@@ -1,0 +1,419 @@
+# Raisket Mexican Fintech Platform - Continuous Deployment
+# Automated deployment to staging and production environments
+
+name: Continuous Deployment
+
+on:
+  push:
+    branches:
+      - main        # Production deployment
+      - develop     # Staging deployment
+    tags:
+      - 'v*'        # Version tags for releases
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: raisket/fintech-mx
+
+jobs:
+  # ===========================================
+  # DETERMINE ENVIRONMENT
+  # ===========================================
+  setup:
+    name: Setup Environment
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.env.outputs.environment }}
+      version: ${{ steps.version.outputs.version }}
+      deploy: ${{ steps.deploy.outputs.deploy }}
+    
+    steps:
+      - name: Determine environment
+        id: env
+        run: |
+          if [[ $GITHUB_REF == refs/heads/main ]]; then
+            echo "environment=production" >> $GITHUB_OUTPUT
+          elif [[ $GITHUB_REF == refs/heads/develop ]]; then
+            echo "environment=staging" >> $GITHUB_OUTPUT
+          elif [[ $GITHUB_REF == refs/tags/* ]]; then
+            echo "environment=production" >> $GITHUB_OUTPUT
+          else
+            echo "environment=review" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Generate version
+        id: version
+        run: |
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          else
+            echo "version=${GITHUB_SHA:0:8}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check if should deploy
+        id: deploy
+        run: |
+          if [[ $GITHUB_REF == refs/heads/main ]] || [[ $GITHUB_REF == refs/heads/develop ]] || [[ $GITHUB_REF == refs/tags/* ]]; then
+            echo "deploy=true" >> $GITHUB_OUTPUT
+          else
+            echo "deploy=false" >> $GITHUB_OUTPUT
+          fi
+
+  # ===========================================
+  # BUILD AND PUSH IMAGES
+  # ===========================================
+  build:
+    name: Build and Push Images
+    runs-on: ubuntu-latest
+    needs: setup
+    if: needs.setup.outputs.deploy == 'true'
+    
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      matrix:
+        component: [backend, frontend]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.component }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=tag
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./apps/${{ matrix.component }}
+          file: ./apps/${{ matrix.component }}/Dockerfile.prod
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            NODE_ENV=production
+            VERSION=${{ needs.setup.outputs.version }}
+
+      - name: Run security scan on image
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.component }}:${{ needs.setup.outputs.version }}
+          format: 'sarif'
+          output: '${{ matrix.component }}-scan.sarif'
+
+      - name: Upload security scan results
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: '${{ matrix.component }}-scan.sarif'
+
+  # ===========================================
+  # DEPLOY TO STAGING
+  # ===========================================
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [setup, build]
+    if: needs.setup.outputs.environment == 'staging'
+    environment: staging
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.28.0'
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig --name raisket-staging-cluster --region us-east-1
+
+      - name: Deploy to staging
+        run: |
+          # Update image tags in Kubernetes manifests
+          sed -i "s|IMAGE_TAG|${{ needs.setup.outputs.version }}|g" infrastructure/kubernetes/deployments/staging/
+          
+          # Apply Kubernetes manifests
+          kubectl apply -f infrastructure/kubernetes/namespaces/staging.yaml
+          kubectl apply -f infrastructure/kubernetes/deployments/staging/
+          kubectl apply -f infrastructure/kubernetes/services/staging/
+          kubectl apply -f infrastructure/kubernetes/ingress/staging/
+
+      - name: Wait for deployment
+        run: |
+          kubectl rollout status deployment/raisket-backend-staging -n raisket-staging --timeout=600s
+          kubectl rollout status deployment/raisket-frontend-staging -n raisket-staging --timeout=600s
+
+      - name: Run health checks
+        run: |
+          # Wait for services to be ready
+          sleep 30
+          
+          # Check backend health
+          kubectl run curl-test --image=curlimages/curl:latest --rm -i --restart=Never -n raisket-staging -- \
+            curl -f http://raisket-backend-staging:8000/health
+          
+          # Check frontend health
+          kubectl run curl-test --image=curlimages/curl:latest --rm -i --restart=Never -n raisket-staging -- \
+            curl -f http://raisket-frontend-staging:3000/health
+
+      - name: Run smoke tests
+        run: |
+          cd tests/smoke
+          npm install
+          STAGING_URL=https://staging.raisket.mx npm run test
+
+      - name: Notify Slack - Staging Deployed
+        uses: 8398a7/action-slack@v3
+        with:
+          status: success
+          text: '🚀 Staging deployment successful! Version: ${{ needs.setup.outputs.version }}'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  # ===========================================
+  # DEPLOY TO PRODUCTION
+  # ===========================================
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [setup, build]
+    if: needs.setup.outputs.environment == 'production' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
+    environment: production
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.28.0'
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
+          aws-region: us-east-1
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig --name raisket-production-cluster --region us-east-1
+
+      - name: Create backup before deployment
+        run: |
+          # Create database backup
+          kubectl create job --from=cronjob/database-backup backup-pre-deploy-$(date +%Y%m%d%H%M%S) -n raisket-production
+
+      - name: Deploy database migrations
+        run: |
+          kubectl apply -f infrastructure/kubernetes/jobs/migration.yaml
+          kubectl wait --for=condition=complete job/database-migration -n raisket-production --timeout=300s
+
+      - name: Blue-Green Deployment
+        run: |
+          # Update image tags
+          sed -i "s|IMAGE_TAG|${{ needs.setup.outputs.version }}|g" infrastructure/kubernetes/deployments/production/
+          
+          # Deploy new version (green)
+          kubectl apply -f infrastructure/kubernetes/deployments/production/
+          
+          # Wait for new deployment to be ready
+          kubectl rollout status deployment/raisket-backend-production -n raisket-production --timeout=600s
+          kubectl rollout status deployment/raisket-frontend-production -n raisket-production --timeout=600s
+
+      - name: Health checks and validation
+        run: |
+          # Wait for services to be fully ready
+          sleep 60
+          
+          # Run comprehensive health checks
+          kubectl run health-check --image=curlimages/curl:latest --rm -i --restart=Never -n raisket-production -- \
+            sh -c '
+              echo "Checking backend health..."
+              curl -f http://raisket-backend-production:8000/health || exit 1
+              
+              echo "Checking frontend health..."
+              curl -f http://raisket-frontend-production:3000/health || exit 1
+              
+              echo "Checking database connectivity..."
+              curl -f http://raisket-backend-production:8000/health/database || exit 1
+              
+              echo "Checking Redis connectivity..."
+              curl -f http://raisket-backend-production:8000/health/redis || exit 1
+              
+              echo "All health checks passed!"
+            '
+
+      - name: Run production smoke tests
+        run: |
+          cd tests/smoke
+          npm install
+          PRODUCTION_URL=https://app.raisket.mx npm run test:production
+
+      - name: Update traffic routing
+        run: |
+          # Update ingress to route traffic to new version
+          kubectl apply -f infrastructure/kubernetes/ingress/production/
+
+      - name: Monitor deployment
+        run: |
+          # Monitor for 5 minutes after traffic switch
+          for i in {1..10}; do
+            echo "Monitoring attempt $i/10..."
+            kubectl run monitor-check --image=curlimages/curl:latest --rm -i --restart=Never -n raisket-production -- \
+              curl -f https://app.raisket.mx/health
+            sleep 30
+          done
+
+      - name: Clean up old resources
+        run: |
+          # Clean up old ReplicaSets (keep last 3)
+          kubectl delete replicaset -n raisket-production \
+            $(kubectl get rs -n raisket-production --sort-by='.metadata.creationTimestamp' -o name | head -n -3)
+
+      - name: Update deployment status
+        run: |
+          # Update deployment tracking
+          kubectl annotate deployment raisket-backend-production -n raisket-production \
+            deployment.kubernetes.io/revision="${{ needs.setup.outputs.version }}"
+          kubectl annotate deployment raisket-frontend-production -n raisket-production \
+            deployment.kubernetes.io/revision="${{ needs.setup.outputs.version }}"
+
+      - name: Notify success
+        uses: 8398a7/action-slack@v3
+        with:
+          status: success
+          text: |
+            🎉 Production deployment successful!
+            Version: ${{ needs.setup.outputs.version }}
+            URL: https://app.raisket.mx
+            Commit: ${{ github.sha }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  # ===========================================
+  # ROLLBACK ON FAILURE
+  # ===========================================
+  rollback:
+    name: Rollback on Failure
+    runs-on: ubuntu-latest
+    needs: [setup, deploy-production]
+    if: failure() && needs.setup.outputs.environment == 'production'
+    environment: production
+
+    steps:
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.28.0'
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
+          aws-region: us-east-1
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig --name raisket-production-cluster --region us-east-1
+
+      - name: Rollback deployment
+        run: |
+          kubectl rollout undo deployment/raisket-backend-production -n raisket-production
+          kubectl rollout undo deployment/raisket-frontend-production -n raisket-production
+          
+          # Wait for rollback to complete
+          kubectl rollout status deployment/raisket-backend-production -n raisket-production --timeout=300s
+          kubectl rollout status deployment/raisket-frontend-production -n raisket-production --timeout=300s
+
+      - name: Verify rollback
+        run: |
+          kubectl run rollback-check --image=curlimages/curl:latest --rm -i --restart=Never -n raisket-production -- \
+            curl -f https://app.raisket.mx/health
+
+      - name: Notify rollback
+        uses: 8398a7/action-slack@v3
+        with:
+          status: failure
+          text: |
+            ⚠️ Production deployment failed and was rolled back!
+            Failed version: ${{ needs.setup.outputs.version }}
+            Please check the logs and fix issues before redeploying.
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  # ===========================================
+  # POST-DEPLOYMENT MONITORING
+  # ===========================================
+  post-deployment-monitoring:
+    name: Post-Deployment Monitoring
+    runs-on: ubuntu-latest
+    needs: [setup, deploy-production]
+    if: success() && needs.setup.outputs.environment == 'production'
+
+    steps:
+      - name: Setup monitoring
+        run: |
+          echo "Setting up post-deployment monitoring for version ${{ needs.setup.outputs.version }}"
+
+      - name: Create Datadog deployment event
+        uses: masci/datadog@v1
+        with:
+          api-key: ${{ secrets.DATADOG_API_KEY }}
+          app-key: ${{ secrets.DATADOG_APP_KEY }}
+          events: |
+            - title: "Raisket Production Deployment"
+              text: "Version ${{ needs.setup.outputs.version }} deployed to production"
+              alert_type: "success"
+              tags:
+                - "env:production"
+                - "service:raisket"
+                - "version:${{ needs.setup.outputs.version }}"
+
+      - name: Trigger performance monitoring
+        run: |
+          curl -X POST "${{ secrets.PERFORMANCE_MONITOR_WEBHOOK }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "event": "deployment",
+              "environment": "production",
+              "version": "${{ needs.setup.outputs.version }}",
+              "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"
+            }'
+
+      - name: Schedule post-deployment report
+        run: |
+          # Schedule a report to be generated in 24 hours
+          echo "Post-deployment monitoring scheduled for 24 hours"

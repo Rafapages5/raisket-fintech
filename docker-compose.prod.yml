@@ -1,0 +1,483 @@
+# Raisket Mexican Fintech Platform - Production Docker Compose
+# For production deployment with high availability and security
+
+version: '3.8'
+
+networks:
+  raisket_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+  
+  database_network:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16
+
+volumes:
+  postgres_primary_data:
+    driver: local
+  postgres_replica_data:
+    driver: local
+  redis_data:
+    driver: local
+  nginx_logs:
+    driver: local
+  app_logs:
+    driver: local
+  ssl_certs:
+    driver: local
+
+secrets:
+  postgres_password:
+    external: true
+  redis_password:
+    external: true
+  jwt_private_key:
+    external: true
+  ssl_certificate:
+    external: true
+  ssl_private_key:
+    external: true
+
+services:
+  # ===========================================
+  # REVERSE PROXY & LOAD BALANCER
+  # ===========================================
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: raisket_nginx_prod
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./infrastructure/docker/nginx/nginx.prod.conf:/etc/nginx/nginx.conf:ro
+      - ssl_certs:/etc/ssl/certs:ro
+      - nginx_logs:/var/log/nginx
+    networks:
+      - raisket_network
+    depends_on:
+      - frontend
+      - backend
+    environment:
+      - NGINX_WORKER_PROCESSES=auto
+      - NGINX_WORKER_CONNECTIONS=1024
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ===========================================
+  # FRONTEND APPLICATION
+  # ===========================================
+  frontend:
+    build:
+      context: ./apps/frontend
+      dockerfile: Dockerfile.prod
+      args:
+        - NODE_ENV=production
+        - NEXT_PUBLIC_API_URL=${API_URL}
+        - NEXT_PUBLIC_APP_URL=${APP_URL}
+    image: raisket/frontend:latest
+    container_name: raisket_frontend_prod
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    networks:
+      - raisket_network
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=${API_URL}
+      - NEXT_PUBLIC_APP_URL=${APP_URL}
+      - NEXT_PUBLIC_GA_TRACKING_ID=${GA_TRACKING_ID}
+      - NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY}
+    volumes:
+      - app_logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ===========================================
+  # BACKEND API (Multiple Instances)
+  # ===========================================
+  backend:
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile.prod
+      args:
+        - NODE_ENV=production
+    image: raisket/backend:latest
+    restart: unless-stopped
+    ports:
+      - "8000-8002:8000"
+    networks:
+      - raisket_network
+      - database_network
+    environment:
+      - NODE_ENV=production
+      - PORT=8000
+      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_REPLICA_URL=${DATABASE_REPLICA_URL}
+      - REDIS_URL=${REDIS_URL}
+      - JWT_PRIVATE_KEY_FILE=/run/secrets/jwt_private_key
+      - BURO_CLIENT_CERTIFICATE_PATH=/etc/ssl/certs/buro-client.crt
+      - BURO_CLIENT_PRIVATE_KEY_PATH=/etc/ssl/private/buro-client.key
+      - CLAUDE_API_KEY=${CLAUDE_API_KEY}
+      - SENTRY_DSN=${SENTRY_DSN}
+      - DD_AGENT_HOST=datadog-agent
+    secrets:
+      - jwt_private_key
+    volumes:
+      - ./ssl/buro:/etc/ssl/certs:ro
+      - app_logs:/app/logs
+    depends_on:
+      postgres_primary:
+        condition: service_healthy
+      redis_cluster:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      replicas: 3
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  # ===========================================
+  # DATABASE - PRIMARY (PostgreSQL)
+  # ===========================================
+  postgres_primary:
+    image: postgres:15-alpine
+    container_name: raisket_postgres_primary
+    restart: unless-stopped
+    ports:
+      - "5432"
+    networks:
+      - database_network
+    environment:
+      - POSTGRES_DB=raisket_production
+      - POSTGRES_USER=raisket_user
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
+      - POSTGRES_INITDB_ARGS=--auth-host=md5
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    secrets:
+      - postgres_password
+    volumes:
+      - postgres_primary_data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d:ro
+      - ./database/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+    command: |
+      postgres
+      -c config_file=/etc/postgresql/postgresql.conf
+      -c log_statement=all
+      -c log_duration=on
+      -c log_line_prefix='%t [%p]: [%l-1] user=%u,db=%d,app=%a,client=%h '
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U raisket_user -d raisket_production"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.0'
+        reservations:
+          memory: 1G
+          cpus: '0.5'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  # ===========================================
+  # DATABASE - READ REPLICA
+  # ===========================================
+  postgres_replica:
+    image: postgres:15-alpine
+    container_name: raisket_postgres_replica
+    restart: unless-stopped
+    ports:
+      - "5433"
+    networks:
+      - database_network
+    environment:
+      - POSTGRES_DB=raisket_production
+      - POSTGRES_USER=raisket_readonly
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
+      - PGUSER=postgres
+      - POSTGRES_MASTER_USER=raisket_user
+      - POSTGRES_MASTER_PASSWORD_FILE=/run/secrets/postgres_password
+      - POSTGRES_MASTER_HOST=postgres_primary
+      - POSTGRES_MASTER_PORT=5432
+    secrets:
+      - postgres_password
+    volumes:
+      - postgres_replica_data:/var/lib/postgresql/data
+      - ./database/setup-replica.sh:/docker-entrypoint-initdb.d/setup-replica.sh:ro
+    depends_on:
+      postgres_primary:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U raisket_readonly -d raisket_production"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '0.5'
+        reservations:
+          memory: 512M
+          cpus: '0.25'
+
+  # ===========================================
+  # REDIS CLUSTER
+  # ===========================================
+  redis_cluster:
+    image: redis:7-alpine
+    container_name: raisket_redis_cluster
+    restart: unless-stopped
+    ports:
+      - "6379"
+    networks:
+      - raisket_network
+      - database_network
+    environment:
+      - REDIS_PASSWORD_FILE=/run/secrets/redis_password
+    secrets:
+      - redis_password
+    volumes:
+      - redis_data:/data
+      - ./infrastructure/docker/redis/redis.conf:/etc/redis/redis.conf:ro
+    command: |
+      sh -c '
+        REDIS_PASSWORD=$$(cat /run/secrets/redis_password)
+        redis-server /etc/redis/redis.conf --requirepass "$$REDIS_PASSWORD"
+      '
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+
+  # ===========================================
+  # BACKGROUND JOB PROCESSOR
+  # ===========================================
+  worker:
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile.prod
+    image: raisket/backend:latest
+    container_name: raisket_worker_prod
+    restart: unless-stopped
+    networks:
+      - raisket_network
+      - database_network
+    environment:
+      - NODE_ENV=production
+      - WORKER_MODE=true
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - CLAUDE_API_KEY=${CLAUDE_API_KEY}
+      - BURO_CLIENT_CERTIFICATE_PATH=/etc/ssl/certs/buro-client.crt
+    volumes:
+      - ./ssl/buro:/etc/ssl/certs:ro
+      - app_logs:/app/logs
+    depends_on:
+      postgres_primary:
+        condition: service_healthy
+      redis_cluster:
+        condition: service_healthy
+    command: ["node", "dist/worker.js"]
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ===========================================
+  # MONITORING & OBSERVABILITY
+  # ===========================================
+  datadog-agent:
+    image: gcr.io/datadoghq/agent:7
+    container_name: raisket_datadog_agent
+    restart: unless-stopped
+    networks:
+      - raisket_network
+    environment:
+      - DD_API_KEY=${DATADOG_API_KEY}
+      - DD_SITE=datadoghq.com
+      - DD_HOSTNAME=raisket-prod
+      - DD_TAGS="env:production,service:raisket,version:1.0.0"
+      - DD_APM_ENABLED=true
+      - DD_PROCESS_AGENT_ENABLED=true
+      - DD_LOGS_ENABLED=true
+      - DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true
+      - DD_CONTAINER_EXCLUDE="name:datadog-agent"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc/:/host/proc/:ro
+      - /opt/datadog-agent/run:/opt/datadog-agent/run:rw
+      - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
+      - app_logs:/var/log/app:ro
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.25'
+
+  # ===========================================
+  # BACKUP SERVICE
+  # ===========================================
+  backup:
+    build:
+      context: ./infrastructure/docker/backup
+      dockerfile: Dockerfile
+    image: raisket/backup:latest
+    container_name: raisket_backup_prod
+    restart: unless-stopped
+    networks:
+      - database_network
+    environment:
+      - BACKUP_SCHEDULE=${BACKUP_SCHEDULE:-0 2 * * *}
+      - BACKUP_RETENTION_DAYS=${BACKUP_RETENTION_DAYS:-90}
+      - DATABASE_URL=${DATABASE_URL}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - S3_BUCKET_NAME=${BACKUP_S3_BUCKET}
+      - BACKUP_ENCRYPTION_KEY_FILE=/run/secrets/backup_encryption_key
+    volumes:
+      - postgres_primary_data:/var/lib/postgresql/data:ro
+      - app_logs:/var/log/app:ro
+    depends_on:
+      postgres_primary:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.25'
+
+  # ===========================================
+  # SECURITY SCANNER
+  # ===========================================
+  security_scanner:
+    image: aquasec/trivy:latest
+    container_name: raisket_security_scanner
+    restart: "no"
+    networks:
+      - raisket_network
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./security/trivy-config.yaml:/etc/trivy/config.yaml:ro
+    command: |
+      sh -c '
+        trivy image --config /etc/trivy/config.yaml raisket/frontend:latest
+        trivy image --config /etc/trivy/config.yaml raisket/backend:latest
+      '
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+
+# ===========================================
+# HEALTH CHECKS & DEPENDENCIES
+# ===========================================
+  healthcheck:
+    image: alpine/curl:latest
+    container_name: raisket_healthcheck
+    restart: unless-stopped
+    networks:
+      - raisket_network
+    depends_on:
+      - nginx
+      - frontend
+      - backend
+      - postgres_primary
+      - redis_cluster
+    command: |
+      sh -c '
+        while true; do
+          echo "Running health checks..."
+          curl -f http://nginx/health || echo "Nginx health check failed"
+          curl -f http://frontend:3000/health || echo "Frontend health check failed"
+          curl -f http://backend:8000/health || echo "Backend health check failed"
+          sleep 30
+        done
+      '
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+          cpus: '0.1'

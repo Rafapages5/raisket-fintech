@@ -1,0 +1,124 @@
+# Raisket Backend - Production Dockerfile
+# Multi-stage build for optimized production image
+
+# ===========================================
+# Stage 1: Build Dependencies
+# ===========================================
+FROM node:18-alpine AS dependencies
+
+# Install system dependencies for native modules
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    gcc \
+    musl-dev \
+    linux-headers \
+    curl \
+    bash
+
+# Create app directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+COPY yarn.lock ./
+
+# Install dependencies with production optimizations
+RUN npm ci --only=production --no-audit --no-fund && \
+    npm cache clean --force
+
+# ===========================================
+# Stage 2: Build Application
+# ===========================================
+FROM node:18-alpine AS builder
+
+# Install build dependencies
+RUN apk add --no-cache python3 make g++ gcc musl-dev linux-headers
+
+WORKDIR /app
+
+# Copy package files and install all dependencies (including dev)
+COPY package*.json ./
+COPY yarn.lock ./
+RUN npm ci --no-audit --no-fund
+
+# Copy source code
+COPY . .
+
+# Build TypeScript application
+RUN npm run build
+
+# ===========================================
+# Stage 3: Production Runtime
+# ===========================================
+FROM node:18-alpine AS production
+
+# Install runtime dependencies and security tools
+RUN apk add --no-cache \
+    dumb-init \
+    curl \
+    bash \
+    ca-certificates \
+    tzdata \
+    tini && \
+    # Update CA certificates
+    update-ca-certificates && \
+    # Create non-root user
+    addgroup -g 1001 -S nodejs && \
+    adduser -S raisket -u 1001 -G nodejs
+
+# Set timezone to Mexico City
+ENV TZ=America/Mexico_City
+
+# Create app directory with proper permissions
+WORKDIR /app
+RUN chown -R raisket:nodejs /app
+
+# Copy production dependencies from dependencies stage
+COPY --from=dependencies --chown=raisket:nodejs /app/node_modules ./node_modules
+
+# Copy built application from builder stage
+COPY --from=builder --chown=raisket:nodejs /app/dist ./dist
+COPY --from=builder --chown=raisket:nodejs /app/package.json ./package.json
+
+# Create directories for logs and uploads
+RUN mkdir -p /app/logs /app/uploads /app/temp && \
+    chown -R raisket:nodejs /app/logs /app/uploads /app/temp
+
+# Copy SSL certificates and configuration files
+COPY --chown=raisket:nodejs ./ssl/ /etc/ssl/
+COPY --chown=raisket:nodejs ./config/production.json /app/config/
+
+# Set production environment
+ENV NODE_ENV=production
+ENV PORT=8000
+ENV HOST=0.0.0.0
+
+# Security: Run as non-root user
+USER raisket
+
+# Expose port
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Use tini as PID 1 for proper signal handling
+ENTRYPOINT ["/sbin/tini", "--"]
+
+# Start application with proper process management
+CMD ["node", "dist/server.js"]
+
+# ===========================================
+# Metadata
+# ===========================================
+LABEL maintainer="Raisket Team <tech@raisket.mx>"
+LABEL description="Raisket Mexican Fintech Platform - Backend API"
+LABEL version="1.0.0"
+LABEL environment="production"
+
+# Security labels
+LABEL security.scan="enabled"
+LABEL security.vulnerability-scan="enabled"

@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: var(--font-body), sans-serif;
+}
+
+@layer base {
+  :root {
+    --background: 208 100% 97%; /* Very Light Blue (#F0F8FF) */
+    --foreground: 210 10% 23%; /* Darker text for readability */
+    --card: 208 100% 100%; /* White cards for contrast */
+    --card-foreground: 210 10% 23%;
+    --popover: 208 100% 100%;
+    --popover-foreground: 210 10% 23%;
+    --primary: 210 40% 60%; /* Moderate Blue (#6699CC) */
+    --primary-foreground: 210 40% 98%; /* Light text on primary */
+    --secondary: 208 60% 90%; /* Lighter shade of background/primary */
+    --secondary-foreground: 210 40% 30%;
+    --muted: 208 60% 90%;
+    --muted-foreground: 210 20% 45%;
+    --accent: 195 37% 44%; /* Teal (#468499) */
+    --accent-foreground: 195 37% 98%; /* Light text on accent */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 208 40% 85%; /* Softer border color */
+    --input: 208 40% 90%; /* Input background */
+    --ring: 210 40% 60%; /* Primary color for rings */
+    --chart-1: 210 40% 60%;
+    --chart-2: 195 37% 44%;
+    --chart-3: 208 50% 70%;
+    --chart-4: 195 45% 55%;
+    --chart-5: 210 30% 50%;
+    --radius: 0.5rem;
+    --sidebar-background: 208 80% 95%; /* Slightly darker than page background */
+    --sidebar-foreground: 210 10% 23%;
+    --sidebar-primary: 210 40% 60%;
+    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-accent: 195 37% 44%;
+    --sidebar-accent-foreground: 195 37% 98%;
+    --sidebar-border: 208 40% 85%;
+    --sidebar-ring: 210 40% 60%;
+  }
+
+  .dark {
+    --background: 210 10% 15%; /* Dark blue-gray */
+    --foreground: 208 100% 97%;
+    --card: 210 10% 20%;
+    --card-foreground: 208 100% 97%;
+    --popover: 210 10% 20%;
+    --popover-foreground: 208 100% 97%;
+    --primary: 210 40% 60%; /* Moderate Blue - stays same */
+    --primary-foreground: 210 40% 10%; /* Darker text on primary for dark mode */
+    --secondary: 210 10% 25%;
+    --secondary-foreground: 208 100% 97%;
+    --muted: 210 10% 25%;
+    --muted-foreground: 208 60% 80%;
+    --accent: 195 37% 50%; /* Slightly lighter Teal for dark mode */
+    --accent-foreground: 195 37% 10%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 210 10% 30%;
+    --input: 210 10% 30%;
+    --ring: 210 40% 60%;
+    --chart-1: 210 40% 60%;
+    --chart-2: 195 37% 50%;
+    --chart-3: 208 50% 70%;
+    --chart-4: 195 45% 55%;
+    --chart-5: 210 30% 50%;
+    --sidebar-background: 210 10% 12%;
+    --sidebar-foreground: 208 100% 97%;
+    --sidebar-primary: 210 40% 60%;
+    --sidebar-primary-foreground: 210 40% 10%;
+    --sidebar-accent: 195 37% 50%;
+    --sidebar-accent-foreground: 195 37% 10%;
+    --sidebar-border: 210 10% 30%;
+    --sidebar-ring: 210 40% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1; /* Enable common ligatures and contextual alternates */
+  }
+}
+
+/* Custom scrollbar for a more modern look */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(var(--background) / 0.5);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.5);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.7);
+}

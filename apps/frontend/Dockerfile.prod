@@ -1,0 +1,118 @@
+# Raisket Frontend - Production Dockerfile
+# Multi-stage build for optimized Next.js production deployment
+
+# ===========================================
+# Stage 1: Dependencies
+# ===========================================
+FROM node:18-alpine AS dependencies
+
+# Install system dependencies
+RUN apk add --no-cache libc6-compat
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+COPY yarn.lock ./
+
+# Install dependencies
+RUN npm ci --only=production --no-audit --no-fund && \
+    npm cache clean --force
+
+# ===========================================
+# Stage 2: Builder
+# ===========================================
+FROM node:18-alpine AS builder
+
+RUN apk add --no-cache libc6-compat
+
+WORKDIR /app
+
+# Copy package files and install all dependencies
+COPY package*.json ./
+COPY yarn.lock ./
+RUN npm ci --no-audit --no-fund
+
+# Copy source code
+COPY . .
+
+# Set build-time environment variables
+ARG NODE_ENV=production
+ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_APP_URL
+ARG NEXT_PUBLIC_GA_TRACKING_ID
+ARG NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+
+ENV NODE_ENV=${NODE_ENV}
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+ENV NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
+ENV NEXT_PUBLIC_GA_TRACKING_ID=${NEXT_PUBLIC_GA_TRACKING_ID}
+ENV NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
+
+# Build Next.js application
+ENV NEXT_TELEMETRY_DISABLED 1
+RUN npm run build
+
+# ===========================================
+# Stage 3: Production Runtime
+# ===========================================
+FROM node:18-alpine AS production
+
+# Install runtime dependencies
+RUN apk add --no-cache \
+    dumb-init \
+    curl \
+    bash \
+    ca-certificates \
+    tzdata && \
+    # Create non-root user
+    addgroup -g 1001 -S nodejs && \
+    adduser -S nextjs -u 1001 -G nodejs
+
+# Set timezone
+ENV TZ=America/Mexico_City
+
+WORKDIR /app
+
+# Set production environment
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+# Copy production dependencies
+COPY --from=dependencies --chown=nextjs:nodejs /app/node_modules ./node_modules
+
+# Copy built Next.js application
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
+
+# Create logs directory
+RUN mkdir -p /app/logs && \
+    chown -R nextjs:nodejs /app/logs
+
+# Security: Run as non-root user
+USER nextjs
+
+# Expose port
+EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:3000/health || exit 1
+
+# Use dumb-init as PID 1
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+
+# Start Next.js server
+CMD ["node", "server.js"]
+
+# ===========================================
+# Metadata
+# ===========================================
+LABEL maintainer="Raisket Team <tech@raisket.mx>"
+LABEL description="Raisket Mexican Fintech Platform - Frontend"
+LABEL version="1.0.0"
+LABEL environment="production"
