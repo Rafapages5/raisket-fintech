@@ -2,80 +2,149 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Importar fuentes según tu jerarquía tipográfica */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700&display=swap');
+
 body {
-  font-family: var(--font-body), sans-serif;
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+}
+
+.font-headline {
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Clases de tipografía personalizadas */
+.title-primary {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800; /* ExtraBold */
+  text-transform: uppercase;
+}
+
+.subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500; /* Medium */
+}
+
+.section-header {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700; /* Bold */
+}
+
+.body-text {
+  font-family: 'Lato', sans-serif;
+  font-weight: 400; /* Regular */
+}
+
+.quote-text {
+  font-family: 'Lato', sans-serif;
+  font-style: italic;
+  font-weight: 300;
+}
+
+.caption-text {
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 0.875rem;
 }
 
 @layer base {
   :root {
-    --background: 208 100% 97%; /* Very Light Blue (#F0F8FF) */
-    --foreground: 210 10% 23%; /* Darker text for readability */
-    --card: 208 100% 100%; /* White cards for contrast */
-    --card-foreground: 210 10% 23%;
-    --popover: 208 100% 100%;
-    --popover-foreground: 210 10% 23%;
-    --primary: 210 40% 60%; /* Moderate Blue (#6699CC) */
-    --primary-foreground: 210 40% 98%; /* Light text on primary */
-    --secondary: 208 60% 90%; /* Lighter shade of background/primary */
-    --secondary-foreground: 210 40% 30%;
-    --muted: 208 60% 90%;
-    --muted-foreground: 210 20% 45%;
-    --accent: 195 37% 44%; /* Teal (#468499) */
-    --accent-foreground: 195 37% 98%; /* Light text on accent */
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 208 40% 85%; /* Softer border color */
-    --input: 208 40% 90%; /* Input background */
-    --ring: 210 40% 60%; /* Primary color for rings */
-    --chart-1: 210 40% 60%;
-    --chart-2: 195 37% 44%;
-    --chart-3: 208 50% 70%;
-    --chart-4: 195 45% 55%;
-    --chart-5: 210 30% 50%;
+    /* Paleta FinanceHub - Modo Claro */
+    --background: 0 0% 100%; /* Blanco #ffffff */
+    --foreground: 222 84% 5%; /* Casi negro para texto */
+    
+    --card: 0 0% 100%; /* Blanco para tarjetas */
+    --card-foreground: 222 84% 5%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 84% 5%;
+    
+    /* Azul marino oscuro como principal (como el header de FinanceHub) */
+    --primary: 215 28% 17%; /* #1e293b */
+    --primary-foreground: 0 0% 100%; /* Blanco */
+    
+    /* Gris claro para elementos secundarios */
+    --secondary: 210 20% 98%; /* #f8fafc */
+    --secondary-foreground: 215 28% 17%;
+    
+    --muted: 210 20% 96%; /* #f1f5f9 */
+    --muted-foreground: 217 17% 45%; /* #6b7280 */
+    
+    /* Verde esmeralda brillante para acentos (botones, CTAs) */
+    --accent: 158 64% 42%; /* #10b981 */
+    --accent-foreground: 0 0% 100%; /* Blanco */
+    
+    /* Rojo para acciones destructivas */
+    --destructive: 0 84% 60%; /* #ef4444 */
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 210 20% 91%; /* #e5e7eb */
+    --input: 210 20% 91%;
+    --ring: 158 64% 42%; /* Verde para focus */
+    
+    /* Colores para gráficos y ratings */
+    --chart-1: 215 28% 17%; /* Azul marino */
+    --chart-2: 158 64% 42%; /* Verde */
+    --chart-3: 38 92% 50%; /* Amarillo #f59e0b */
+    --chart-4: 280 73% 58%; /* Púrpura */
+    --chart-5: 0 84% 60%; /* Rojo */
+    
     --radius: 0.5rem;
-    --sidebar-background: 208 80% 95%; /* Slightly darker than page background */
-    --sidebar-foreground: 210 10% 23%;
-    --sidebar-primary: 210 40% 60%;
-    --sidebar-primary-foreground: 210 40% 98%;
-    --sidebar-accent: 195 37% 44%;
-    --sidebar-accent-foreground: 195 37% 98%;
-    --sidebar-border: 208 40% 85%;
-    --sidebar-ring: 210 40% 60%;
+    
+    /* Sidebar con colores FinanceHub */
+    --sidebar-background: 215 28% 17%; /* Azul marino oscuro */
+    --sidebar-foreground: 0 0% 100%; /* Blanco */
+    --sidebar-primary: 158 64% 42%; /* Verde */
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 158 64% 52%; /* Verde más claro */
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 215 25% 27%; /* Borde más claro que el fondo */
+    --sidebar-ring: 158 64% 42%;
   }
 
   .dark {
-    --background: 210 10% 15%; /* Dark blue-gray */
-    --foreground: 208 100% 97%;
-    --card: 210 10% 20%;
-    --card-foreground: 208 100% 97%;
-    --popover: 210 10% 20%;
-    --popover-foreground: 208 100% 97%;
-    --primary: 210 40% 60%; /* Moderate Blue - stays same */
-    --primary-foreground: 210 40% 10%; /* Darker text on primary for dark mode */
-    --secondary: 210 10% 25%;
-    --secondary-foreground: 208 100% 97%;
-    --muted: 210 10% 25%;
-    --muted-foreground: 208 60% 80%;
-    --accent: 195 37% 50%; /* Slightly lighter Teal for dark mode */
-    --accent-foreground: 195 37% 10%;
-    --destructive: 0 62.8% 30.6%;
+    /* Modo oscuro con los mismos colores de FinanceHub */
+    --background: 222 47% 11%; /* #0f172a Fondo muy oscuro */
+    --foreground: 210 40% 98%; /* Casi blanco */
+    
+    --card: 215 28% 17%; /* #1e293b */
+    --card-foreground: 210 40% 98%;
+    
+    --popover: 215 28% 17%;
+    --popover-foreground: 210 40% 98%;
+    
+    /* Azul marino en modo oscuro */
+    --primary: 215 28% 17%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 217 33% 17%; /* #1e293b */
+    --secondary-foreground: 210 40% 98%;
+    
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%; /* Gris más claro */
+    
+    /* Verde esmeralda en modo oscuro */
+    --accent: 158 64% 42%; /* #10b981 */
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 0 73% 41%; /* Rojo más oscuro */
     --destructive-foreground: 0 0% 98%;
-    --border: 210 10% 30%;
-    --input: 210 10% 30%;
-    --ring: 210 40% 60%;
-    --chart-1: 210 40% 60%;
-    --chart-2: 195 37% 50%;
-    --chart-3: 208 50% 70%;
-    --chart-4: 195 45% 55%;
-    --chart-5: 210 30% 50%;
-    --sidebar-background: 210 10% 12%;
-    --sidebar-foreground: 208 100% 97%;
-    --sidebar-primary: 210 40% 60%;
-    --sidebar-primary-foreground: 210 40% 10%;
-    --sidebar-accent: 195 37% 50%;
-    --sidebar-accent-foreground: 195 37% 10%;
-    --sidebar-border: 210 10% 30%;
-    --sidebar-ring: 210 40% 60%;
+    
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 158 64% 42%;
+    
+    /* Sidebar modo oscuro */
+    --sidebar-background: 222 47% 11%; /* Muy oscuro */
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 158 64% 42%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 158 64% 52%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 217 33% 17%;
+    --sidebar-ring: 158 64% 42%;
   }
 }
 
@@ -85,23 +154,130 @@ body {
   }
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1; /* Enable common ligatures and contextual alternates */
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
-/* Custom scrollbar for a more modern look */
+/* Header y Footer con estilo FinanceHub */
+.header-dark {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+}
+
+.footer-dark {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+/* Botones con estilo FinanceHub */
+.btn-primary {
+  background: #10b981;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: #059669;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+}
+
+/* Cards con sombra suave */
+.card-shadow {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.card-shadow:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+}
+
+/* Scrollbar personalizado estilo FinanceHub */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
+
 ::-webkit-scrollbar-track {
-  background: hsl(var(--background) / 0.5);
-  border-radius: 10px;
+  background: #f1f5f9;
+  border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground) / 0.5);
-  border-radius: 10px;
+  background: #10b981;
+  border-radius: 4px;
+  transition: background 0.3s;
 }
+
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.7);
+  background: #059669;
+}
+
+/* Para dark mode */
+.dark ::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #10b981;
+}
+
+/* Badges y Tags */
+.badge-success {
+  background: #10b981;
+  color: white;
+}
+
+.badge-warning {
+  background: #f59e0b;
+  color: white;
+}
+
+.badge-info {
+  background: #3b82f6;
+  color: white;
+}
+
+/* Rating stars color */
+.star-rating {
+  color: #f59e0b;
+}
+
+/* Gradientes para elementos especiales */
+.gradient-primary {
+  background: linear-gradient(135deg, #1e293b 0%, #10b981 100%);
+}
+
+.gradient-accent {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+/* Animaciones suaves */
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideUp {
+    from {
+      transform: translateY(10px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
 }
