@@ -51,100 +51,100 @@ body {
 
 @layer base {
   :root {
-    /* Paleta FinanceHub - Modo Claro */
-    --background: 0 0% 100%; /* Blanco #ffffff */
-    --foreground: 222 84% 5%; /* Casi negro para texto */
+    /* COLORES EXACTOS DE FINANCEHUB */
     
-    --card: 0 0% 100%; /* Blanco para tarjetas */
-    --card-foreground: 222 84% 5%;
+    /* Fondo principal - Gris muy claro */
+    --background: 210 25% 97%; /* #f8f9fb - Fondo gris muy claro */
+    --foreground: 222 47% 11%; /* #0f172a - Texto oscuro */
+    
+    /* Cards - Blanco puro */
+    --card: 0 0% 100%; /* #ffffff */
+    --card-foreground: 222 47% 11%;
     
     --popover: 0 0% 100%;
-    --popover-foreground: 222 84% 5%;
+    --popover-foreground: 222 47% 11%;
     
-    /* Azul marino oscuro como principal (como el header de FinanceHub) */
-    --primary: 215 28% 17%; /* #1e293b */
+    /* AZUL OSCURO DEL HEADER/FOOTER - Color exacto de la imagen */
+    --primary: 217 33% 17%; /* #1e293b - Azul marino oscuro del header */
     --primary-foreground: 0 0% 100%; /* Blanco */
     
     /* Gris claro para elementos secundarios */
-    --secondary: 210 20% 98%; /* #f8fafc */
-    --secondary-foreground: 215 28% 17%;
+    --secondary: 214 32% 91%; /* #e2e8f0 */
+    --secondary-foreground: 217 33% 17%;
     
-    --muted: 210 20% 96%; /* #f1f5f9 */
-    --muted-foreground: 217 17% 45%; /* #6b7280 */
+    --muted: 210 40% 96%; /* #f1f5f9 */
+    --muted-foreground: 215 16% 47%; /* #64748b - Gris texto secundario */
     
-    /* Verde esmeralda brillante para acentos (botones, CTAs) */
-    --accent: 158 64% 42%; /* #10b981 */
+    /* VERDE CYAN/TURQUESA - Color exacto del texto "FINANCIERA PERFECTA" */
+    --accent: 174 100% 41%; /* #00d4aa - Verde cyan brillante */
     --accent-foreground: 0 0% 100%; /* Blanco */
     
-    /* Rojo para acciones destructivas */
+    /* Rojo para destructive */
     --destructive: 0 84% 60%; /* #ef4444 */
     --destructive-foreground: 0 0% 100%;
     
-    --border: 210 20% 91%; /* #e5e7eb */
-    --input: 210 20% 91%;
-    --ring: 158 64% 42%; /* Verde para focus */
+    --border: 214 32% 91%; /* #e2e8f0 */
+    --input: 214 32% 91%;
+    --ring: 174 100% 41%; /* Verde cyan para focus */
     
-    /* Colores para gráficos y ratings */
-    --chart-1: 215 28% 17%; /* Azul marino */
-    --chart-2: 158 64% 42%; /* Verde */
-    --chart-3: 38 92% 50%; /* Amarillo #f59e0b */
-    --chart-4: 280 73% 58%; /* Púrpura */
+    /* Colores adicionales */
+    --chart-1: 217 33% 17%; /* Azul marino */
+    --chart-2: 174 100% 41%; /* Verde cyan */
+    --chart-3: 38 92% 50%; /* Amarillo #f59e0b para ratings */
+    --chart-4: 251 91% 60%; /* Púrpura badges */
     --chart-5: 0 84% 60%; /* Rojo */
     
     --radius: 0.5rem;
     
-    /* Sidebar con colores FinanceHub */
-    --sidebar-background: 215 28% 17%; /* Azul marino oscuro */
-    --sidebar-foreground: 0 0% 100%; /* Blanco */
-    --sidebar-primary: 158 64% 42%; /* Verde */
+    /* Sidebar con colores exactos */
+    --sidebar-background: 217 33% 17%; /* #1e293b */
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 174 100% 41%; /* Verde cyan */
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 158 64% 52%; /* Verde más claro */
+    --sidebar-accent: 174 100% 45%;
     --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 215 25% 27%; /* Borde más claro que el fondo */
-    --sidebar-ring: 158 64% 42%;
+    --sidebar-border: 217 30% 25%;
+    --sidebar-ring: 174 100% 41%;
   }
 
   .dark {
-    /* Modo oscuro con los mismos colores de FinanceHub */
-    --background: 222 47% 11%; /* #0f172a Fondo muy oscuro */
-    --foreground: 210 40% 98%; /* Casi blanco */
+    /* Modo oscuro con los mismos colores */
+    --background: 222 47% 11%; /* #0f172a */
+    --foreground: 210 40% 98%;
     
-    --card: 215 28% 17%; /* #1e293b */
+    --card: 217 33% 17%; /* #1e293b */
     --card-foreground: 210 40% 98%;
     
-    --popover: 215 28% 17%;
+    --popover: 217 33% 17%;
     --popover-foreground: 210 40% 98%;
     
-    /* Azul marino en modo oscuro */
-    --primary: 215 28% 17%;
+    --primary: 217 33% 17%; /* #1e293b */
     --primary-foreground: 0 0% 100%;
     
-    --secondary: 217 33% 17%; /* #1e293b */
+    --secondary: 217 30% 22%;
     --secondary-foreground: 210 40% 98%;
     
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%; /* Gris más claro */
+    --muted: 217 30% 22%;
+    --muted-foreground: 215 20% 65%;
     
-    /* Verde esmeralda en modo oscuro */
-    --accent: 158 64% 42%; /* #10b981 */
+    --accent: 174 100% 41%; /* #00d4aa */
     --accent-foreground: 0 0% 100%;
     
-    --destructive: 0 73% 41%; /* Rojo más oscuro */
+    --destructive: 0 73% 41%;
     --destructive-foreground: 0 0% 98%;
     
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 158 64% 42%;
+    --border: 217 30% 25%;
+    --input: 217 30% 25%;
+    --ring: 174 100% 41%;
     
-    /* Sidebar modo oscuro */
-    --sidebar-background: 222 47% 11%; /* Muy oscuro */
+    --sidebar-background: 222 47% 11%;
     --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 158 64% 42%;
+    --sidebar-primary: 174 100% 41%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 158 64% 52%;
+    --sidebar-accent: 174 100% 45%;
     --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 217 33% 17%;
-    --sidebar-ring: 158 64% 42%;
+    --sidebar-border: 217 30% 25%;
+    --sidebar-ring: 174 100% 41%;
   }
 }
 
@@ -158,40 +158,131 @@ body {
   }
 }
 
-/* Header y Footer con estilo FinanceHub */
-.header-dark {
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+/* ESTILOS EXACTOS DE FINANCEHUB */
+
+/* Header con gradiente azul oscuro exacto */
+.header-financehub {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
 }
 
-.footer-dark {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+/* Footer con el mismo azul oscuro */
+.footer-financehub {
+  background: #1e293b;
 }
 
-/* Botones con estilo FinanceHub */
-.btn-primary {
+/* Texto verde cyan para elementos destacados */
+.text-accent-bright {
+  color: #00d4aa;
+}
+
+/* Botones verdes exactos de FinanceHub */
+.btn-success {
   background: #10b981;
   color: white;
-  transition: all 0.3s ease;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
-.btn-primary:hover {
+.btn-success:hover {
   background: #059669;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
 }
 
-/* Cards con sombra suave */
-.card-shadow {
+/* Botones outline */
+.btn-outline {
+  border: 1px solid #e2e8f0;
+  background: transparent;
+  color: #1e293b;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease;
+}
+
+.btn-outline:hover {
+  background: #f8f9fb;
+  border-color: #cbd5e1;
+}
+
+/* Cards con el estilo exacto */
+.card-product {
+  background: white;
+  border-radius: 0.5rem;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
-.card-shadow:hover {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+.card-product:hover {
   transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-/* Scrollbar personalizado estilo FinanceHub */
+/* Badges con colores exactos */
+.badge-purple {
+  background: #8b5cf6;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-orange {
+  background: #f59e0b;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Rating stars - Amarillo exacto */
+.star-filled {
+  color: #f59e0b;
+  fill: #f59e0b;
+}
+
+.star-empty {
+  color: #e2e8f0;
+}
+
+/* Input de búsqueda */
+.search-input {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 2rem;
+  padding: 0.75rem 1.5rem;
+  width: 100%;
+  max-width: 400px;
+  transition: all 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #00d4aa;
+  box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.1);
+}
+
+/* Texto en el hero/header */
+.hero-title {
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 2.5rem;
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  color: #cbd5e1;
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+/* Scrollbar personalizado */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -199,59 +290,31 @@ body {
 
 ::-webkit-scrollbar-track {
   background: #f1f5f9;
-  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #10b981;
+  background: #00d4aa;
   border-radius: 4px;
-  transition: background 0.3s;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #059669;
+  background: #00b894;
 }
 
-/* Para dark mode */
-.dark ::-webkit-scrollbar-track {
-  background: #1e293b;
+/* Secciones con fondo gris */
+.section-gray {
+  background: #f8f9fb;
 }
 
-.dark ::-webkit-scrollbar-thumb {
-  background: #10b981;
+/* Gradiente para textos especiales */
+.text-gradient {
+  background: linear-gradient(135deg, #00d4aa 0%, #10b981 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-/* Badges y Tags */
-.badge-success {
-  background: #10b981;
-  color: white;
-}
-
-.badge-warning {
-  background: #f59e0b;
-  color: white;
-}
-
-.badge-info {
-  background: #3b82f6;
-  color: white;
-}
-
-/* Rating stars color */
-.star-rating {
-  color: #f59e0b;
-}
-
-/* Gradientes para elementos especiales */
-.gradient-primary {
-  background: linear-gradient(135deg, #1e293b 0%, #10b981 100%);
-}
-
-.gradient-accent {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-}
-
-/* Animaciones suaves */
+/* Animaciones */
 @layer utilities {
   .animate-fade-in {
     animation: fadeIn 0.5s ease-in-out;
@@ -262,12 +325,8 @@ body {
   }
   
   @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
   
   @keyframes slideUp {
@@ -280,4 +339,13 @@ body {
       opacity: 1;
     }
   }
+}
+
+/* Asegurar que el header y footer usen el azul oscuro */
+header {
+  background: #1e293b !important;
+}
+
+footer {
+  background: #1e293b !important;
 }
