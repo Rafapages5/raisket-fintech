@@ -10,21 +10,40 @@ interface IndividualProductsPageProps {
   };
 }
 
+// Mapeo de categorías en inglés a español para la metadata y títulos
+const categoryMap: { [key: string]: string } = {
+  all: 'Todos',
+  credit: 'Crédito',
+  financing: 'Financiamiento',
+  investment: 'Inversión',
+  insurance: 'Seguros',
+};
+
+// Función para obtener el nombre de la categoría en español
+const getSpanishCategoryName = (categoryKey: string): string => {
+  return categoryMap[categoryKey.toLowerCase()] || categoryKey;
+};
+
+
 export async function generateMetadata({ params }: IndividualProductsPageProps): Promise<Metadata> {
-  const category = params.category.charAt(0).toUpperCase() + params.category.slice(1);
-  const title = category === 'All' ? 'All Personal Financial Products' : `${category} Products for Individuals`;
+  const categoryKey = params.category.toLowerCase();
+  const categoryName = getSpanishCategoryName(categoryKey);
+  const title = categoryKey === 'all' ? 'Todos los Productos Financieros Personales' : `Productos de ${categoryName} para Personas`;
+  
   return {
     title: `${title} | Raisket`,
-    description: `Browse ${category.toLowerCase()} financial products tailored for individuals on Raisket.`,
+    description: `Explora productos financieros de ${categoryName.toLowerCase()} diseñados para personas en Raisket.`,
   };
 }
 
 export default async function IndividualProductsPage({ params }: IndividualProductsPageProps) {
-  const currentCategory = params.category as ProductCategory | 'all';
+  const currentCategoryKey = params.category.toLowerCase();
+  const currentCategoryName = getSpanishCategoryName(currentCategoryKey) as ProductCategory | 'Todos';
 
   const products = mockProducts.filter((product) => {
     const segmentMatch = product.segment === 'Individual';
-    const categoryMatch = currentCategory === 'all' || product.category.toLowerCase() === currentCategory.toLowerCase();
+    // Compara con el nombre de la categoría en inglés o si es 'all'
+    const categoryMatch = currentCategoryKey === 'all' || product.category.toLowerCase() === currentCategoryKey;
     return segmentMatch && categoryMatch;
   });
 
@@ -32,8 +51,9 @@ export default async function IndividualProductsPage({ params }: IndividualProdu
 }
 
 export async function generateStaticParams() {
-  const categories: ProductCategory[] = ["All", "Credit", "Financing", "Investment", "Insurance"];
+  // Usamos las claves en inglés para generar las rutas estáticas
+  const categories: string[] = ["all", "credit", "financing", "investment", "insurance"];
   return categories.map((category) => ({
-    category: category.toLowerCase(),
+    category: category,
   }));
 }
