@@ -15,11 +15,11 @@ import { Lightbulb, Loader2 } from 'lucide-react';
 import type { FinancialProfile } from '@/ai/flows/generate-financial-product-recommendations';
 
 const recommendationFormSchema = z.object({
-  income: z.coerce.number().min(0, "Income must be positive.").positive("Income must be a positive number."),
-  creditScore: z.coerce.number().min(300, "Credit score must be at least 300.").max(850, "Credit score cannot exceed 850."),
-  financialGoals: z.string().min(10, "Please describe your financial goals in at least 10 characters.").max(500, "Financial goals cannot exceed 500 characters."),
-  riskTolerance: z.enum(['low', 'medium', 'high'], { required_error: "Please select your risk tolerance." }),
-  age: z.coerce.number().min(18, "Age must be at least 18.").max(100, "Age cannot exceed 100.").int(),
+  income: z.coerce.number().min(0, "Los ingresos deben ser positivos.").positive("Los ingresos deben ser un número positivo."),
+  creditScore: z.coerce.number().min(300, "La puntuación crediticia debe ser al menos 300.").max(850, "La puntuación crediticia no puede exceder 850."),
+  financialGoals: z.string().min(10, "Por favor describe tus objetivos financieros en al menos 10 caracteres.").max(500, "Los objetivos financieros no pueden exceder 500 caracteres."),
+  riskTolerance: z.enum(['low', 'medium', 'high'], { required_error: "Por favor selecciona tu tolerancia al riesgo." }),
+  age: z.coerce.number().min(18, "La edad debe ser al menos 18.").max(100, "La edad no puede exceder 100.").int(),
   isBusiness: z.boolean().default(false),
 });
 
@@ -52,9 +52,9 @@ export default function RecommendationForm({ onSubmit, isLoading }: Recommendati
       <CardHeader>
         <div className="flex items-center space-x-3 mb-2">
           <Lightbulb className="h-8 w-8 text-primary" />
-          <CardTitle className="font-headline text-2xl text-primary">Get Personalized Recommendations</CardTitle>
+          <CardTitle className="font-headline text-2xl text-primary">Obtén Recomendaciones Personalizadas</CardTitle>
         </div>
-        <CardDescription>Tell us about your financial situation and goals, and we'll suggest suitable products.</CardDescription>
+        <CardDescription>Cuéntanos sobre tu situación financiera y objetivos, y te sugeriremos productos adecuados.</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -65,9 +65,9 @@ export default function RecommendationForm({ onSubmit, isLoading }: Recommendati
                 name="income"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Annual Income ($)</FormLabel>
+                    <FormLabel>Ingresos Anuales ($)</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="e.g., 60000" {...field} />
+                      <Input type="number" placeholder="ej., 60000" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -78,9 +78,9 @@ export default function RecommendationForm({ onSubmit, isLoading }: Recommendati
                 name="creditScore"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Credit Score (300-850)</FormLabel>
+                    <FormLabel>Puntuación Crediticia (300-850)</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="e.g., 720" {...field} />
+                      <Input type="number" placeholder="ej., 720" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -93,9 +93,9 @@ export default function RecommendationForm({ onSubmit, isLoading }: Recommendati
               name="financialGoals"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Financial Goals</FormLabel>
+                  <FormLabel>Objetivos Financieros</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="e.g., Save for a house, invest for retirement, start a business..." {...field} rows={4}/>
+                    <Textarea placeholder="ej., Ahorrar para una casa, invertir para el retiro, iniciar un negocio..." {...field} rows={4}/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -108,17 +108,17 @@ export default function RecommendationForm({ onSubmit, isLoading }: Recommendati
                 name="riskTolerance"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Risk Tolerance</FormLabel>
+                    <FormLabel>Tolerancia al Riesgo</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select your risk tolerance" />
+                          <SelectValue placeholder="Selecciona tu tolerancia al riesgo" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="low">Low</SelectItem>
-                        <SelectItem value="medium">Medium</SelectItem>
-                        <SelectItem value="high">High</SelectItem>
+                        <SelectItem value="low">Baja</SelectItem>
+                        <SelectItem value="medium">Media</SelectItem>
+                        <SelectItem value="high">Alta</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -130,9 +130,9 @@ export default function RecommendationForm({ onSubmit, isLoading }: Recommendati
                 name="age"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Age</FormLabel>
+                    <FormLabel>Edad</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="e.g., 35" {...field} />
+                      <Input type="number" placeholder="ej., 35" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -153,10 +153,10 @@ export default function RecommendationForm({ onSubmit, isLoading }: Recommendati
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormLabel>
-                      Is this for a business?
+                      ¿Es esto para un negocio?
                     </FormLabel>
                     <FormDescription>
-                      Check this box if these recommendations are for a business entity.
+                      Marca esta casilla si estas recomendaciones son para una entidad empresarial.
                     </FormDescription>
                   </div>
                 </FormItem>
@@ -167,10 +167,10 @@ export default function RecommendationForm({ onSubmit, isLoading }: Recommendati
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Getting Recommendations...
+                  Obteniendo Recomendaciones...
                 </>
               ) : (
-                'Find Products'
+                'Encontrar Productos'
               )}
             </Button>
           </form>
