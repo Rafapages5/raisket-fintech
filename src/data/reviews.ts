@@ -2,16 +2,16 @@
 import type { Review } from '@/types';
 
 export const mockReviews: Review[] = [
-  // Reviews for ind-credit-001 (Platinum Rewards Card)
+  // Reseñas para ind-credit-001 (Tarjeta Platinum Rewards)
   {
     id: 'review-001',
     productId: 'ind-credit-001',
     userName: 'Alice Wonderland',
     avatarUrl: 'https://placehold.co/40x40.png?text=AW',
     rating: 5,
-    comment: 'Absolutely love this card! The travel points are amazing and customer service is top-notch. Highly recommend for frequent travelers.',
+    comment: '¡Me encanta absolutamente esta tarjeta! Los puntos de viaje son increíbles y el servicio al cliente es de primera clase. Muy recomendada para viajeros frecuentes.',
     date: '2024-07-15T10:00:00Z',
-    title: 'Best Travel Rewards Card!',
+    title: '¡La Mejor Tarjeta de Recompensas de Viaje!',
   },
   {
     id: 'review-002',
@@ -19,20 +19,20 @@ export const mockReviews: Review[] = [
     userName: 'Bob The Builder',
     avatarUrl: 'https://placehold.co/40x40.png?text=BB',
     rating: 4,
-    comment: 'Good rewards program, especially for dining. The annual fee is a bit high, but the benefits outweigh it if you use them.',
+    comment: 'Buen programa de recompensas, especialmente para restaurantes. La cuota anual es un poco alta, pero los beneficios la compensan si los usas.',
     date: '2024-07-10T14:30:00Z',
-    title: 'Solid Card with Great Perks',
+    title: 'Tarjeta Sólida con Grandes Beneficios',
   },
-  // Reviews for ind-finance-001 (Personal Flex Loan)
+  // Reseñas para ind-finance-001 (Préstamo Personal Flex)
   {
     id: 'review-003',
     productId: 'ind-finance-001',
     userName: 'Charlie Brown',
     avatarUrl: 'https://placehold.co/40x40.png?text=CB',
     rating: 5,
-    comment: 'The loan application process was smooth and I got approved quickly. The flexible terms really helped me manage my finances better.',
+    comment: 'El proceso de solicitud del préstamo fue fluido y me aprobaron rápidamente. Los términos flexibles realmente me ayudaron a manejar mejor mis finanzas.',
     date: '2024-06-20T09:15:00Z',
-    title: 'Excellent Loan Service',
+    title: 'Excelente Servicio de Préstamos',
   },
   {
     id: 'review-004',
@@ -40,20 +40,20 @@ export const mockReviews: Review[] = [
     userName: 'Diana Prince',
     avatarUrl: 'https://placehold.co/40x40.png?text=DP',
     rating: 4,
-    comment: 'Competitive rates and good customer support. The online portal is easy to use for managing payments.',
+    comment: 'Tasas competitivas y buen soporte al cliente. El portal en línea es fácil de usar para gestionar los pagos.',
     date: '2024-06-18T11:00:00Z',
-    title: 'Good, Reliable Loan Option',
+    title: 'Buena y Confiable Opción de Préstamo',
   },
-  // Reviews for biz-credit-001 (Business Pro Rewards Card)
+  // Reseñas para biz-credit-001 (Tarjeta Business Pro Rewards)
   {
     id: 'review-005',
     productId: 'biz-credit-001',
     userName: 'Stark Industries',
     avatarUrl: 'https://placehold.co/40x40.png?text=SI',
     rating: 5,
-    comment: 'This card has been a game-changer for our business expenses. The cashback on office supplies is fantastic and the accounting integration saves us a lot of time.',
+    comment: 'Esta tarjeta ha sido un cambio revolucionario para nuestros gastos empresariales. El cashback en suministros de oficina es fantástico y la integración contable nos ahorra mucho tiempo.',
     date: '2024-07-01T16:00:00Z',
-    title: 'Perfect for Business Spending!',
+    title: '¡Perfecta para Gastos Empresariales!',
   },
   {
     id: 'review-006',
@@ -61,20 +61,20 @@ export const mockReviews: Review[] = [
     userName: 'Wayne Enterprises',
     avatarUrl: 'https://placehold.co/40x40.png?text=WE',
     rating: 4,
-    comment: 'Solid rewards and the employee card feature is very useful. The annual fee is reasonable for the benefits provided.',
+    comment: 'Recompensas sólidas y la función de tarjetas para empleados es muy útil. La cuota anual es razonable para los beneficios proporcionados.',
     date: '2024-06-25T12:00:00Z',
-    title: 'Great Business Card',
+    title: 'Excelente Tarjeta Empresarial',
   },
-  // Add more reviews for other products as needed
+  // Agregar más reseñas para otros productos según sea necesario
   {
     id: 'review-007',
     productId: 'ind-invest-001',
     userName: 'Eva Green',
     avatarUrl: 'https://placehold.co/40x40.png?text=EG',
     rating: 5,
-    comment: 'Setting up my investment portfolio was incredibly easy. I love the automated rebalancing and the low fees. Watching my investments grow!',
+    comment: 'Configurar mi portafolio de inversión fue increíblemente fácil. Me encanta el rebalanceo automatizado y las tarifas bajas. ¡Viendo crecer mis inversiones!',
     date: '2024-05-10T08:20:00Z',
-    title: 'Effortless Investing!',
+    title: '¡Inversión Sin Esfuerzo!',
   },
   {
     id: 'review-008',
@@ -82,9 +82,9 @@ export const mockReviews: Review[] = [
     userName: 'Frank Castle',
     avatarUrl: 'https://placehold.co/40x40.png?text=FC',
     rating: 5,
-    comment: 'Getting life insurance was straightforward and affordable. Gives me peace of mind knowing my family is protected.',
+    comment: 'Obtener un seguro de vida fue sencillo y asequible. Me da tranquilidad saber que mi familia está protegida.',
     date: '2024-04-22T17:45:00Z',
-    title: 'Peace of Mind Secured',
+    title: 'Tranquilidad Asegurada',
   },
   {
     id: 'review-009',
@@ -92,9 +92,9 @@ export const mockReviews: Review[] = [
     userName: 'Innovate Solutions Ltd.',
     avatarUrl: 'https://placehold.co/40x40.png?text=IS',
     rating: 4,
-    comment: 'The Growth Capital Loan helped us expand our operations significantly. The dedicated advisor was very helpful throughout the process.',
+    comment: 'El Préstamo de Capital de Crecimiento nos ayudó a expandir nuestras operaciones significativamente. El asesor dedicado fue muy útil durante todo el proceso.',
     date: '2024-03-15T11:30:00Z',
-    title: 'Fueled Our Expansion',
+    title: 'Impulsó Nuestra Expansión',
   },
   {
     id: 'review-010',
@@ -102,8 +102,8 @@ export const mockReviews: Review[] = [
     userName: 'Construct Co.',
     avatarUrl: 'https://placehold.co/40x40.png?text=CC',
     rating: 5,
-    comment: 'Comprehensive coverage that meets all our business needs. The team was great at customizing the policy for us.',
+    comment: 'Cobertura integral que satisface todas nuestras necesidades empresariales. El equipo fue excelente personalizando la póliza para nosotros.',
     date: '2024-02-28T13:00:00Z',
-    title: 'Top-Tier Business Insurance',
+    title: 'Seguro Empresarial de Primera Categoría',
   },
 ];
