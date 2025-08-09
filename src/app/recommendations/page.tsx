@@ -24,7 +24,7 @@ export default function RecommendationsPage() {
       setRecommendations(result);
     } catch (e) {
       console.error(e);
-      setError("Failed to generate recommendations. Please try again.");
+      setError("Error al generar recomendaciones. Por favor intenta de nuevo.");
     } finally {
       setIsLoading(false);
     }
@@ -100,23 +100,23 @@ export default function RecommendationsPage() {
           <CardHeader>
             <div className="flex items-center space-x-3 mb-2">
               <CheckCircle className="h-8 w-8 text-green-500" />
-              <CardTitle className="font-headline text-2xl text-primary">Your Personalized Recommendations</CardTitle>
+              <CardTitle className="font-headline text-2xl text-primary">Tus Recomendaciones Personalizadas</CardTitle>
             </div>
-            <CardDescription>Based on your profile, here are some financial products that might suit your needs.</CardDescription>
+            <CardDescription>Basado en tu perfil, aquí tienes algunos productos financieros que podrían adaptarse a tus necesidades.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
-              <ProductList title="Credit Products" products={recommendations.creditProducts} icon={ShoppingBag} />
-              <ProductList title="Financing Products" products={recommendations.financingProducts} icon={Briefcase}/>
-              <ProductList title="Investment Products" products={recommendations.investmentProducts} icon={BarChart3} />
-              <ProductList title="Insurance Products" products={recommendations.insuranceProducts} icon={ShieldCheck}/>
+              <ProductList title="Productos de Crédito" products={recommendations.creditProducts} icon={ShoppingBag} />
+              <ProductList title="Productos de Financiamiento" products={recommendations.financingProducts} icon={Briefcase}/>
+              <ProductList title="Productos de Inversión" products={recommendations.investmentProducts} icon={BarChart3} />
+              <ProductList title="Productos de Seguro" products={recommendations.insuranceProducts} icon={ShieldCheck}/>
             </div>
             
             <Separator />
 
             <div>
               <h3 className="text-xl font-semibold text-primary mb-3 flex items-center">
-                <MessageSquare className="h-5 w-5 mr-2"/> AI Reasoning
+                <MessageSquare className="h-5 w-5 mr-2"/> Razonamiento de IA
               </h3>
               <p className="text-foreground/80 whitespace-pre-line bg-muted/50 p-4 rounded-md">{recommendations.reasoning}</p>
             </div>
