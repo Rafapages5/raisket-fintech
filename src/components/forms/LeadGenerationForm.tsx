@@ -14,9 +14,9 @@ import { FileText, Loader2 } from 'lucide-react';
 import type { GenerateLandingPageOfferInput } from '@/ai/flows/generate-landing-page-prompt';
 
 const leadGenFormSchema = z.object({
-  segment: z.enum(['Individual', 'Business'], { required_error: "Please select a segment." }),
-  productType: z.string().min(3, "Product type must be at least 3 characters.").max(100, "Product type cannot exceed 100 characters."),
-  needs: z.string().min(10, "Please describe your needs in at least 10 characters.").max(500, "Needs description cannot exceed 500 characters."),
+  segment: z.enum(['Individual', 'Business'], { required_error: "Por favor selecciona un segmento." }),
+  productType: z.string().min(3, "El tipo de producto debe tener al menos 3 caracteres.").max(100, "El tipo de producto no puede exceder 100 caracteres."),
+  needs: z.string().min(10, "Por favor describe tus necesidades en al menos 10 caracteres.").max(500, "La descripción de necesidades no puede exceder 500 caracteres."),
 });
 
 type LeadGenFormData = z.infer<typeof leadGenFormSchema>;
@@ -45,9 +45,9 @@ export default function LeadGenerationForm({ onSubmit, isLoading }: LeadGenerati
       <CardHeader>
         <div className="flex items-center space-x-3 mb-2">
           <FileText className="h-8 w-8 text-primary" />
-          <CardTitle className="font-headline text-2xl text-primary">Find a Personalized Offer</CardTitle>
+          <CardTitle className="font-headline text-2xl text-primary">Encuentra una Oferta Personalizada</CardTitle>
         </div>
-        <CardDescription>Describe your requirements, and we'll help you find a tailored financial product offer.</CardDescription>
+        <CardDescription>Describe tus requisitos y te ayudaremos a encontrar una oferta de producto financiero a tu medida.</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -57,11 +57,11 @@ export default function LeadGenerationForm({ onSubmit, isLoading }: LeadGenerati
               name="segment"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Segment</FormLabel>
+                  <FormLabel>Segmento</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select a segment (Individual or Business)" />
+                        <SelectValue placeholder="Selecciona un segmento (Individual o Business)" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -79,11 +79,11 @@ export default function LeadGenerationForm({ onSubmit, isLoading }: LeadGenerati
               name="productType"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Product Type</FormLabel>
+                  <FormLabel>Tipo de Producto</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Mortgage, Business Loan, Travel Insurance" {...field} />
+                    <Input placeholder="ej., Hipoteca, Préstamo Empresarial, Seguro de Viaje" {...field} />
                   </FormControl>
-                  <FormDescription>What kind of financial product are you looking for?</FormDescription>
+                  <FormDescription>¿Qué tipo de producto financiero estás buscando?</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -94,9 +94,9 @@ export default function LeadGenerationForm({ onSubmit, isLoading }: LeadGenerati
               name="needs"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Specific Needs & Requirements</FormLabel>
+                  <FormLabel>Necesidades y Requisitos Específicos</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="e.g., Need a loan for home renovation, looking for low-interest business credit line..." {...field} rows={4} />
+                    <Textarea placeholder="ej., Necesito un préstamo para renovación de casa, busco una línea de crédito empresarial con bajo interés..." {...field} rows={4} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -107,10 +107,10 @@ export default function LeadGenerationForm({ onSubmit, isLoading }: LeadGenerati
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Generating Offer...
+                  Generando Oferta...
                 </>
               ) : (
-                'Find My Offer'
+                'Encontrar Mi Oferta'
               )}
             </Button>
           </form>
