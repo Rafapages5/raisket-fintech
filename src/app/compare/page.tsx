@@ -18,10 +18,10 @@ export default function ComparePage() {
     return (
       <div className="text-center py-16">
         <Scale className="h-24 w-24 mx-auto text-muted-foreground mb-6" />
-        <h1 className="font-headline text-3xl text-primary mb-4">Product Comparison</h1>
-        <p className="text-lg text-muted-foreground mb-6">You haven't added any products to compare yet.</p>
+        <h1 className="font-headline text-3xl text-primary mb-4">Comparación de Productos</h1>
+        <p className="text-lg text-muted-foreground mb-6">Aún no has agregado ningún producto para comparar.</p>
         <Button asChild>
-          <Link href="/individuals/all">Browse Products</Link>
+          <Link href="/individuals/all">Explorar Productos</Link>
         </Button>
       </div>
     );
@@ -29,17 +29,17 @@ export default function ComparePage() {
 
   // Define which fields to display in the comparison table.
   const comparisonFields: Array<{ label: string; key: keyof FinancialProduct | ((p: FinancialProduct) => React.ReactNode) }> = [
-    { label: 'Provider', key: 'provider' },
-    { label: 'Category', key: 'category' },
-    { label: 'Segment', key: 'segment' },
-    { label: 'Interest Rate', key: 'interestRate' },
-    { label: 'Fees', key: 'fees' },
-    { label: 'Loan Term', key: 'loanTerm' },
-    { label: 'Max Loan Amount', key: 'maxLoanAmount' },
-    { label: 'Min. Investment', key: 'minInvestment' },
-    { label: 'Coverage Amount', key: 'coverageAmount' },
+    { label: 'Proveedor', key: 'provider' },
+    { label: 'Categoría', key: 'category' },
+    { label: 'Segmento', key: 'segment' },
+    { label: 'Tasa de Interés', key: 'interestRate' },
+    { label: 'Tarifas', key: 'fees' },
+    { label: 'Plazo del Préstamo', key: 'loanTerm' },
+    { label: 'Monto Máximo del Préstamo', key: 'maxLoanAmount' },
+    { label: 'Inversión Mínima', key: 'minInvestment' },
+    { label: 'Monto de Cobertura', key: 'coverageAmount' },
     { 
-      label: 'Eligibility', 
+      label: 'Elegibilidad', 
       key: (p) => p.eligibility && p.eligibility.length > 0 ? (
         <ul className="list-disc list-inside text-xs">
           {p.eligibility.map((item, i) => <li key={i}>{item}</li>)}
@@ -47,11 +47,11 @@ export default function ComparePage() {
       ) : <span className="text-muted-foreground/70">-</span>
     },
     { 
-      label: 'Features', 
+      label: 'Características', 
       key: (p) => p.features && p.features.length > 0 ? (
         <ul className="list-disc list-inside text-xs">
           {p.features.slice(0, 5).map((item, i) => <li key={i}>{item}</li>)} {/* Show first 5 features */}
-          {p.features.length > 5 && <li>...and more</li>}
+          {p.features.length > 5 && <li>...y más</li>}
         </ul>
       ) : <span className="text-muted-foreground/70">-</span>
     },
@@ -60,10 +60,10 @@ export default function ComparePage() {
   return (
     <div className="space-y-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 className="font-headline text-3xl md:text-4xl text-primary">Compare Products ({compareItems.length})</h1>
+        <h1 className="font-headline text-3xl md:text-4xl text-primary">Comparar Productos ({compareItems.length})</h1>
         {compareItems.length > 0 && (
           <Button variant="destructive" onClick={clearCompare} size="sm">
-            <Trash2 className="mr-2 h-4 w-4" /> Clear All
+            <Trash2 className="mr-2 h-4 w-4" /> Limpiar Todo
           </Button>
         )}
       </div>
@@ -72,14 +72,14 @@ export default function ComparePage() {
         <Card className="border-accent bg-accent/10">
           <CardHeader className="flex flex-row items-center space-x-3">
             <Info className="h-6 w-6 text-accent" />
-            <CardTitle className="text-accent">Add More Products</CardTitle>
+            <CardTitle className="text-accent">Agregar Más Productos</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-accent/80">
-              Add at least one more product to see a side-by-side comparison.
+              Agrega al menos un producto más para ver una comparación lado a lado.
             </p>
             <Button asChild variant="link" className="p-0 h-auto text-accent hover:underline">
-              <Link href="/individuals/all">Continue Browsing Products</Link>
+              <Link href="/individuals/all">Continuar Explorando Productos</Link>
             </Button>
           </CardContent>
         </Card>
@@ -89,7 +89,7 @@ export default function ComparePage() {
         <Table className="min-w-max lg:min-w-full border">
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[200px] sticky left-0 bg-card z-10 border-r">Feature</TableHead>
+              <TableHead className="w-[200px] sticky left-0 bg-card z-10 border-r">Característica</TableHead>
               {compareItems.map(product => (
                 <TableHead key={product.id} className="min-w-[250px] border-l">
                   <div className="flex flex-col items-center text-center">
@@ -111,7 +111,7 @@ export default function ComparePage() {
                       <span className="ml-1">({product.reviewCount})</span>
                     </div>
                     <Button variant="ghost" size="sm" onClick={() => removeFromCompare(product.id)} className="text-destructive hover:text-destructive/80 h-auto p-1 text-xs">
-                      <XCircle className="mr-1 h-3 w-3" /> Remove
+                      <XCircle className="mr-1 h-3 w-3" /> Quitar
                     </Button>
                   </div>
                 </TableHead>
@@ -146,11 +146,11 @@ export default function ComparePage() {
               );
             })}
             <TableRow>
-              <TableCell className="font-medium sticky left-0 bg-card z-10 border-r">Actions</TableCell>
+              <TableCell className="font-medium sticky left-0 bg-card z-10 border-r">Acciones</TableCell>
               {compareItems.map(product => (
                 <TableCell key={product.id} className="text-center border-l">
                   <Button asChild size="sm">
-                    <Link href={`/products/${product.id}`}>View Details</Link>
+                    <Link href={`/products/${product.id}`}>Ver Detalles</Link>
                   </Button>
                 </TableCell>
               ))}
