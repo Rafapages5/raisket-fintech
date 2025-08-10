@@ -9,39 +9,39 @@ import { useCompare } from '@/contexts/CompareContext';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
-const elementosNavegacion = [
-  { href: '/individuals/all', etiqueta: 'Para Personas', icono: Users },
-  { href: '/businesses/all', etiqueta: 'Para Empresas', icono: Briefcase },
-  { href: '/recommendations', etiqueta: 'Recomendaciones', icono: Lightbulb },
-  { href: '/personalized-offer', etiqueta: 'Oferta Personalizada', icono: FileText },
-  { href: '/compare', etiqueta: 'Comparar', icono: Scale, especial: true },
+const navItems = [
+  { href: '/individuals/all', label: 'Para Personas', icon: Users },
+  { href: '/businesses/all', label: 'Para Empresas', icon: Briefcase },
+  { href: '/recommendations', label: 'Recomendaciones', icon: Lightbulb },
+  { href: '/personalized-offer', label: 'Oferta Personalizada', icon: FileText },
+  { href: '/compare', label: 'Comparar', icon: Scale, special: true },
 ];
 
-export default function Encabezado() {
-  const { elementosComparar } = useCompare();
-  const rutaActual = usePathname();
+export default function Header() {
+  const { compareItems } = useCompare();
+  const pathname = usePathname();
 
-  const EnlacesNavegacion = ({esMobil = false}: {esMobil?: boolean}) => (
+  const NavLinks = ({isMobile = false}: {isMobile?: boolean}) => (
     <>
-      {elementosNavegacion.map((elemento) => {
-        const estaActivo = rutaActual === elemento.href || (elemento.href !== '/' && rutaActual.startsWith(elemento.href)) || (elemento.href.endsWith('/all') && rutaActual.startsWith(elemento.href.replace('/all', '')));
-        if (elemento.especial && elemento.etiqueta === 'Comparar') {
+      {navItems.map((item) => {
+        const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href)) || (item.href.endsWith('/all') && pathname.startsWith(item.href.replace('/all', '')));
+        if (item.special && item.label === 'Comparar') {
           return (
-            <Link key={elemento.href} href={elemento.href} passHref legacyBehavior>
+            <Link key={item.href} href={item.href} passHref legacyBehavior>
               <Button
                 variant="ghost"
                 className={cn(
                   "relative text-white hover:text-[#00d4aa] hover:bg-white/10 transition-all duration-200",
-                  esMobil ? "justify-start w-full text-base py-3" : "text-sm",
-                  estaActivo && "text-[#00d4aa] bg-white/10 font-semibold"
+                  isMobile ? "justify-start w-full text-base py-3" : "text-sm",
+                  isActive && "text-[#00d4aa] bg-white/10 font-semibold"
                 )}
-                aria-current={estaActivo ? "page" : undefined}
+                aria-current={isActive ? "page" : undefined}
               >
-                <elemento.icono className="mr-2 h-4 w-4" />
-                {elemento.etiqueta}
-                {elementosComparar.length > 0 && (
+                <item.icon className="mr-2 h-4 w-4" />
+                {item.label}
+                {compareItems.length > 0 && (
                   <span className="absolute top-1 right-1 md:top-1.5 md:right-1.5 bg-[#00d4aa] text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                    {elementosComparar.length}
+                    {compareItems.length}
                   </span>
                 )}
               </Button>
@@ -49,18 +49,18 @@ export default function Encabezado() {
           );
         }
         return (
-          <Link key={elemento.href} href={elemento.href} passHref legacyBehavior>
+          <Link key={item.href} href={item.href} passHref legacyBehavior>
             <Button
               variant="ghost"
               className={cn(
                 "text-white hover:text-[#00d4aa] hover:bg-white/10 transition-all duration-200",
-                esMobil ? "justify-start w-full text-base py-3" : "text-sm",
-                estaActivo && "text-[#00d4aa] bg-white/10 font-semibold"
+                isMobile ? "justify-start w-full text-base py-3" : "text-sm",
+                isActive && "text-[#00d4aa] bg-white/10 font-semibold"
               )}
-              aria-current={estaActivo ? "page" : undefined}
+              aria-current={isActive ? "page" : undefined}
             >
-              <elemento.icono className="mr-2 h-4 w-4" />
-              {elemento.etiqueta}
+              <item.icon className="mr-2 h-4 w-4" />
+              {item.label}
             </Button>
           </Link>
         );
@@ -75,7 +75,7 @@ export default function Encabezado() {
           Raisket
         </Link>
         <nav className="hidden md:flex space-x-2 items-center">
-          <EnlacesNavegacion />
+          <NavLinks />
         </nav>
         <div className="md:hidden">
           <Sheet>
@@ -91,7 +91,7 @@ export default function Encabezado() {
                   </Link>
               </div>
               <nav className="flex flex-col space-y-2 p-4">
-                <EnlacesNavegacion esMobil={true}/>
+                <NavLinks isMobile={true}/>
               </nav>
             </SheetContent>
           </Sheet>
