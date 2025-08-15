@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Importar fuentes según tu jerarquía tipográfica */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700&display=swap');
+
 body {
   font-family: 'Lato', sans-serif;
   font-weight: 400;
@@ -346,24 +350,47 @@ footer {
   background: #1e293b !important;
 }
 
-/* Blog Styles */
+/* ESTILOS PARA BLOG */
+
+/* Contenido de artículos con Prose mejorado */
 .prose {
-  font-family: system-ui, sans-serif;
+  font-family: 'Lato', sans-serif;
   color: #374151;
   line-height: 1.75;
 }
 
-.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  font-family: 'Montserrat', sans-serif;
   font-weight: 700;
   color: #1e293b;
   margin-top: 2rem;
   margin-bottom: 1rem;
 }
 
-.prose h1 { font-size: 2.25rem; font-weight: 800; }
-.prose h2 { font-size: 1.875rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; }
-.prose h3 { font-size: 1.5rem; color: #00d4aa; }
-.prose h4 { font-size: 1.25rem; }
+.prose h1 {
+  font-size: 2.25rem;
+  font-weight: 800;
+}
+
+.prose h2 {
+  font-size: 1.875rem;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+}
+
+.prose h3 {
+  font-size: 1.5rem;
+  color: #00d4aa;
+}
+
+.prose h4 {
+  font-size: 1.25rem;
+}
 
 .prose p {
   margin-bottom: 1.5rem;
@@ -383,7 +410,8 @@ footer {
   text-decoration: underline;
 }
 
-.prose ul, .prose ol {
+.prose ul,
+.prose ol {
   margin: 1.5rem 0;
   padding-left: 2rem;
 }
@@ -391,4 +419,145 @@ footer {
 .prose li {
   margin: 0.5rem 0;
   font-size: 1.125rem;
+}
+
+.prose blockquote {
+  border-left: 4px solid #00d4aa;
+  margin: 2rem 0;
+  padding: 1rem 2rem;
+  background: #f8f9fb;
+  font-style: italic;
+  color: #64748b;
+}
+
+.prose code {
+  background: #f1f5f9;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  color: #1e293b;
+  font-weight: 500;
+}
+
+.prose pre {
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 2rem 0;
+}
+
+.prose pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+/* Cards de blog con hover especial */
+.blog-card {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 1px solid #f1f5f9;
+}
+
+.blog-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border-color: #00d4aa;
+}
+
+/* Tags de blog */
+.blog-tag {
+  background: linear-gradient(135deg, #00d4aa 0%, #10b981 100%);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 2rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Meta información del blog */
+.blog-meta {
+  color: #64748b;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.blog-meta svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Navegación del blog */
+.blog-nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #00d4aa;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+}
+
+.blog-nav-link:hover {
+  background: #f0fdfa;
+  color: #00b894;
+  transform: translateX(-2px);
+}
+
+/* Header del blog */
+.blog-header {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  color: white;
+  text-align: center;
+  padding: 4rem 2rem;
+  margin-bottom: 3rem;
+}
+
+.blog-header h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.blog-header p {
+  font-size: 1.25rem;
+  color: #cbd5e1;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Responsive adjustments para blog */
+@media (max-width: 768px) {
+  .prose h1 {
+    font-size: 1.875rem;
+  }
+  
+  .prose h2 {
+    font-size: 1.5rem;
+  }
+  
+  .prose p,
+  .prose li {
+    font-size: 1rem;
+  }
+  
+  .blog-header h1 {
+    font-size: 2rem;
+  }
+  
+  .blog-header p {
+    font-size: 1rem;
+  }
 }
