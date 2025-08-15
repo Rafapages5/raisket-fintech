@@ -1,0 +1,17 @@
+{
+  "node": {
+    "40278db5b247add711947c0b57778d0a61ff4cfca4": {
+      "workers": {
+        "app/recommendations/page": {
+          "moduleId": "[project]/.next-internal/server/app/recommendations/page/actions.js { ACTIONS_MODULE0 => \"[project]/src/ai/flows/generate-financial-product-recommendations.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/recommendations/page": "action-browser"
+      }
+    }
+  },
+  "edge": {},
+  "encryptionKey": "lxXTzcD1LgIq2GwFDPxRh71R/8J1H1ZUluK+VAz9wYk="
+}
