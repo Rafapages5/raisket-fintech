@@ -1,0 +1,346 @@
+"use client";
+
+import { useState } from 'react';
+import Image from 'next/image';
+import { Star, Shield, CreditCard, Users, Gift, Award, CheckCircle, Phone, Mail, MapPin, Clock, DollarSign, Percent, Calendar, FileText, Heart, Umbrella, Car, Plane } from 'lucide-react';
+
+export default function ProductDetailPage() {
+  const [activeTab, setActiveTab] = useState('overview');
+
+  const product = {
+    id: 'bbva-platinum-001',
+    name: 'Tarjeta de Crédito Platinum BBVA',
+    tagline: 'Exclusividad y beneficios premium.',
+    description: 'La tarjeta premium de BBVA con los mejores beneficios, seguros completos y acceso a experiencias exclusivas.',
+    imageUrl: 'https://placehold.co/600x400/C0C0C0/000000?text=BBVA+Platinum',
+    provider: 'BBVA México',
+    rating: 4.8,
+    reviewCount: 750,
+    cat: '36.9%',
+    creditLimit: 'Hasta $500,000 MXN'
+  };
+
+  const financialInfo = {
+    interestRate: '36.9% anual',
+    cat: '36.9%',
+    annualFee: '$3,500 MXN',
+    creditLimit: 'Hasta $500,000 MXN',
+    paymentTerm: '3-36 meses sin intereses'
+  };
+
+  const features = [
+    'Límite de crédito premium',
+    'Seguro de vida por $500,000 MXN',
+    'Acceso a salas VIP Priority Pass',
+    'Concierge personal 24/7',
+    'Seguro de viaje internacional',
+    'Protección de compras mundial',
+    'BBVA Rewards acelerado 2x puntos',
+    'Extensión de garantía automática'
+  ];
+
+  const benefits = [
+    'Máxima exclusividad',
+    'Protección integral mundial',
+    'Experiencias únicas',
+    'Servicio personalizado',
+    'Recompensas premium'
+  ];
+
+  const commissions = [
+    { concept: 'Anualidad', amount: '$3,500 MXN' },
+    { concept: 'Comisión por disposición en efectivo', amount: '3% mínimo $50 MXN' },
+    { concept: 'Comisión por pago tardío', amount: '$500 MXN' },
+    { concept: 'Comisión por exceso de límite', amount: '$500 MXN' },
+    { concept: 'Reposición de tarjeta', amount: 'Sin costo' },
+    { concept: 'Estado de cuenta adicional', amount: 'Sin costo' },
+    { concept: 'Cambio de fecha de corte', amount: 'Sin costo' }
+  ];
+
+  const insurance = [
+    { type: 'Seguro de vida', coverage: '$500,000 MXN' },
+    { type: 'Seguro de accidentes personales', coverage: '$300,000 MXN' },
+    { type: 'Seguro de viaje internacional', coverage: 'Gastos médicos hasta $100,000 USD' },
+    { type: 'Protección de compras mundial', coverage: 'Hasta $50,000 MXN por evento' },
+    { type: 'Extensión de garantía', coverage: 'Hasta 2 años adicionales' },
+    { type: 'Protección de precio', coverage: 'Reembolso diferencias hasta $5,000 MXN' }
+  ];
+
+  const requirements = [
+    'Ingresos mínimos de $50,000 MXN mensuales',
+    'Excelente historial crediticio',
+    'Edad entre 25 y 70 años',
+    'Cliente preferente BBVA',
+    'Evaluación crediticia rigurosa',
+    'Patrimonio comprobable'
+  ];
+
+  const promotions = [
+    { title: 'Welcome Bonus', description: '50,000 puntos BBVA Rewards de bienvenida' },
+    { title: 'Priority Pass gratis', description: 'Acceso ilimitado a salas VIP por 1 año' },
+    { title: 'Concierge premium', description: 'Servicio personalizado 24/7 sin costo' },
+    { title: 'Seguros premium', description: 'Cobertura completa incluida sin costo adicional' }
+  ];
+
+  const renderStars = (rating: number) => {
+    return Array.from({ length: 5 }, (_, i) => (
+      <Star
+        key={i}
+        className={`h-5 w-5 ${i < Math.round(rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
+      />
+    ));
+  };
+
+  const tabs = [
+    { id: 'overview', label: 'Información General', icon: CreditCard },
+    { id: 'benefits', label: 'Beneficios', icon: Gift },
+    { id: 'commissions', label: 'Comisiones', icon: DollarSign },
+    { id: 'insurance', label: 'Seguros', icon: Shield },
+    { id: 'requirements', label: 'Requisitos', icon: FileText }
+  ];
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-primary to-primary/80 text-white">
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div>
+              <h1 className="text-4xl font-bold mb-4">{product.name}</h1>
+              <p className="text-xl mb-4 text-primary-foreground/90">{product.tagline}</p>
+              <div className="flex items-center mb-4">
+                <div className="flex mr-4">
+                  {renderStars(product.rating)}
+                </div>
+                <span className="text-primary-foreground/80">
+                  {product.rating}/5 ({product.reviewCount.toLocaleString()} reseñas)
+                </span>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-white/10 rounded-lg p-4">
+                  <div className="text-sm text-primary-foreground/80">CAT Promedio</div>
+                  <div className="text-2xl font-bold">{product.cat}</div>
+                </div>
+                <div className="bg-white/10 rounded-lg p-4">
+                  <div className="text-sm text-primary-foreground/80">Límite de Crédito</div>
+                  <div className="text-2xl font-bold">{product.creditLimit}</div>
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-center">
+              <Image
+                src={product.imageUrl}
+                alt={product.name}
+                width={400}
+                height={250}
+                className="rounded-lg shadow-lg"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Navigation Tabs */}
+      <div className="bg-white shadow-sm sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex space-x-8 overflow-x-auto">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center space-x-2 py-4 px-2 border-b-2 whitespace-nowrap transition-colors ${
+                    activeTab === tab.id
+                      ? 'border-primary text-primary'
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  <Icon className="h-5 w-5" />
+                  <span className="font-medium">{tab.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="grid lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            {activeTab === 'overview' && (
+              <div className="space-y-6">
+                <div className="bg-white rounded-lg shadow p-6">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">Información Financiera</h2>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Tasa de Interés:</span>
+                        <span className="font-semibold">{financialInfo.interestRate}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">CAT Promedio:</span>
+                        <span className="font-semibold">{financialInfo.cat}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Anualidad:</span>
+                        <span className="font-semibold">{financialInfo.annualFee}</span>
+                      </div>
+                    </div>
+                    <div className="space-y-4">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Límite de Crédito:</span>
+                        <span className="font-semibold">{financialInfo.creditLimit}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Meses sin Intereses:</span>
+                        <span className="font-semibold">{financialInfo.paymentTerm}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow p-6">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">Características Principales</h2>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {features.map((feature, index) => (
+                      <div key={index} className="flex items-start space-x-3">
+                        <CheckCircle className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
+                        <span className="text-gray-700">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'benefits' && (
+              <div className="space-y-6">
+                <div className="bg-white rounded-lg shadow p-6">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">Beneficios Principales</h2>
+                  <div className="grid gap-4">
+                    {benefits.map((benefit, index) => (
+                      <div key={index} className="flex items-start space-x-3 p-4 bg-primary/10 rounded-lg">
+                        <Award className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
+                        <span className="text-gray-700 font-medium">{benefit}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow p-6">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">Promociones Vigentes</h2>
+                  <div className="grid gap-4">
+                    {promotions.map((promotion, index) => (
+                      <div key={index} className="border border-primary rounded-lg p-4">
+                        <h3 className="font-semibold text-primary mb-2">{promotion.title}</h3>
+                        <p className="text-gray-700">{promotion.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'commissions' && (
+              <div className="bg-white rounded-lg shadow p-6">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">Comisiones y Costos</h2>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="text-left py-3 px-4 font-semibold text-gray-900">Concepto</th>
+                        <th className="text-left py-3 px-4 font-semibold text-gray-900">Costo</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {commissions.map((commission, index) => (
+                        <tr key={index} className="border-b">
+                          <td className="py-3 px-4 text-gray-700">{commission.concept}</td>
+                          <td className="py-3 px-4 font-semibold">{commission.amount}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'insurance' && (
+              <div className="bg-white rounded-lg shadow p-6">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">Seguros Incluidos</h2>
+                <div className="grid gap-4">
+                  {insurance.map((item, index) => (
+                    <div key={index} className="flex items-start space-x-4 p-4 border border-gray-200 rounded-lg">
+                      <Shield className="h-6 w-6 text-accent mt-1 flex-shrink-0" />
+                      <div>
+                        <h3 className="font-semibold text-gray-900">{item.type}</h3>
+                        <p className="text-gray-600">{item.coverage}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'requirements' && (
+              <div className="bg-white rounded-lg shadow p-6">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">Requisitos de Elegibilidad</h2>
+                <div className="grid gap-4">
+                  {requirements.map((requirement, index) => (
+                    <div key={index} className="flex items-start space-x-3">
+                      <CheckCircle className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
+                      <span className="text-gray-700">{requirement}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            <div className="bg-white rounded-lg shadow p-6">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Solicitar Tarjeta</h3>
+              <button className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-4 rounded-lg transition-colors mb-4">
+                Solicitar Ahora
+              </button>
+              <p className="text-sm text-gray-600 text-center">
+                Evaluación crediticia rigurosa • Aprobación exclusiva
+              </p>
+            </div>
+
+            <div className="bg-white rounded-lg shadow p-6">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Información de Contacto</h3>
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <Phone className="h-5 w-5 text-primary" />
+                  <span className="text-gray-700">01 800 BBVA MX</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Clock className="h-5 w-5 text-primary" />
+                  <span className="text-gray-700">Concierge 24/7</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <MapPin className="h-5 w-5 text-primary" />
+                  <span className="text-gray-700">Atención preferente en sucursales</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-primary/10 rounded-lg p-6">
+              <h3 className="text-lg font-bold text-primary mb-2">Beneficios Platinum</h3>
+              <ul className="text-sm text-gray-700 space-y-2">
+                <li>• Priority Pass incluido</li>
+                <li>• Concierge personal 24/7</li>
+                <li>• Seguros premium completos</li>
+                <li>• Límites máximos exclusivos</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
