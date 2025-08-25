@@ -1,6 +1,6 @@
 // src/app/individuals/[category]/page.tsx
 import ProductList from '@/components/products/ProductList';
-import CategoryNav from '@/components/products/categorynav';
+import CategoryNav from '@/components/products/CategoryNav';
 import { mockProducts } from '@/data/products';
 import type { FinancialProduct, ProductCategory } from '@/types';
 import { Metadata } from 'next';
