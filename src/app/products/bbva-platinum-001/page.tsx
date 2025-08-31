@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { Star, Shield, CreditCard, Users, Gift, Award, CheckCircle, Phone, Mail, MapPin, Clock, DollarSign, Percent, Calendar, FileText, Heart, Umbrella, Car, Plane } from 'lucide-react';
+import SimpleReviewForm from '@/components/reviews/SimpleReviewForm';
 
 export default function ProductDetailPage() {
   const [activeTab, setActiveTab] = useState('overview');
@@ -301,15 +302,7 @@ export default function ProductDetailPage() {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Solicitar Tarjeta</h3>
-              <button className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-4 rounded-lg transition-colors mb-4">
-                Solicitar Ahora
-              </button>
-              <p className="text-sm text-gray-600 text-center">
-                Evaluación crediticia rigurosa • Aprobación exclusiva
-              </p>
-            </div>
+            <SimpleReviewForm productId={product.id} />
 
             <div className="bg-white rounded-lg shadow p-6">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Información de Contacto</h3>
