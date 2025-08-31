@@ -12,7 +12,6 @@ const categories = [
   { slug: 'credit', name: 'Crédito' },
   { slug: 'financing', name: 'Financiamiento' },
   { slug: 'investment', name: 'Inversión' },
-  { slug: 'insurance', name: 'Seguros' },
 ];
 
 interface CategoryNavProps {
