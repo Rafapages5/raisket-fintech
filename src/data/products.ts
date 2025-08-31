@@ -131,7 +131,7 @@ export const mockProducts: FinancialProduct[] = [
     name: 'Préstamo de Capital de Crecimiento',
     tagline: 'Impulsa la expansión de tu negocio.',
     description: 'Soluciones de financiamiento flexibles para empresas establecidas que buscan expandir operaciones, comprar equipos o aumentar capital de trabajo.',
-    category: 'Financiamiento',
+    category: 'Financing',
     segment: 'Business',
     imageUrl: 'https://placehold.co/600x400.png',
     aiHint: 'fábrica industria',
