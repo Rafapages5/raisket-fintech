@@ -32,7 +32,7 @@ export default async function BusinessProductsPage({ params }: BusinessProductsP
 }
 
 export async function generateStaticParams() {
-  const categories: ProductCategory[] = ["All", "Credit", "Financing", "Investment", "Insurance"];
+  const categories: ProductCategory[] = ["All", "Credit", "Financing", "Investment"];
   return categories.map((category) => ({
     category: category.toLowerCase(),
   }));
