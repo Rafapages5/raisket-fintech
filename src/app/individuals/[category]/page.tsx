@@ -1,5 +1,6 @@
 // src/app/individuals/[category]/page.tsx
 import ProductList from '@/components/products/ProductList';
+import CategoryNav from '@/components/products/CategoryNav';
 import { mockProducts } from '@/data/products';
 import type { FinancialProduct, ProductCategory } from '@/types';
 import { Metadata } from 'next';
@@ -46,7 +47,12 @@ export default async function IndividualProductsPage({ params }: IndividualProdu
     return segmentMatch && categoryMatch;
   });
 
-  return <ProductList products={products} />;
+  return (
+    <>
+      <CategoryNav basePath="/individuals" />
+      <ProductList products={products} />
+    </>
+  );
 }
 
 export async function generateStaticParams() {
