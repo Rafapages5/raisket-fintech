@@ -16,7 +16,6 @@ const categoryMap: { [key: string]: string } = {
   credit: 'Crédito',
   financing: 'Financiamiento',
   investment: 'Inversión',
-  insurance: 'Seguros',
 };
 
 // Función para obtener el nombre de la categoría en español
@@ -52,7 +51,7 @@ export default async function IndividualProductsPage({ params }: IndividualProdu
 
 export async function generateStaticParams() {
   // Usamos las claves en inglés para generar las rutas estáticas
-  const categories: string[] = ["all", "credit", "financing", "investment", "insurance"];
+  const categories: string[] = ["all", "credit", "financing", "investment"];
   return categories.map((category) => ({
     category: category,
   }));
