@@ -13,19 +13,33 @@ interface BusinessProductsPageProps {
 
 export async function generateMetadata({ params }: BusinessProductsPageProps): Promise<Metadata> {
   const category = params.category.charAt(0).toUpperCase() + params.category.slice(1);
-  const title = category === 'All' ? 'All Business Financial Products' : `${category} Products for Businesses`;
+  const title = category === 'All' ? 'Todos los Productos Financieros para Empresas' : `Productos de ${category} para Empresas`;
   return {
     title: `${title} | Raisket`,
     description: `Browse ${category.toLowerCase()} financial products tailored for businesses on Raisket.`,
   };
 }
 
+// Mapeo de URLs en inglés a categorías en español
+const categoryUrlMap: { [key: string]: ProductCategory } = {
+  'all': 'All',
+  'credit': 'Crédito',
+  'credito': 'Crédito',
+  'financing': 'Financiamiento',
+  'financiamiento': 'Financiamiento',
+  'investment': 'Inversión',
+  'inversion': 'Inversión',
+  'insurance': 'Seguro',
+  'seguro': 'Seguro',
+};
+
 export default async function BusinessProductsPage({ params }: BusinessProductsPageProps) {
-  const currentCategory = params.category as ProductCategory | 'all';
+  const urlCategory = params.category.toLowerCase();
+  const currentCategory = categoryUrlMap[urlCategory] || 'All';
 
   const products = mockProducts.filter((product) => {
-    const segmentMatch = product.segment === 'Business';
-    const categoryMatch = currentCategory === 'all' || product.category.toLowerCase() === currentCategory.toLowerCase();
+    const segmentMatch = product.segment === 'Empresas';
+    const categoryMatch = currentCategory === 'All' || product.category === currentCategory;
     return segmentMatch && categoryMatch;
   });
 
@@ -38,8 +52,8 @@ export default async function BusinessProductsPage({ params }: BusinessProductsP
 }
 
 export async function generateStaticParams() {
-  const categories: ProductCategory[] = ["All", "Credit", "Financing", "Investment"];
-  return categories.map((category) => ({
-    category: category.toLowerCase(),
+  const urlCategories = ["all", "credit", "financing", "investment", "insurance"];
+  return urlCategories.map((category) => ({
+    category,
   }));
 }

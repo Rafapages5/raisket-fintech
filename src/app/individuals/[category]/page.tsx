@@ -2,7 +2,7 @@
 import ProductList from '@/components/products/ProductList';
 import CategoryNav from '@/components/products/CategoryNav';
 import { mockProducts } from '@/data/products';
-import type { FinancialProduct, ProductCategory } from '@/types';
+import type { ProductCategory } from '@/types';
 import { Metadata } from 'next';
 
 interface IndividualProductsPageProps {
@@ -15,8 +15,13 @@ interface IndividualProductsPageProps {
 const categoryMap: { [key: string]: string } = {
   all: 'Todos',
   credit: 'Crédito',
+  'crédito': 'Crédito',
   financing: 'Financiamiento',
+  financiamiento: 'Financiamiento',
   investment: 'Inversión',
+  'inversión': 'Inversión',
+  insurance: 'Seguro',
+  seguro: 'Seguro',
 };
 
 // Función para obtener el nombre de la categoría en español
@@ -36,14 +41,27 @@ export async function generateMetadata({ params }: IndividualProductsPageProps):
   };
 }
 
+// Mapeo de URLs a categorías del producto
+const categoryUrlToProductMap: { [key: string]: ProductCategory } = {
+  'all': 'All',
+  'credit': 'Crédito',
+  'credito': 'Crédito',
+  'financing': 'Financiamiento',
+  'financiamiento': 'Financiamiento',
+  'investment': 'Inversión',
+  'inversion': 'Inversión',
+  'insurance': 'Seguro',
+  'seguro': 'Seguro',
+};
+
 export default async function IndividualProductsPage({ params }: IndividualProductsPageProps) {
   const currentCategoryKey = params.category.toLowerCase();
-  const currentCategoryName = getSpanishCategoryName(currentCategoryKey) as ProductCategory | 'Todos';
+  // const currentCategoryName = getSpanishCategoryName(currentCategoryKey);
+  const productCategory = categoryUrlToProductMap[currentCategoryKey] || 'All';
 
   const products = mockProducts.filter((product) => {
-    const segmentMatch = product.segment === 'Individual';
-    // Compara con el nombre de la categoría en inglés o si es 'all'
-    const categoryMatch = currentCategoryKey === 'all' || product.category.toLowerCase() === currentCategoryKey;
+    const segmentMatch = product.segment === 'Personas';
+    const categoryMatch = productCategory === 'All' || product.category === productCategory;
     return segmentMatch && categoryMatch;
   });
 
