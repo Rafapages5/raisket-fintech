@@ -14,7 +14,7 @@ import { FileText, Loader2 } from 'lucide-react';
 import type { GenerateLandingPageOfferInput } from '@/ai/flows/generate-landing-page-prompt';
 
 const leadGenFormSchema = z.object({
-  segment: z.enum(['Individual', 'Business'], { required_error: "Por favor selecciona un segmento." }),
+  segment: z.enum(['Personas', 'Empresas'], { required_error: "Por favor selecciona un segmento." }),
   productType: z.string().min(3, "El tipo de producto debe tener al menos 3 caracteres.").max(100, "El tipo de producto no puede exceder 100 caracteres."),
   needs: z.string().min(10, "Por favor describe tus necesidades en al menos 10 caracteres.").max(500, "La descripción de necesidades no puede exceder 500 caracteres."),
 });
@@ -61,12 +61,12 @@ export default function LeadGenerationForm({ onSubmit, isLoading }: LeadGenerati
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Selecciona un segmento (Individual o Business)" />
+                        <SelectValue placeholder="Selecciona un segmento (Personas o Empresas)" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="Individual">Individual</SelectItem>
-                      <SelectItem value="Business">Business</SelectItem>
+                      <SelectItem value="Personas">Personas</SelectItem>
+                      <SelectItem value="Empresas">Empresas</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />

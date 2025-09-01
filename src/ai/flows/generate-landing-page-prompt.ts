@@ -13,7 +13,7 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const GenerateLandingPageOfferInputSchema = z.object({
-  segment: z.enum(['Individual', 'Business']).describe('The segment of the user.'),
+  segment: z.enum(['Personas', 'Empresas']).describe('The segment of the user.'),
   productType: z.string().describe('The type of financial product the user is looking for.'),
   needs: z.string().describe('The specific needs and requirements of the user.'),
 });

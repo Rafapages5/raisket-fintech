@@ -44,8 +44,8 @@ export default function ProductCard({ product }: ProductCardProps) {
             data-ai-hint={product.aiHint || product.category.toLowerCase()}
           />
           <div className="absolute top-2 right-2 flex space-x-1">
-            <Badge variant={product.segment === 'Individual' ? 'secondary' : 'outline'} className="bg-opacity-80 backdrop-blur-sm">
-              {product.segment === 'Individual' ? <Users className="h-3 w-3 mr-1" /> : <Briefcase className="h-3 w-3 mr-1" />}
+            <Badge variant={product.segment === 'Personas' ? 'secondary' : 'outline'} className="bg-opacity-80 backdrop-blur-sm">
+              {product.segment === 'Personas' ? <Users className="h-3 w-3 mr-1" /> : <Briefcase className="h-3 w-3 mr-1" />}
               {product.segment}
             </Badge>
           </div>

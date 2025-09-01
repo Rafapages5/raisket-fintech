@@ -1,6 +1,6 @@
 // src/types/index.ts
-export type ProductCategory = "Credit" | "Financing" | "Investment" | "Insurance" | "All";
-export type ProductSegment = "Individual" | "Business";
+export type ProductCategory = "Crédito" | "Financiamiento" | "Inversión" | "All";
+export type ProductSegment = "Personas" | "Empresas";
 
 export interface Review {
   id: string;

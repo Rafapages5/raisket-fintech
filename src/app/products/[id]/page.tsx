@@ -78,7 +78,7 @@ export default function ProductDetailPage({ params }: { params: { id:string } })
               />
               <div className="absolute top-4 right-4 flex space-x-2">
                 <Badge variant="secondary" className="text-sm py-1 px-3 bg-opacity-80 backdrop-blur-sm">
-                  {product.segment === 'Individual' ? <Users className="h-4 w-4 mr-1.5" /> : <Briefcase className="h-4 w-4 mr-1.5" />}
+                  {product.segment === 'Personas' ? <Users className="h-4 w-4 mr-1.5" /> : <Briefcase className="h-4 w-4 mr-1.5" />}
                   {product.segment}
                 </Badge>
                 <Badge variant="default" className="text-sm py-1 px-3 bg-accent text-accent-foreground bg-opacity-90 backdrop-blur-sm">
