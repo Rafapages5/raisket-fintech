@@ -41,16 +41,45 @@ export default function SimpleReviewForm({ productId }: SimpleReviewFormProps) {
     },
   });
 
-  const onSubmit = (data: ReviewFormData) => {
-    console.log('Review Submitted:', { ...data, productId });
-    // Here you would typically send the data to a server action or API endpoint
-    // For now, we'll just show a success toast and reset the form
-    toast({
-      title: "Review Submitted!",
-      description: "Thank you for your feedback. Your review is pending approval.",
-    });
-    form.reset();
-    // setSelectedRating(0); // Resetting Controller's value is handled by form.reset()
+  const onSubmit = async (data: ReviewFormData) => {
+    try {
+      // Send data to the API endpoint
+      const response = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productId,
+          reviewerName: data.name,
+          reviewerEmail: data.email,
+          rating: data.rating,
+          title: data.title,
+          comment: data.comment,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // Show success message
+      toast({
+        title: "Review Submitted!",
+        description: "Thank you for your feedback. Your review is pending approval.",
+      });
+
+      // Reset form
+      form.reset();
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      // Show error message
+      toast({
+        title: "Error",
+        description: "Failed to submit review. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
