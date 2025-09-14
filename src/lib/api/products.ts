@@ -5,7 +5,7 @@ export class ProductsAPI {
   // Get all products
   static async getAll(): Promise<FinancialProduct[]> {
     const { data, error } = await supabase
-      .from('products')
+      .from('financial_products')
       .select('*')
       .order('created_at', { ascending: false })
 
@@ -20,7 +20,7 @@ export class ProductsAPI {
   // Get products by category
   static async getByCategory(category: string): Promise<FinancialProduct[]> {
     const { data, error } = await supabase
-      .from('products')
+      .from('financial_products')
       .select('*')
       .eq('category', category)
       .order('average_rating', { ascending: false })
@@ -36,7 +36,7 @@ export class ProductsAPI {
   // Get products by segment
   static async getBySegment(segment: string): Promise<FinancialProduct[]> {
     const { data, error } = await supabase
-      .from('products')
+      .from('financial_products')
       .select('*')
       .eq('segment', segment)
       .order('average_rating', { ascending: false })
@@ -52,7 +52,7 @@ export class ProductsAPI {
   // Get products by category AND segment
   static async getByCategoryAndSegment(category: string, segment: string): Promise<FinancialProduct[]> {
     const { data, error } = await supabase
-      .from('products')
+      .from('financial_products')
       .select('*')
       .eq('category', category)
       .eq('segment', segment)
@@ -69,9 +69,9 @@ export class ProductsAPI {
   // Get single product by ID
   static async getById(id: string): Promise<FinancialProduct | null> {
     const { data, error } = await supabase
-      .from('products')
+      .from('financial_products')
       .select('*')
-      .eq('id', id)
+      .eq('product_id', id)
       .single()
 
     if (error) {
@@ -89,7 +89,7 @@ export class ProductsAPI {
   // Search products by name or description
   static async search(query: string): Promise<FinancialProduct[]> {
     const { data, error } = await supabase
-      .from('products')
+      .from('financial_products')
       .select('*')
       .or(`name.ilike.%${query}%,description.ilike.%${query}%,provider.ilike.%${query}%`)
       .order('average_rating', { ascending: false })
@@ -105,7 +105,7 @@ export class ProductsAPI {
   // Get featured products (highest rated)
   static async getFeatured(limit: number = 6): Promise<FinancialProduct[]> {
     const { data, error } = await supabase
-      .from('products')
+      .from('financial_products')
       .select('*')
       .gte('average_rating', 4.0)
       .order('average_rating', { ascending: false })
@@ -122,7 +122,7 @@ export class ProductsAPI {
   // Map database fields to FinancialProduct interface
   private static mapDatabaseToProduct(dbProducts: any[]): FinancialProduct[] {
     return dbProducts.map(product => ({
-      id: product.id,
+      id: product.product_id, // Using product_id as the main ID
       name: product.name,
       tagline: product.tagline,
       description: product.description,
@@ -136,15 +136,16 @@ export class ProductsAPI {
       benefits: product.benefits || [],
       averageRating: product.average_rating || 0,
       reviewCount: product.review_count || 0,
-      interestRate: product.interest_rate,
+      // Map category-specific fields to generic ones
+      interestRate: product.credit_interest_rate || product.financing_interest_rate,
       fees: product.fees,
       eligibility: product.eligibility || [],
       detailsUrl: product.details_url,
-      loanTerm: product.loan_term,
-      maxLoanAmount: product.max_loan_amount,
-      minInvestment: product.min_investment,
-      investmentType: product.investment_type,
-      coverageAmount: product.coverage_amount,
+      loanTerm: product.credit_loan_term || product.financing_loan_term,
+      maxLoanAmount: product.credit_max_loan_amount || product.financing_max_loan_amount,
+      minInvestment: product.investment_min_balance,
+      investmentType: product.investment_account_type,
+      coverageAmount: undefined, // Not in financial_products table
     }))
   }
 }
