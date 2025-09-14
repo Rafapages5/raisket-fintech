@@ -1,7 +1,7 @@
 // src/app/businesses/[category]/page.tsx
 import ProductList from '@/components/products/ProductList';
 import CategoryNav from '@/components/products/CategoryNav';
-import { mockProducts } from '@/data/products';
+import { ProductsAPI } from '@/lib/api/products';
 import type { FinancialProduct, ProductCategory } from '@/types';
 import { Metadata } from 'next';
 
@@ -37,11 +37,18 @@ export default async function BusinessProductsPage({ params }: BusinessProductsP
   const urlCategory = params.category.toLowerCase();
   const currentCategory = categoryUrlMap[urlCategory] || 'All';
 
-  const products = mockProducts.filter((product) => {
-    const segmentMatch = product.segment === 'Empresas';
-    const categoryMatch = currentCategory === 'All' || product.category === currentCategory;
-    return segmentMatch && categoryMatch;
-  });
+  // Get products from Supabase
+  let products: FinancialProduct[];
+  try {
+    if (currentCategory === 'All') {
+      products = await ProductsAPI.getBySegment('Empresas');
+    } else {
+      products = await ProductsAPI.getByCategoryAndSegment(currentCategory, 'Empresas');
+    }
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    products = [];
+  }
 
   return (
     <>

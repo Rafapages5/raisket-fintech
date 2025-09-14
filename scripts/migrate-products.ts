@@ -207,18 +207,37 @@ async function migrateData() {
         name: product.name,
         product_code: product.id,
         category: product.category,
-        subcategory: product.segment,
+        subcategory: product.segment, // Keep for backwards compatibility
+        segment: product.segment, // New field
         description: product.description,
+        long_description: product.longDescription,
+        tagline: product.tagline,
         terms_and_conditions: product.longDescription || product.description,
         min_amount: minInvestment,
         max_amount: maxAmount,
         interest_rate_min: interestRateMin,
         interest_rate_max: interestRateMax,
+        interest_rate: product.interestRate, // New string field
         min_term_months: minTermMonths,
         max_term_months: maxTermMonths,
-        annual_fee: product.fees ? parseAmount(product.fees) : null,
+        loan_term: product.loanTerm, // New string field
+        annual_fee: product.fees && product.fees.includes('$') ? parseAmount(product.fees) : null,
+        image_url: product.imageUrl,
+        ai_hint: product.aiHint,
+        provider: product.provider, // New field
+        features: product.features, // New array field
+        benefits: product.benefits, // New array field
+        average_rating: product.averageRating, // New rating field
+        review_count: product.reviewCount, // New count field
+        fees: product.fees, // New string field
+        eligibility: product.eligibility, // New array field
+        details_url: product.detailsUrl,
+        max_loan_amount: product.maxLoanAmount, // New string field
+        min_investment: product.minInvestment, // New string field
+        investment_type: product.investmentType, // New field
+        coverage_amount: product.coverageAmount, // New field
         is_active: true,
-        is_featured: false,
+        is_featured: product.averageRating && product.averageRating >= 4.5, // Auto-feature high-rated products
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       };

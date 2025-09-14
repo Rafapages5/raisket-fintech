@@ -1,8 +1,9 @@
 // src/app/products/[id]/page.tsx
 "use client"; // Required for useCompare hook and potential client-side interactions
 
-import { mockProducts } from '@/data/products';
+import { ProductsAPI } from '@/lib/api/products';
 import { mockReviews } from '@/data/reviews';
+import { useEffect, useState } from 'react';
 import type { FinancialProduct } from '@/types';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
@@ -32,10 +33,30 @@ import Link from 'next/link';
 // }
 
 export default function ProductDetailPage({ params }: { params: { id:string } }) {
-  const product = mockProducts.find(p => p.id === params.id) as FinancialProduct | undefined;
+  const [product, setProduct] = useState<FinancialProduct | null>(null);
+  const [loading, setLoading] = useState(true);
   const reviews = mockReviews.filter(r => r.productId === params.id);
   const { addToCompare, removeFromCompare, isInCompare } = useCompare();
   const { toast } = useToast();
+
+  useEffect(() => {
+    async function fetchProduct() {
+      try {
+        const fetchedProduct = await ProductsAPI.getById(params.id);
+        setProduct(fetchedProduct);
+      } catch (error) {
+        console.error('Error fetching product:', error);
+        setProduct(null);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchProduct();
+  }, [params.id]);
+
+  if (loading) {
+    return <div className="flex justify-center py-12">Loading...</div>;
+  }
 
   if (!product) {
     notFound();
