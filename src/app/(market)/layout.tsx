@@ -13,7 +13,6 @@ const categories: { name: ProductCategory; icon: React.ElementType; url: string 
   { name: 'Crédito', icon: CreditCard, url: 'credit' },
   { name: 'Financiamiento', icon: Landmark, url: 'financing' },
   { name: 'Inversión', icon: TrendingUp, url: 'investment' },
-  { name: 'Seguro', icon: Shield, url: 'insurance' },
 ];
 
 export default function MarketLayout({
@@ -40,7 +39,7 @@ export default function MarketLayout({
       </div>
 
       <Tabs defaultValue={currentCategory || 'all'} className="w-full">
-        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 h-auto p-1.5">
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 h-auto p-1.5">
           {categories.map((category) => (
             <TabsTrigger
               key={category.name}
