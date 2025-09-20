@@ -1,5 +1,5 @@
 export interface Database {
-  financial: {
+  public: {
     Tables: {
       products: {
         Row: {
@@ -9,15 +9,20 @@ export interface Database {
           product_code: string | null;
           category: string;
           subcategory: string | null;
+          segment: string | null;
           description: string | null;
+          long_description: string | null;
+          tagline: string | null;
           terms_and_conditions: string | null;
           min_amount: number | null;
           max_amount: number | null;
           interest_rate_min: number | null;
           interest_rate_max: number | null;
+          interest_rate: string | null;
           rate_type: string | null;
           min_term_months: number | null;
           max_term_months: number | null;
+          loan_term: string | null;
           annual_fee: number | null;
           credit_limit_min: number | null;
           credit_limit_max: number | null;
@@ -32,6 +37,20 @@ export interface Database {
           is_active: boolean;
           is_featured: boolean;
           commission_rate: number | null;
+          image_url: string | null;
+          ai_hint: string | null;
+          provider: string | null;
+          features: string[] | null;
+          benefits: string[] | null;
+          average_rating: number | null;
+          review_count: number | null;
+          fees: string | null;
+          eligibility: string[] | null;
+          details_url: string | null;
+          max_loan_amount: string | null;
+          min_investment: string | null;
+          investment_type: string | null;
+          coverage_amount: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -42,15 +61,20 @@ export interface Database {
           product_code?: string | null;
           category: string;
           subcategory?: string | null;
+          segment?: string | null;
           description?: string | null;
+          long_description?: string | null;
+          tagline?: string | null;
           terms_and_conditions?: string | null;
           min_amount?: number | null;
           max_amount?: number | null;
           interest_rate_min?: number | null;
           interest_rate_max?: number | null;
+          interest_rate?: string | null;
           rate_type?: string | null;
           min_term_months?: number | null;
           max_term_months?: number | null;
+          loan_term?: string | null;
           annual_fee?: number | null;
           credit_limit_min?: number | null;
           credit_limit_max?: number | null;
@@ -65,6 +89,20 @@ export interface Database {
           is_active?: boolean;
           is_featured?: boolean;
           commission_rate?: number | null;
+          image_url?: string | null;
+          ai_hint?: string | null;
+          provider?: string | null;
+          features?: string[] | null;
+          benefits?: string[] | null;
+          average_rating?: number | null;
+          review_count?: number | null;
+          fees?: string | null;
+          eligibility?: string[] | null;
+          details_url?: string | null;
+          max_loan_amount?: string | null;
+          min_investment?: string | null;
+          investment_type?: string | null;
+          coverage_amount?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -75,15 +113,20 @@ export interface Database {
           product_code?: string | null;
           category?: string;
           subcategory?: string | null;
+          segment?: string | null;
           description?: string | null;
+          long_description?: string | null;
+          tagline?: string | null;
           terms_and_conditions?: string | null;
           min_amount?: number | null;
           max_amount?: number | null;
           interest_rate_min?: number | null;
           interest_rate_max?: number | null;
+          interest_rate?: string | null;
           rate_type?: string | null;
           min_term_months?: number | null;
           max_term_months?: number | null;
+          loan_term?: string | null;
           annual_fee?: number | null;
           credit_limit_min?: number | null;
           credit_limit_max?: number | null;
@@ -98,6 +141,20 @@ export interface Database {
           is_active?: boolean;
           is_featured?: boolean;
           commission_rate?: number | null;
+          image_url?: string | null;
+          ai_hint?: string | null;
+          provider?: string | null;
+          features?: string[] | null;
+          benefits?: string[] | null;
+          average_rating?: number | null;
+          review_count?: number | null;
+          fees?: string | null;
+          eligibility?: string[] | null;
+          details_url?: string | null;
+          max_loan_amount?: string | null;
+          min_investment?: string | null;
+          investment_type?: string | null;
+          coverage_amount?: string | null;
           created_at?: string;
           updated_at?: string;
         };
