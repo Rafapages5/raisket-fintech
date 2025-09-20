@@ -4,8 +4,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Users, Briefcase, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { getFeaturedProducts } from '@/lib/products';
+import ProductList from '@/components/products/ProductList';
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Get featured products from Supabase
+  let featuredProducts: any[] = [];
+  try {
+    featuredProducts = await getFeaturedProducts(6);
+  } catch (error) {
+    console.error('Error loading featured products:', error);
+  }
+
   return (
     <div className="space-y-12">
       <section className="text-center py-12 md:py-16 bg-gradient-to-br from-primary/10 via-background to-background rounded-xl shadow-lg">
@@ -110,6 +120,20 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {featuredProducts.length > 0 && (
+        <section className="py-12">
+          <h2 className="font-headline text-3xl md:text-4xl font-semibold text-center text-foreground mb-10">
+            Productos Destacados
+          </h2>
+          <ProductList products={featuredProducts} />
+          <div className="text-center mt-8">
+            <Button asChild size="lg" variant="outline">
+              <Link href="/individuals/all">Ver Todos los Productos <ArrowRight className="ml-2 h-4 w-4" /></Link>
+            </Button>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

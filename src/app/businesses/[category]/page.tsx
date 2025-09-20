@@ -1,7 +1,7 @@
 // src/app/businesses/[category]/page.tsx
 import ProductList from '@/components/products/ProductList';
 import CategoryNav from '@/components/products/CategoryNav';
-import { mockProducts } from '@/data/products';
+import { getAllProducts } from '@/lib/products';
 import type { FinancialProduct, ProductCategory } from '@/types';
 import { Metadata } from 'next';
 
@@ -29,30 +29,53 @@ const categoryUrlMap: { [key: string]: ProductCategory } = {
   'financiamiento': 'Financiamiento',
   'investment': 'Inversión',
   'inversion': 'Inversión',
-  'insurance': 'Seguro',
-  'seguro': 'Seguro',
 };
 
 export default async function BusinessProductsPage({ params }: BusinessProductsPageProps) {
   const urlCategory = params.category.toLowerCase();
-  const currentCategory = categoryUrlMap[urlCategory] || 'All';
 
-  const products = mockProducts.filter((product) => {
-    const segmentMatch = product.segment === 'Empresas';
-    const categoryMatch = currentCategory === 'All' || product.category === currentCategory;
-    return segmentMatch && categoryMatch;
-  });
+  // Map URL categories to Supabase categories
+  const categoryMap: { [key: string]: string } = {
+    'credit': 'tarjeta_credito',
+    'credito': 'tarjeta_credito',
+    'financing': 'prestamo_personal',
+    'financiamiento': 'prestamo_personal',
+    'investment': 'cuenta_inversion',
+    'inversion': 'cuenta_inversion'
+  };
 
-  return (
-    <>
-      <CategoryNav basePath="/businesses" />
-      <ProductList products={products} />
-    </>
-  );
+  try {
+    // Get products from Supabase
+    const products = await getAllProducts({
+      categoria: urlCategory === 'all' ? undefined : categoryMap[urlCategory],
+      segmento: 'empresas',
+      limit: 50
+    });
+
+    // Filter by segment (for now, filter based on institution type or product characteristics)
+    const businessProducts = products.filter(product => product.segment === 'Empresas');
+
+    return (
+      <>
+        <CategoryNav basePath="/businesses" />
+        <ProductList products={businessProducts} />
+      </>
+    );
+  } catch (error) {
+    console.error('Error loading business products:', error);
+    return (
+      <>
+        <CategoryNav basePath="/businesses" />
+        <div className="text-center py-8">
+          <p className="text-muted-foreground">Error loading products. Please try again later.</p>
+        </div>
+      </>
+    );
+  }
 }
 
 export async function generateStaticParams() {
-  const urlCategories = ["all", "credit", "financing", "investment", "insurance"];
+  const urlCategories = ["all", "credit", "financing", "investment"];
   return urlCategories.map((category) => ({
     category,
   }));

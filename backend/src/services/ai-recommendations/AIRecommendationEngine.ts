@@ -374,6 +374,9 @@ export class AIRecommendationEngine {
     
     // Credit score compatibility
     const productMinScore = 600; // Would be from product.eligibility.minCreditScore
+    // AS-IS: Valor fijo
+    // TO-BE: Usar el valor del producto, con un fallback razonable
+    const productMinScore = product.eligibility?.minCreditScore || 600;
     if (profile.creditScore) {
       const scoreRatio = Math.min(profile.creditScore / productMinScore, 1.2);
       score += weights.creditScore * Math.min(scoreRatio * 100, 100);
@@ -381,6 +384,7 @@ export class AIRecommendationEngine {
     
     // Income compatibility
     const productMinIncome = 10000; // Would be from product.eligibility.minIncome
+    const productMinIncome = product.eligibility?.minIncome || 10000;
     const incomeRatio = Math.min(profile.monthlyIncome / productMinIncome, 2);
     score += weights.income * Math.min(incomeRatio * 100, 100);
     

@@ -1,7 +1,7 @@
 // src/app/individuals/[category]/page.tsx
 import ProductList from '@/components/products/ProductList';
 import CategoryNav from '@/components/products/CategoryNav';
-import { mockProducts } from '@/data/products';
+import { getAllProducts } from '@/lib/products';
 import type { ProductCategory } from '@/types';
 import { Metadata } from 'next';
 
@@ -50,27 +50,49 @@ const categoryUrlToProductMap: { [key: string]: ProductCategory } = {
   'financiamiento': 'Financiamiento',
   'investment': 'Inversión',
   'inversion': 'Inversión',
-  'insurance': 'Seguro',
-  'seguro': 'Seguro',
 };
 
 export default async function IndividualProductsPage({ params }: IndividualProductsPageProps) {
   const currentCategoryKey = params.category.toLowerCase();
-  // const currentCategoryName = getSpanishCategoryName(currentCategoryKey);
-  const productCategory = categoryUrlToProductMap[currentCategoryKey] || 'All';
 
-  const products = mockProducts.filter((product) => {
-    const segmentMatch = product.segment === 'Personas';
-    const categoryMatch = productCategory === 'All' || product.category === productCategory;
-    return segmentMatch && categoryMatch;
-  });
+  // Map URL categories to Supabase categories
+  const categoryMap: { [key: string]: string } = {
+    'credit': 'tarjeta_credito',
+    'credito': 'tarjeta_credito',
+    'financing': 'prestamo_personal',
+    'financiamiento': 'prestamo_personal',
+    'investment': 'cuenta_inversion',
+    'inversion': 'cuenta_inversion'
+  };
 
-  return (
-    <>
-      <CategoryNav basePath="/individuals" />
-      <ProductList products={products} />
-    </>
-  );
+  try {
+    // Get products from Supabase
+    const products = await getAllProducts({
+      categoria: currentCategoryKey === 'all' ? undefined : categoryMap[currentCategoryKey],
+      segmento: 'personas',
+      limit: 50
+    });
+
+    // Filter by segment (for now, all products will be 'Personas' based on our transform logic)
+    const individualProducts = products.filter(product => product.segment === 'Personas');
+
+    return (
+      <>
+        <CategoryNav basePath="/individuals" />
+        <ProductList products={individualProducts} />
+      </>
+    );
+  } catch (error) {
+    console.error('Error loading products:', error);
+    return (
+      <>
+        <CategoryNav basePath="/individuals" />
+        <div className="text-center py-8">
+          <p className="text-muted-foreground">Error loading products. Please try again later.</p>
+        </div>
+      </>
+    );
+  }
 }
 
 export async function generateStaticParams() {
