@@ -10,8 +10,8 @@ export default function ReviewList({ reviews }: ReviewListProps) {
   if (!reviews || reviews.length === 0) {
     return (
       <div className="text-center py-8 text-muted-foreground bg-card rounded-lg shadow">
-        <p className="text-lg">No reviews yet for this product.</p>
-        <p className="text-sm">Be the first to share your experience!</p>
+        <p className="text-lg">Aún no hay reseñas para este producto.</p>
+        <p className="text-sm">¡Sé el primero en compartir tu experiencia!</p>
       </div>
     );
   }
