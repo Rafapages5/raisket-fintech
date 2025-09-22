@@ -8,7 +8,7 @@ interface ProductListProps {
 
 export default function ProductList({ products }: ProductListProps) {
   if (!products || products.length === 0) {
-    return <p className="text-center text-muted-foreground py-8">No products found for this category.</p>;
+    return <p className="text-center text-muted-foreground py-8">No se encontraron productos para esta categoría.</p>;
   }
 
   return (

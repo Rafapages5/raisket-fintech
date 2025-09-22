@@ -68,14 +68,14 @@ export default function ProductCard({ product }: ProductCardProps) {
                 className={`h-4 w-4 ${i < Math.round(averageRating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
               />
             ))}
-            <span className="ml-1.5">{averageRating.toFixed(1)} ({product.reviewCount} reviews)</span>
+            <span className="ml-1.5">{averageRating.toFixed(1)} ({product.reviewCount} reseñas)</span>
           </div>
         </CardContent>
         <CardFooter className="p-4 pt-0 border-t mt-auto">
           <div className="flex justify-between items-center w-full">
             <Button variant="ghost" size="sm" asChild className="text-primary hover:text-accent hover:bg-accent/10">
               {/* This Link is nested, but the outer link covers the card. This button is for visual cue. */}
-              <span>View Details</span> 
+              <span>Ver Detalles</span> 
             </Button>
             <Button
               variant={isComparing ? "secondary" : "outline"}
@@ -85,7 +85,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               className="transition-all"
             >
               {isComparing ? <MinusCircle className="h-4 w-4 mr-1.5" /> : <PlusCircle className="h-4 w-4 mr-1.5" />}
-              {isComparing ? 'Comparing' : 'Compare'}
+              {isComparing ? 'Comparando' : 'Comparar'}
             </Button>
           </div>
         </CardFooter>
