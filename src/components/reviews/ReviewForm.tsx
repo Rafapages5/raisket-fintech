@@ -29,6 +29,7 @@ interface ReviewFormProps {
 
 export default function ReviewForm({ productId }: ReviewFormProps) {
   const [hoverRating, setHoverRating] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
   const form = useForm<ReviewFormData>({
@@ -42,16 +43,51 @@ export default function ReviewForm({ productId }: ReviewFormProps) {
     },
   });
 
-  const onSubmit = (data: ReviewFormData) => {
-    console.log('Review Submitted:', { ...data, productId });
-    // Here you would typically send the data to a server action or API endpoint
-    // For now, we'll just show a success toast and reset the form
-    toast({
-      title: "Review Submitted!",
-      description: "Thank you for your feedback. Your review is pending approval.",
-    });
-    form.reset();
-    // setSelectedRating(0); // Resetting Controller's value is handled by form.reset()
+  const onSubmit = async (data: ReviewFormData) => {
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productId,
+          name: data.name,
+          email: data.email,
+          rating: data.rating,
+          title: data.title,
+          comment: data.comment,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        toast({
+          title: "¡Reseña enviada!",
+          description: "Gracias por tu comentario. Tu reseña está pendiente de aprobación.",
+        });
+        form.reset();
+        setHoverRating(0);
+      } else {
+        toast({
+          title: "Error",
+          description: result.error || "No se pudo enviar la reseña. Inténtalo de nuevo.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      toast({
+        title: "Error",
+        description: "Hubo un problema al enviar tu reseña. Inténtalo de nuevo.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -148,8 +184,9 @@ export default function ReviewForm({ productId }: ReviewFormProps) {
               )}
             />
 
-            <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" disabled={form.formState.isSubmitting}>
-              <Send className="mr-2 h-4 w-4" /> Submit Review
+            <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" disabled={isSubmitting}>
+              <Send className="mr-2 h-4 w-4" />
+              {isSubmitting ? 'Enviando...' : 'Enviar Reseña'}
             </Button>
           </form>
         </Form>
