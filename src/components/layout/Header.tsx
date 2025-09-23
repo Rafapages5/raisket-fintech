@@ -8,6 +8,7 @@ import { Menu, Briefcase, Users, Lightbulb, FileText, Scale, ShoppingCart, BookO
 import { useCompare } from '@/contexts/CompareContext';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import UserMenu from '@/components/auth/UserMenu';
 
 const navItems = [
   { href: '/individuals/all', label: 'Para Personas', icon: Users },
@@ -77,6 +78,9 @@ export default function Header() {
         </Link>
         <nav className="hidden md:flex space-x-2 items-center">
           <NavLinks />
+          <div className="ml-4">
+            <UserMenu />
+          </div>
         </nav>
         <div className="md:hidden">
           <Sheet>
@@ -93,6 +97,9 @@ export default function Header() {
               </div>
               <nav className="flex flex-col space-y-2 p-4">
                 <NavLinks isMobile={true}/>
+                <div className="pt-4 border-t border-white/10 mt-4">
+                  <UserMenu />
+                </div>
               </nav>
             </SheetContent>
           </Sheet>
