@@ -31,44 +31,48 @@ export function transformProductToLegacy(
 
   // Format interest rate
   const formatInterestRate = () => {
-    if (product.interest_rate_min && product.interest_rate_max) {
-      return `${product.interest_rate_min}% - ${product.interest_rate_max}% anual`;
+    const productAny = product as any;
+    if (productAny.interest_rate_min && productAny.interest_rate_max) {
+      return `${productAny.interest_rate_min}% - ${productAny.interest_rate_max}% anual`;
     }
-    if (product.interest_rate_min) {
-      return `Desde ${product.interest_rate_min}% anual`;
+    if (productAny.interest_rate_min) {
+      return `Desde ${productAny.interest_rate_min}% anual`;
     }
     return undefined;
   };
 
   // Format loan term
   const formatLoanTerm = () => {
-    if (product.min_term_months && product.max_term_months) {
-      return `${product.min_term_months}-${product.max_term_months} meses`;
+    const productAny = product as any;
+    if (productAny.min_term_months && productAny.max_term_months) {
+      return `${productAny.min_term_months}-${productAny.max_term_months} meses`;
     }
-    if (product.min_term_months) {
-      return `Desde ${product.min_term_months} meses`;
+    if (productAny.min_term_months) {
+      return `Desde ${productAny.min_term_months} meses`;
     }
     return undefined;
   };
 
   // Format max loan amount
   const formatMaxAmount = () => {
-    if (product.max_amount) {
-      return `$${product.max_amount.toLocaleString('es-MX')} MXN`;
+    const productAny = product as any;
+    if (productAny.max_amount) {
+      return `$${productAny.max_amount.toLocaleString('es-MX')} MXN`;
     }
-    if (product.credit_limit_max) {
-      return `Límite hasta $${product.credit_limit_max.toLocaleString('es-MX')} MXN`;
+    if (productAny.credit_limit_max) {
+      return `Límite hasta $${productAny.credit_limit_max.toLocaleString('es-MX')} MXN`;
     }
     return undefined;
   };
 
   // Format fees
   const formatFees = () => {
-    if (product.annual_fee === 0) {
+    const productAny = product as any;
+    if (productAny.annual_fee === 0) {
       return 'Sin anualidad';
     }
-    if (product.annual_fee) {
-      return `Anualidad: $${product.annual_fee.toLocaleString('es-MX')} MXN`;
+    if (productAny.annual_fee) {
+      return `Anualidad: $${productAny.annual_fee.toLocaleString('es-MX')} MXN`;
     }
     return undefined;
   };
@@ -76,32 +80,33 @@ export function transformProductToLegacy(
   // Build eligibility array
   const buildEligibility = (): string[] => {
     const eligibility: string[] = [];
+    const productAny = product as any;
 
-    if (product.min_income) {
-      eligibility.push(`Ingresos mínimos: $${product.min_income.toLocaleString('es-MX')} MXN mensuales`);
+    if (productAny.min_income) {
+      eligibility.push(`Ingresos mínimos: $${productAny.min_income.toLocaleString('es-MX')} MXN mensuales`);
     }
 
-    if (product.min_credit_score) {
-      eligibility.push(`Score mínimo: ${product.min_credit_score}`);
+    if (productAny.min_credit_score) {
+      eligibility.push(`Score mínimo: ${productAny.min_credit_score}`);
     }
 
-    if (product.employment_requirement) {
-      eligibility.push(product.employment_requirement);
+    if (productAny.employment_requirement) {
+      eligibility.push(productAny.employment_requirement);
     }
 
-    if (product.accepts_imss) {
+    if (productAny.accepts_imss) {
       eligibility.push('Acepta IMSS');
     }
 
-    if (product.accepts_issste) {
+    if (productAny.accepts_issste) {
       eligibility.push('Acepta ISSSTE');
     }
 
-    if (product.requires_guarantor) {
+    if (productAny.requires_guarantor) {
       eligibility.push('Requiere aval');
     }
 
-    if (product.collateral_required) {
+    if (productAny.collateral_required) {
       eligibility.push('Requiere garantía');
     }
 
@@ -111,21 +116,22 @@ export function transformProductToLegacy(
   // Build features array
   const buildFeatures = (): string[] => {
     const features: string[] = [];
+    const productAny = product as any;
 
-    if (product.rate_type) {
-      features.push(`Tasa ${product.rate_type}`);
+    if (productAny.rate_type) {
+      features.push(`Tasa ${productAny.rate_type}`);
     }
 
-    if (product.annual_fee === 0) {
+    if (productAny.annual_fee === 0) {
       features.push('Sin anualidad');
     }
 
-    if (product.min_amount && product.max_amount) {
-      features.push(`Montos de $${product.min_amount.toLocaleString('es-MX')} a $${product.max_amount.toLocaleString('es-MX')} MXN`);
+    if (productAny.min_amount && productAny.max_amount) {
+      features.push(`Montos de $${productAny.min_amount.toLocaleString('es-MX')} a $${productAny.max_amount.toLocaleString('es-MX')} MXN`);
     }
 
-    if (product.credit_limit_min && product.credit_limit_max) {
-      features.push(`Límite de crédito de $${product.credit_limit_min.toLocaleString('es-MX')} a $${product.credit_limit_max.toLocaleString('es-MX')} MXN`);
+    if (productAny.credit_limit_min && productAny.credit_limit_max) {
+      features.push(`Límite de crédito de $${productAny.credit_limit_min.toLocaleString('es-MX')} a $${productAny.credit_limit_max.toLocaleString('es-MX')} MXN`);
     }
 
     // Add default features if none exist

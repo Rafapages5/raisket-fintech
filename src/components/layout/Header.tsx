@@ -4,10 +4,11 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Briefcase, Users, Lightbulb, FileText, Scale, ShoppingCart, BookOpen } from 'lucide-react';
+import { Menu, Briefcase, Users, Lightbulb, FileText, Scale, ShoppingCart, BookOpen, User, LogOut } from 'lucide-react';
 import { useCompare } from '@/contexts/CompareContext';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/hooks/useAuth';
 
 const navItems = [
   { href: '/individuals/all', label: 'Para Personas', icon: Users },
@@ -21,6 +22,7 @@ const navItems = [
 export default function Header() {
   const { compareItems } = useCompare();
   const pathname = usePathname();
+  const { user, loading, signOut } = useAuth();
 
   const NavLinks = ({isMobile = false}: {isMobile?: boolean}) => (
     <>
@@ -75,9 +77,36 @@ export default function Header() {
         <Link href="/" className="text-3xl font-headline font-bold text-white hover:text-[#00d4aa] transition-colors duration-200">
           Raisket
         </Link>
-        <nav className="hidden md:flex space-x-2 items-center">
-          <NavLinks />
-        </nav>
+        <div className="hidden md:flex items-center space-x-4">
+          <nav className="flex space-x-2 items-center">
+            <NavLinks />
+          </nav>
+
+          {loading ? (
+            <div className="animate-pulse bg-white/20 rounded-full h-8 w-20"></div>
+          ) : user ? (
+            <div className="flex items-center space-x-2">
+              <span className="text-white text-sm">
+                {user.user_metadata?.full_name || user.email}
+              </span>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={signOut}
+                className="text-white hover:text-[#00d4aa] hover:bg-white/10"
+              >
+                <LogOut className="h-4 w-4" />
+              </Button>
+            </div>
+          ) : (
+            <Button asChild variant="default" size="sm" className="bg-[#00d4aa] hover:bg-[#00c49a] text-white">
+              <Link href="/login">
+                <User className="mr-2 h-4 w-4" />
+                Iniciar Sesión
+              </Link>
+            </Button>
+          )}
+        </div>
         <div className="md:hidden">
           <Sheet>
             <SheetTrigger asChild>
@@ -93,6 +122,33 @@ export default function Header() {
               </div>
               <nav className="flex flex-col space-y-2 p-4">
                 <NavLinks isMobile={true}/>
+
+                <div className="border-t border-white/10 mt-4 pt-4">
+                  {loading ? (
+                    <div className="animate-pulse bg-white/20 rounded h-8"></div>
+                  ) : user ? (
+                    <div className="space-y-2">
+                      <div className="text-white text-sm px-3 py-2">
+                        {user.user_metadata?.full_name || user.email}
+                      </div>
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start text-white hover:text-[#00d4aa] hover:bg-white/10"
+                        onClick={signOut}
+                      >
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Cerrar Sesión
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button asChild variant="default" className="w-full bg-[#00d4aa] hover:bg-[#00c49a] text-white">
+                      <Link href="/login">
+                        <User className="mr-2 h-4 w-4" />
+                        Iniciar Sesión
+                      </Link>
+                    </Button>
+                  )}
+                </div>
               </nav>
             </SheetContent>
           </Sheet>
