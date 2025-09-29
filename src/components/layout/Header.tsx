@@ -4,10 +4,12 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Briefcase, Users, Lightbulb, FileText, Scale, ShoppingCart, BookOpen } from 'lucide-react';
+import { Menu, Briefcase, Users, Lightbulb, FileText, Scale, ShoppingCart, BookOpen, LogIn } from 'lucide-react';
 import { useCompare } from '@/contexts/CompareContext';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/hooks/useAuth';
+import UserMenu from '@/components/auth/UserMenu';
 
 const navItems = [
   { href: '/individuals/all', label: 'Para Personas', icon: Users },
@@ -20,6 +22,7 @@ const navItems = [
 
 export default function Header() {
   const { compareItems } = useCompare();
+  const { user, loading } = useAuth();
   const pathname = usePathname();
 
   const NavLinks = ({isMobile = false}: {isMobile?: boolean}) => (
@@ -77,6 +80,23 @@ export default function Header() {
         </Link>
         <nav className="hidden md:flex space-x-2 items-center">
           <NavLinks />
+          <div className="ml-4 pl-4 border-l border-white/20">
+            {loading ? (
+              <div className="w-8 h-8 rounded-full bg-white/10 animate-pulse"></div>
+            ) : user ? (
+              <UserMenu />
+            ) : (
+              <Link href="/login">
+                <Button
+                  variant="ghost"
+                  className="text-white hover:text-[#00d4aa] hover:bg-white/10 transition-all duration-200"
+                >
+                  <LogIn className="mr-2 h-4 w-4" />
+                  Iniciar Sesión
+                </Button>
+              </Link>
+            )}
+          </div>
         </nav>
         <div className="md:hidden">
           <Sheet>
@@ -93,6 +113,28 @@ export default function Header() {
               </div>
               <nav className="flex flex-col space-y-2 p-4">
                 <NavLinks isMobile={true}/>
+                <div className="pt-4 border-t border-white/10">
+                  {loading ? (
+                    <div className="w-full h-10 rounded bg-white/10 animate-pulse"></div>
+                  ) : user ? (
+                    <div className="space-y-2">
+                      <div className="text-white text-sm px-3 py-2">
+                        {user.user_metadata?.full_name || user.email}
+                      </div>
+                      <UserMenu />
+                    </div>
+                  ) : (
+                    <Link href="/login" className="w-full">
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start text-base py-3 text-white hover:text-[#00d4aa] hover:bg-white/10"
+                      >
+                        <LogIn className="mr-2 h-4 w-4" />
+                        Iniciar Sesión
+                      </Button>
+                    </Link>
+                  )}
+                </div>
               </nav>
             </SheetContent>
           </Sheet>
