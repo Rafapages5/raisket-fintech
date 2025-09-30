@@ -14,11 +14,11 @@ import { Star, Send } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const reviewSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters." }).max(50),
-  email: z.string().email({ message: "Please enter a valid email." }), // For internal use, not displayed
-  rating: z.number().min(1, { message: "Please select a rating." }).max(5),
-  title: z.string().min(3, { message: "Title must be at least 3 characters." }).max(100).optional(),
-  comment: z.string().min(10, { message: "Comment must be at least 10 characters." }).max(1000),
+  name: z.string().min(2, { message: "El nombre debe tener al menos 2 caracteres." }).max(50),
+  email: z.string().email({ message: "Por favor ingresa un correo válido." }), // For internal use, not displayed
+  rating: z.number().min(1, { message: "Por favor selecciona una calificación." }).max(5),
+  title: z.string().min(3, { message: "El título debe tener al menos 3 caracteres." }).max(100).optional(),
+  comment: z.string().min(10, { message: "El comentario debe tener al menos 10 caracteres." }).max(1000),
 });
 
 type ReviewFormData = z.infer<typeof reviewSchema>;
@@ -93,8 +93,8 @@ export default function ReviewForm({ productId }: ReviewFormProps) {
   return (
     <Card className="shadow-md">
       <CardHeader>
-        <CardTitle className="font-headline text-xl text-primary">Write a Review</CardTitle>
-        <CardDescription>Share your experience with this product.</CardDescription>
+        <CardTitle className="font-headline text-xl text-primary">Escribe una Reseña</CardTitle>
+        <CardDescription>Comparte tu experiencia con este producto.</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -105,9 +105,9 @@ export default function ReviewForm({ productId }: ReviewFormProps) {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Your Name</FormLabel>
+                    <FormLabel>Tu Nombre</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g. Jane Doe" {...field} />
+                      <Input placeholder="ej. Juan Pérez" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -118,11 +118,11 @@ export default function ReviewForm({ productId }: ReviewFormProps) {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Your Email</FormLabel>
+                    <FormLabel>Tu Correo</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="you@example.com" {...field} />
+                      <Input type="email" placeholder="tucorreo@ejemplo.com" {...field} />
                     </FormControl>
-                     <FormDescription className="text-xs">Your email will not be published.</FormDescription>
+                     <FormDescription className="text-xs">Tu correo no será publicado.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -134,7 +134,7 @@ export default function ReviewForm({ productId }: ReviewFormProps) {
               name="rating"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Your Rating</FormLabel>
+                  <FormLabel>Tu Calificación</FormLabel>
                   <FormControl>
                     <div className="flex items-center space-x-1">
                       {[1, 2, 3, 4, 5].map((star) => (
@@ -146,7 +146,7 @@ export default function ReviewForm({ productId }: ReviewFormProps) {
                           onClick={() => field.onChange(star)}
                           onMouseEnter={() => setHoverRating(star)}
                           onMouseLeave={() => setHoverRating(0)}
-                          aria-label={`Rate ${star} out of 5 stars`}
+                          aria-label={`Calificar ${star} de 5 estrellas`}
                         />
                       ))}
                     </div>
@@ -155,15 +155,15 @@ export default function ReviewForm({ productId }: ReviewFormProps) {
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Review Title (Optional)</FormLabel>
+                  <FormLabel>Título de la Reseña (Opcional)</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. Excellent Product!" {...field} />
+                    <Input placeholder="ej. ¡Excelente Producto!" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -175,9 +175,9 @@ export default function ReviewForm({ productId }: ReviewFormProps) {
               name="comment"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Your Comment</FormLabel>
+                  <FormLabel>Tu Comentario</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Tell us more about your experience..." {...field} rows={5} />
+                    <Textarea placeholder="Cuéntanos más sobre tu experiencia..." {...field} rows={5} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -36,8 +36,8 @@ export default function ProductDetailClient({ product, reviews }: ProductDetailC
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
     toast({
-      title: "Link Copied!",
-      description: "Product link copied to clipboard.",
+      title: "¡Enlace Copiado!",
+      description: "El enlace del producto se copió al portapapeles.",
     });
   };
 
@@ -79,12 +79,12 @@ export default function ProductDetailClient({ product, reviews }: ProductDetailC
                     className={`h-5 w-5 ${i < Math.round(averageRating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
                   />
                 ))}
-                <span className="ml-2 text-muted-foreground">{averageRating.toFixed(1)} ({product.reviewCount} reviews)</span>
+                <span className="ml-2 text-muted-foreground">{averageRating.toFixed(1)} ({product.reviewCount} reseñas)</span>
               </div>
               <p className="text-foreground/80 leading-relaxed whitespace-pre-line mb-6">{product.longDescription || product.description}</p>
 
               {product.provider && (
-                <p className="text-sm text-muted-foreground">Provider: <span className="font-semibold text-foreground">{product.provider}</span></p>
+                <p className="text-sm text-muted-foreground">Proveedor: <span className="font-semibold text-foreground">{product.provider}</span></p>
               )}
             </CardContent>
           </Card>
@@ -92,12 +92,12 @@ export default function ProductDetailClient({ product, reviews }: ProductDetailC
           {(product.features?.length > 0 || (product.benefits && product.benefits.length > 0)) && (
              <Card>
               <CardHeader>
-                <CardTitle className="font-headline text-2xl text-primary">Features & Benefits</CardTitle>
+                <CardTitle className="font-headline text-2xl text-primary">Características y Beneficios</CardTitle>
               </CardHeader>
               <CardContent className="grid md:grid-cols-2 gap-6">
                 {product.features?.length > 0 && (
                   <div>
-                    <h3 className="font-semibold text-lg text-foreground mb-2">Key Features</h3>
+                    <h3 className="font-semibold text-lg text-foreground mb-2">Características Principales</h3>
                     <ul className="list-disc list-inside space-y-1 text-foreground/80">
                       {product.features.map((feature, index) => (
                         <li key={`feature-${index}`} className="flex items-start">
@@ -109,7 +109,7 @@ export default function ProductDetailClient({ product, reviews }: ProductDetailC
                 )}
                 {(product.benefits && product.benefits.length > 0) && (
                   <div>
-                    <h3 className="font-semibold text-lg text-foreground mb-2">Key Benefits</h3>
+                    <h3 className="font-semibold text-lg text-foreground mb-2">Beneficios Principales</h3>
                     <ul className="list-disc list-inside space-y-1 text-foreground/80">
                       {product.benefits.map((benefit, index) => (
                          <li key={`benefit-${index}`} className="flex items-start">
@@ -127,22 +127,22 @@ export default function ProductDetailClient({ product, reviews }: ProductDetailC
         <div className="lg:col-span-1 space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="font-headline text-2xl text-primary">Actions</CardTitle>
+              <CardTitle className="font-headline text-2xl text-primary">Acciones</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               {product.detailsUrl && product.detailsUrl !== '#' && (
                  <Button size="lg" className="w-full bg-primary hover:bg-primary/90" asChild>
                   <Link href={product.detailsUrl} target="_blank" rel="noopener noreferrer">
-                    Visit Provider <ExternalLink className="ml-2 h-4 w-4" />
+                    Visitar Proveedor <ExternalLink className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
               )}
               <Button size="lg" variant="outline" className="w-full" onClick={handleCompareClick}>
                 {isComparing ? <MinusCircle className="mr-2 h-4 w-4" /> : <PlusCircle className="mr-2 h-4 w-4" />}
-                {isComparing ? 'Remove from Compare' : 'Add to Compare'}
+                {isComparing ? 'Quitar de Comparación' : 'Agregar a Comparación'}
               </Button>
               <Button size="lg" variant="outline" className="w-full" onClick={handleShare}>
-                <Copy className="mr-2 h-4 w-4" /> Share Product
+                <Copy className="mr-2 h-4 w-4" /> Compartir Producto
               </Button>
             </CardContent>
           </Card>
@@ -150,18 +150,18 @@ export default function ProductDetailClient({ product, reviews }: ProductDetailC
           {(product.interestRate || product.loanTerm || product.fees || (product.eligibility && product.eligibility.length > 0)) && (
             <Card>
               <CardHeader>
-                <CardTitle className="font-headline text-xl text-primary">Product Snapshot</CardTitle>
+                <CardTitle className="font-headline text-xl text-primary">Resumen del Producto</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3 text-sm">
-                {product.interestRate && <p><strong>Interest Rate:</strong> {product.interestRate}</p>}
-                {product.loanTerm && <p><strong>Term:</strong> {product.loanTerm}</p>}
-                {product.maxLoanAmount && <p><strong>Max Amount:</strong> {product.maxLoanAmount}</p>}
-                {product.coverageAmount && <p><strong>Coverage:</strong> {product.coverageAmount}</p>}
-                {product.minInvestment && <p><strong>Min. Investment:</strong> {product.minInvestment}</p>}
-                {product.fees && <p><strong>Fees:</strong> {product.fees}</p>}
+                {product.interestRate && <p><strong>Tasa de Interés:</strong> {product.interestRate}</p>}
+                {product.loanTerm && <p><strong>Plazo:</strong> {product.loanTerm}</p>}
+                {product.maxLoanAmount && <p><strong>Monto Máximo:</strong> {product.maxLoanAmount}</p>}
+                {product.coverageAmount && <p><strong>Cobertura:</strong> {product.coverageAmount}</p>}
+                {product.minInvestment && <p><strong>Inversión Mínima:</strong> {product.minInvestment}</p>}
+                {product.fees && <p><strong>Comisiones:</strong> {product.fees}</p>}
                 {(product.eligibility && product.eligibility.length > 0) && (
                   <div>
-                    <h4 className="font-semibold mb-1">Eligibility:</h4>
+                    <h4 className="font-semibold mb-1">Elegibilidad:</h4>
                     <ul className="list-disc list-inside space-y-0.5 text-foreground/80">
                       {product.eligibility.map((item, i) => <li key={i}>{item}</li>)}
                     </ul>
@@ -176,7 +176,7 @@ export default function ProductDetailClient({ product, reviews }: ProductDetailC
       <Separator />
 
       <div>
-        <h2 className="font-headline text-2xl md:text-3xl font-semibold text-primary mb-6">Customer Reviews</h2>
+        <h2 className="font-headline text-2xl md:text-3xl font-semibold text-primary mb-6">Reseñas de Clientes</h2>
         <div className="grid md:grid-cols-2 gap-6">
             <ReviewList reviews={reviews} />
             <ReviewForm productId={product.id} />
