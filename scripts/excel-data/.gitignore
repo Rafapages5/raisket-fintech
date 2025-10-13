@@ -1,0 +1,7 @@
+# Ignore Excel files to avoid committing sensitive data
+*.xlsx
+*.xls
+*.csv
+
+# But keep this directory in git
+!.gitignore

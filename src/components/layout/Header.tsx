@@ -31,7 +31,7 @@ export default function Header() {
         const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href)) || (item.href.endsWith('/all') && pathname.startsWith(item.href.replace('/all', '')));
         if (item.special && item.label === 'Comparar') {
           return (
-            <Link key={item.href} href={item.href} passHref legacyBehavior>
+            <Link key={item.href} href={item.href}>
               <Button
                 variant="ghost"
                 className={cn(
@@ -53,7 +53,7 @@ export default function Header() {
           );
         }
         return (
-          <Link key={item.href} href={item.href} passHref legacyBehavior>
+          <Link key={item.href} href={item.href}>
             <Button
               variant="ghost"
               className={cn(
