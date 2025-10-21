@@ -6,7 +6,7 @@ import Footer from '@/components/layout/Footer';
 import { CompareContextProvider } from '@/contexts/CompareContext';
 
 export const metadata: Metadata = {
-  title: 'Raisket - Your Financial Marketplace',
+  title: 'Raisket - Ayudándote a entender el sistema financiero',
   description: 'Discover credit, financing, investments, and insurance products tailored for individuals and businesses.',
   keywords: ['financial products', 'credit', 'financing', 'investments', 'insurance', 'business finance', 'personal finance']
 };
