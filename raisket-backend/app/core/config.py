@@ -4,7 +4,7 @@ Carga variables de entorno y proporciona valores por defecto.
 """
 from typing import List
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import Field, validator
+from pydantic import Field, field_validator
 
 
 class Settings(BaseSettings):
@@ -52,26 +52,26 @@ class Settings(BaseSettings):
         description="Umbral de similitud para resultados del RAG"
     )
 
-    @validator("CORS_ORIGINS", pre=True)
-    def parse_cors_origins(cls, v: str) -> List[str]:
-        """Convierte la cadena de orígenes en una lista."""
-        if isinstance(v, str):
-            return [origin.strip() for origin in v.split(",") if origin.strip()]
-        return v
-
-    @validator("TEMPERATURE")
+    @field_validator("TEMPERATURE")
+    @classmethod
     def validate_temperature(cls, v: float) -> float:
         """Valida que la temperatura esté en el rango correcto."""
         if not 0.0 <= v <= 1.0:
             raise ValueError("La temperatura debe estar entre 0.0 y 1.0")
         return v
 
-    @validator("SIMILARITY_THRESHOLD")
+    @field_validator("SIMILARITY_THRESHOLD")
+    @classmethod
     def validate_similarity_threshold(cls, v: float) -> float:
         """Valida que el umbral de similitud esté en el rango correcto."""
         if not 0.0 <= v <= 1.0:
             raise ValueError("El umbral de similitud debe estar entre 0.0 y 1.0")
         return v
+
+    @property
+    def cors_origins_list(self) -> List[str]:
+        """Retorna los orígenes de CORS como una lista."""
+        return [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
 
     @property
     def is_production(self) -> bool:
@@ -82,10 +82,6 @@ class Settings(BaseSettings):
     def is_development(self) -> bool:
         """Retorna True si el ambiente es desarrollo."""
         return self.ENVIRONMENT.lower() == "development"
-
-    class Config:
-        """Configuración adicional de Pydantic."""
-        case_sensitive = True
 
 
 # Instancia global de configuración
