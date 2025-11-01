@@ -314,6 +314,89 @@ class RAGService:
             logger.error(f"Error al obtener estadísticas: {e}")
             raise Exception(f"Error en estadísticas: {str(e)}")
 
+    def format_context(self, documents: List[Dict[str, Any]]) -> str:
+        """
+        Formatea una lista de documentos en un string de contexto para el LLM.
+
+        Args:
+            documents: Lista de documentos con formato:
+                [{"id": "...", "score": 0.9, "text": "...", "metadata": {...}}]
+
+        Returns:
+            String formateado con el contexto de los documentos
+
+        Raises:
+            Exception: Si hay un error al formatear
+        """
+        try:
+            if not documents:
+                return ""
+
+            logger.info(f"Formateando {len(documents)} documentos como contexto")
+
+            context_parts = []
+            for i, doc in enumerate(documents, 1):
+                score = doc.get("score", 0)
+                text = doc.get("text", "")
+                metadata = doc.get("metadata", {})
+
+                # Formatear cada documento
+                doc_text = f"[Fuente {i} - Relevancia: {score:.2%}]\n{text}"
+
+                # Agregar metadata relevante si existe
+                if metadata:
+                    metadata_str = ", ".join([f"{k}: {v}" for k, v in metadata.items()])
+                    doc_text += f"\nMetadata: {metadata_str}"
+
+                context_parts.append(doc_text)
+
+            context = "\n\n---\n\n".join(context_parts)
+            logger.info(f"Contexto formateado: {len(context)} caracteres")
+
+            return context
+
+        except Exception as e:
+            logger.error(f"Error al formatear contexto: {e}")
+            return ""
+
+    async def search(
+        self,
+        query: str,
+        top_k: int = 5,
+        namespace: str = "default"
+    ) -> str:
+        """
+        Método simplificado de búsqueda que retorna contexto formateado.
+
+        Args:
+            query: Consulta de búsqueda
+            top_k: Número de resultados
+            namespace: Namespace de Pinecone
+
+        Returns:
+            Contexto formateado como string
+
+        Raises:
+            Exception: Si hay un error en la búsqueda
+        """
+        try:
+            logger.info(f"Búsqueda simplificada: '{query[:50]}...'")
+
+            # Buscar documentos similares
+            documents = await self.search_similar_documents(
+                query=query,
+                top_k=top_k,
+                namespace=namespace
+            )
+
+            # Formatear y retornar contexto
+            return self.format_context(documents)
+
+        except Exception as e:
+            logger.error(f"Error en búsqueda simplificada: {e}")
+            # Retornar string vacío en lugar de fallar
+            return ""
+
 
 # Instancia global del servicio
 rag_service = RAGService()
