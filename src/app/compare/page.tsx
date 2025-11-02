@@ -6,10 +6,11 @@ import { FinancialProduct } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Trash2, Info, Star, XCircle, Scale } from 'lucide-react';
+import { Trash2, Info, Star, XCircle, Scale, Check } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 
 export default function ComparePage() {
   const { compareItems, removeFromCompare, clearCompare } = useCompare();
@@ -85,7 +86,149 @@ export default function ComparePage() {
         </Card>
       )}
 
-      <div className="overflow-x-auto">
+      {/* Mobile View - Cards */}
+      <div className="md:hidden space-y-6">
+        {compareItems.map(product => (
+          <Card key={product.id} className="overflow-hidden">
+            <CardHeader className="p-0 relative">
+              <Link href={`/products/${product.id}`}>
+                <Image
+                  src={product.imageUrl}
+                  alt={product.name}
+                  width={400}
+                  height={200}
+                  className="object-cover w-full h-48"
+                  data-ai-hint={product.aiHint || product.category.toLowerCase()}
+                />
+              </Link>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => removeFromCompare(product.id)}
+                className="absolute top-2 right-2 text-destructive hover:text-destructive/80 bg-white/90 backdrop-blur-sm"
+              >
+                <XCircle className="mr-1 h-4 w-4" /> Quitar
+              </Button>
+            </CardHeader>
+            <CardContent className="p-4 space-y-4">
+              <div>
+                <Link href={`/products/${product.id}`}>
+                  <h3 className="font-semibold text-lg text-primary hover:underline mb-2">{product.name}</h3>
+                </Link>
+                <div className="flex items-center text-sm text-muted-foreground mb-2">
+                  {Array.from({ length: 5 }, (_, i) => (
+                    <Star key={i} className={`h-4 w-4 ${i < Math.round(product.averageRating || 0) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} />
+                  ))}
+                  <span className="ml-2">{(product.averageRating || 0).toFixed(1)} ({product.reviewCount} reseñas)</span>
+                </div>
+                <div className="flex gap-2 mb-3">
+                  <Badge variant="secondary">
+                    {product.segment}
+                  </Badge>
+                  <Badge variant="default">
+                    {product.category}
+                  </Badge>
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="space-y-3 text-sm">
+                {product.provider && (
+                  <div>
+                    <span className="font-medium text-foreground">Proveedor:</span>{' '}
+                    <span className="text-muted-foreground">{product.provider}</span>
+                  </div>
+                )}
+                {product.interestRate && (
+                  <div>
+                    <span className="font-medium text-foreground">Tasa de Interés:</span>{' '}
+                    <span className="text-muted-foreground">{product.interestRate}</span>
+                  </div>
+                )}
+                {product.fees && (
+                  <div>
+                    <span className="font-medium text-foreground">Tarifas:</span>{' '}
+                    <span className="text-muted-foreground">{product.fees}</span>
+                  </div>
+                )}
+                {product.loanTerm && (
+                  <div>
+                    <span className="font-medium text-foreground">Plazo del Préstamo:</span>{' '}
+                    <span className="text-muted-foreground">{product.loanTerm}</span>
+                  </div>
+                )}
+                {product.maxLoanAmount && (
+                  <div>
+                    <span className="font-medium text-foreground">Monto Máximo:</span>{' '}
+                    <span className="text-muted-foreground">{product.maxLoanAmount}</span>
+                  </div>
+                )}
+                {product.minInvestment && (
+                  <div>
+                    <span className="font-medium text-foreground">Inversión Mínima:</span>{' '}
+                    <span className="text-muted-foreground">{product.minInvestment}</span>
+                  </div>
+                )}
+                {product.coverageAmount && (
+                  <div>
+                    <span className="font-medium text-foreground">Monto de Cobertura:</span>{' '}
+                    <span className="text-muted-foreground">{product.coverageAmount}</span>
+                  </div>
+                )}
+              </div>
+
+              {product.features && product.features.length > 0 && (
+                <>
+                  <Separator />
+                  <div>
+                    <h4 className="font-medium text-foreground mb-2">Características</h4>
+                    <ul className="space-y-1.5">
+                      {product.features.slice(0, 3).map((feature, i) => (
+                        <li key={i} className="flex items-start text-sm text-muted-foreground">
+                          <Check className="h-4 w-4 text-accent mr-2 mt-0.5 shrink-0" />
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                      {product.features.length > 3 && (
+                        <li className="text-sm text-muted-foreground pl-6">
+                          +{product.features.length - 3} más
+                        </li>
+                      )}
+                    </ul>
+                  </div>
+                </>
+              )}
+
+              {product.eligibility && product.eligibility.length > 0 && (
+                <>
+                  <Separator />
+                  <div>
+                    <h4 className="font-medium text-foreground mb-2">Elegibilidad</h4>
+                    <ul className="space-y-1.5">
+                      {product.eligibility.map((item, i) => (
+                        <li key={i} className="flex items-start text-sm text-muted-foreground">
+                          <Check className="h-4 w-4 text-accent mr-2 mt-0.5 shrink-0" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </>
+              )}
+
+              <Separator />
+
+              <Button asChild className="w-full">
+                <Link href={`/products/${product.id}`}>Ver Detalles Completos</Link>
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Desktop View - Table */}
+      <div className="hidden md:block overflow-x-auto">
         <Table className="min-w-max lg:min-w-full border">
           <TableHeader>
             <TableRow>
@@ -94,11 +237,11 @@ export default function ComparePage() {
                 <TableHead key={product.id} className="min-w-[250px] border-l">
                   <div className="flex flex-col items-center text-center">
                      <Link href={`/products/${product.id}`}>
-                        <Image 
-                            src={product.imageUrl} 
-                            alt={product.name} 
-                            width={150} 
-                            height={80} 
+                        <Image
+                            src={product.imageUrl}
+                            alt={product.name}
+                            width={150}
+                            height={80}
                             className="object-cover rounded-md mb-2 h-20 w-full max-w-[150px]"
                             data-ai-hint={product.aiHint || product.category.toLowerCase()}
                         />
@@ -136,8 +279,8 @@ export default function ComparePage() {
                   <TableCell className="font-medium sticky left-0 bg-card z-10 border-r">{field.label}</TableCell>
                   {compareItems.map(product => (
                     <TableCell key={product.id} className="text-sm border-l">
-                      {typeof field.key === 'function' 
-                        ? field.key(product) 
+                      {typeof field.key === 'function'
+                        ? field.key(product)
                         : (product[field.key as keyof FinancialProduct] as React.ReactNode) || <span className="text-muted-foreground/70">-</span>
                       }
                     </TableCell>
