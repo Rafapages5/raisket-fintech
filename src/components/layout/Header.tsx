@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Briefcase, Users, Lightbulb, FileText, Scale, ShoppingCart, BookOpen, LogIn } from 'lucide-react';
+import { Menu, Briefcase, Users, MessageCircle, Scale, BookOpen, LogIn } from 'lucide-react';
 import { useCompare } from '@/contexts/CompareContext';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -14,10 +14,9 @@ import UserMenu from '@/components/auth/UserMenu';
 const navItems = [
   { href: '/individuals/all', label: 'Para Personas', icon: Users },
   { href: '/businesses/all', label: 'Para Empresas', icon: Briefcase },
-  { href: '/recommendations', label: 'Recomendaciones', icon: Lightbulb },
+  { href: '/chat', label: 'Asistente IA', icon: MessageCircle, special: 'chat' },
   { href: '/blog', label: 'Blog', icon: BookOpen },
-  { href: '/personalized-offer', label: 'Oferta Personalizada', icon: FileText },
-  { href: '/compare', label: 'Comparar', icon: Scale, special: true },
+  { href: '/compare', label: 'Comparar', icon: Scale, special: 'badge' },
 ];
 
 export default function Header() {
@@ -29,7 +28,32 @@ export default function Header() {
     <>
       {navItems.map((item) => {
         const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href)) || (item.href.endsWith('/all') && pathname.startsWith(item.href.replace('/all', '')));
-        if (item.special && item.label === 'Comparar') {
+
+        // Botón de Chat IA con badge "3 GRATIS"
+        if (item.special === 'chat') {
+          return (
+            <Link key={item.href} href={item.href}>
+              <Button
+                variant="ghost"
+                className={cn(
+                  "relative text-white hover:text-[#00d4aa] hover:bg-white/10 transition-all duration-200",
+                  isMobile ? "justify-start w-full text-base py-3" : "text-sm",
+                  isActive && "text-[#00d4aa] bg-white/10 font-semibold"
+                )}
+                aria-current={isActive ? "page" : undefined}
+              >
+                <item.icon className="mr-2 h-4 w-4" />
+                {item.label}
+                <span className="ml-2 bg-[#00d4aa] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                  3 GRATIS
+                </span>
+              </Button>
+            </Link>
+          );
+        }
+
+        // Botón de Comparar con contador
+        if (item.special === 'badge') {
           return (
             <Link key={item.href} href={item.href}>
               <Button
