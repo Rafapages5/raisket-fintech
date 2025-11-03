@@ -1,0 +1,282 @@
+{
+  "SAT": [
+    {
+      "titulo": "Guía para presentar tu declaración anual",
+      "url": "https://www.prodecon.gob.mx/wp-content/uploads/2025/03/Guia-Declaracion-2025-revision-13.pdf",
+      "categoria": "impuestos",
+      "descripcion": "Guía oficial sobre declaración anual personales"
+    },
+    {
+      "titulo": "Ejemplo: Manual de declaración anual",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "impuestos",
+      "descripcion": "Instrucciones para declaración anual"
+    },
+    {
+      "titulo": "Ejemplo: Régimen de Incorporación Fiscal",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "impuestos",
+      "descripcion": "Información sobre RIF"
+    },
+    {
+      "titulo": "Ejemplo: Facturación electrónica",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "impuestos",
+      "descripcion": "Guía de CFDI 4.0"
+    },
+    {
+      "titulo": "Ejemplo: ISR para personas físicas",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "impuestos",
+      "descripcion": "Impuesto sobre la renta"
+    },
+    {
+      "titulo": "Ejemplo: IVA - Guía básica",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "impuestos",
+      "descripcion": "Información sobre IVA"
+    },
+    {
+      "titulo": "Ejemplo: Constancia de situación fiscal",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "impuestos",
+      "descripcion": "Cómo obtener constancia"
+    },
+    {
+      "titulo": "Ejemplo: Comprobantes fiscales",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "impuestos",
+      "descripcion": "Requisitos de comprobantes"
+    },
+    {
+      "titulo": "Ejemplo: Devoluciones automáticas",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "impuestos",
+      "descripcion": "Proceso de devolución de saldos a favor"
+    },
+    {
+      "titulo": "Ejemplo: Buzón tributario",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "impuestos",
+      "descripcion": "Uso del buzón tributario"
+    }
+  ],
+  "CNBV": [
+    {
+      "titulo": "Ejemplo: Ley de instituciones de crédito",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "regulacion_bancaria",
+      "descripcion": "Marco regulatorio bancario"
+    },
+    {
+      "titulo": "Ejemplo: Protección al usuario de servicios financieros",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "regulacion_bancaria",
+      "descripcion": "Derechos del usuario financiero"
+    },
+    {
+      "titulo": "Ejemplo: Regulación de bancos digitales",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "regulacion_bancaria",
+      "descripcion": "Normativa para bancos digitales"
+    },
+    {
+      "titulo": "Ejemplo: Supervisión de instituciones financieras",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "regulacion_bancaria",
+      "descripcion": "Proceso de supervisión"
+    },
+    {
+      "titulo": "Ejemplo: Prevención de lavado de dinero",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "regulacion_bancaria",
+      "descripcion": "Normativa antilavado"
+    },
+    {
+      "titulo": "Ejemplo: Solvencia de instituciones",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "regulacion_bancaria",
+      "descripcion": "Requisitos de capital"
+    },
+    {
+      "titulo": "Ejemplo: Gobierno corporativo bancario",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "regulacion_bancaria",
+      "descripcion": "Mejores prácticas de gobierno"
+    },
+    {
+      "titulo": "Ejemplo: Operaciones con valores",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "regulacion_bancaria",
+      "descripcion": "Normativa del mercado de valores"
+    },
+    {
+      "titulo": "Ejemplo: Fintech y regulación",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "regulacion_bancaria",
+      "descripcion": "Ley Fintech"
+    },
+    {
+      "titulo": "Ejemplo: Reportes regulatorios",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "regulacion_bancaria",
+      "descripcion": "Requerimientos de información"
+    }
+  ],
+  "Banxico": [
+    {
+      "titulo": "Ejemplo: Política monetaria 2024",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "economia",
+      "descripcion": "Decisiones de política monetaria"
+    },
+    {
+      "titulo": "Ejemplo: Inflación y metas",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "economia",
+      "descripcion": "Objetivos de inflación"
+    },
+    {
+      "titulo": "Ejemplo: Sistema de pagos electrónicos",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "economia",
+      "descripcion": "SPEI y otros sistemas"
+    },
+    {
+      "titulo": "Ejemplo: Tasa de interés interbancaria",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "economia",
+      "descripcion": "Información sobre tasas de referencia"
+    },
+    {
+      "titulo": "Ejemplo: Estabilidad financiera",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "economia",
+      "descripcion": "Reporte de estabilidad financiera"
+    }
+  ],
+  "Condusef": [
+    {
+      "titulo": "Ejemplo: Derechos de usuarios financieros",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "derechos_financieros",
+      "descripcion": "Guía de derechos del consumidor"
+    },
+    {
+      "titulo": "Ejemplo: Cómo presentar una reclamación",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "derechos_financieros",
+      "descripcion": "Proceso de reclamación"
+    },
+    {
+      "titulo": "Ejemplo: Tarjetas de crédito - Derechos",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "derechos_financieros",
+      "descripcion": "Guía de tarjetas de crédito"
+    },
+    {
+      "titulo": "Ejemplo: Créditos hipotecarios",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "derechos_financieros",
+      "descripcion": "Información sobre hipotecas"
+    },
+    {
+      "titulo": "Ejemplo: Seguros y protección",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "derechos_financieros",
+      "descripcion": "Guía de seguros"
+    },
+    {
+      "titulo": "Ejemplo: Ahorro para el retiro",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "derechos_financieros",
+      "descripcion": "Información sobre Afores"
+    },
+    {
+      "titulo": "Ejemplo: Comisiones bancarias",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "derechos_financieros",
+      "descripcion": "Guía de comisiones"
+    },
+    {
+      "titulo": "Ejemplo: Educación financiera básica",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "derechos_financieros",
+      "descripcion": "Conceptos básicos de finanzas"
+    },
+    {
+      "titulo": "Ejemplo: Fraudes financieros",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "derechos_financieros",
+      "descripcion": "Prevención de fraudes"
+    },
+    {
+      "titulo": "Ejemplo: Buró de crédito",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "derechos_financieros",
+      "descripcion": "Guía del buró de crédito"
+    }
+  ],
+  "CETES_Afores": [
+    {
+      "titulo": "Ejemplo: Guía de inversión en CETES",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "inversion",
+      "descripcion": "Cómo invertir en CETES"
+    },
+    {
+      "titulo": "Ejemplo: Comparativa de Afores",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "inversion",
+      "descripcion": "Comparación de rendimientos"
+    },
+    {
+      "titulo": "Ejemplo: CETES Directo - Tutorial",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "inversion",
+      "descripcion": "Uso de plataforma CETES Directo"
+    },
+    {
+      "titulo": "Ejemplo: Fondos de inversión en México",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "inversion",
+      "descripcion": "Guía de fondos de inversión"
+    },
+    {
+      "titulo": "Ejemplo: Bonos gubernamentales",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "inversion",
+      "descripcion": "Tipos de bonos del gobierno"
+    },
+    {
+      "titulo": "Ejemplo: Retiro de Afore",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "inversion",
+      "descripcion": "Proceso de retiro"
+    },
+    {
+      "titulo": "Ejemplo: Inversiones en Banco de México",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "inversion",
+      "descripcion": "Instrumentos de Banxico"
+    },
+    {
+      "titulo": "Ejemplo: Planeación del retiro",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "inversion",
+      "descripcion": "Guía de planeación financiera"
+    },
+    {
+      "titulo": "Ejemplo: Ahorro voluntario en Afore",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "inversion",
+      "descripcion": "Beneficios del ahorro voluntario"
+    },
+    {
+      "titulo": "Ejemplo: Rendimientos y comisiones Afore",
+      "url": "REEMPLAZAR_CON_URL_REAL",
+      "categoria": "inversion",
+      "descripcion": "Análisis de rendimientos"
+    }
+  ]
+}
