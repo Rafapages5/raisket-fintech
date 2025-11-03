@@ -9,7 +9,7 @@ export default function Footer() {
           <Copyright className="h-4 w-4 mr-1.5" /> {new Date().getFullYear()} Raisket. All rights reserved.
         </p>
         <p className="text-xs text-muted-foreground/70 mt-1">
-          Your trusted marketplace for financial products.
+          Tu Asesor Financiero.
         </p>
       </div>
     </footer>
