@@ -11,6 +11,7 @@ npm run migrate:excel
 ## 📁 Estructura de Archivos
 
 Los archivos Excel deben estar en `scripts/excel-data/`:
+
 - `Credito.xlsx` - Productos de crédito (tarjetas)
 - `Financiamiento.xlsx` - Productos de financiamiento (préstamos)
 - `Inversion.xlsx` - Productos de inversión
@@ -18,10 +19,12 @@ Los archivos Excel deben estar en `scripts/excel-data/`:
 ## 📋 Formato del Excel
 
 ### Columnas Requeridas
+
 - `name` - Nombre del producto (REQUERIDO)
 - `provider` - Nombre de la institución/banco (REQUERIDO)
 
 ### Columnas Opcionales Comunes
+
 - `tagline` - Frase descriptiva corta
 - `description` - Descripción del producto
 - `longDescription` - Descripción detallada
@@ -36,16 +39,19 @@ Los archivos Excel deben estar en `scripts/excel-data/`:
 ### Columnas Específicas por Categoría
 
 #### Crédito (Credito.xlsx)
+
 - `interestRate` - Ej: "29.9% - 49.9% anual" o "Desde 29.9%"
 - `maxLoanAmount` - Ej: "$50,000" o "50000"
 - `fees` - Ej: "Sin anualidad" o "$500"
 
 #### Financiamiento (Financiamiento.xlsx)
+
 - `interestRate` - Ej: "12.5% - 35% anual"
 - `loanTerm` - Ej: "12-60 meses" o "Desde 12 meses"
 - `maxLoanAmount` - Ej: "$500,000"
 
 #### Inversión (Inversion.xlsx)
+
 - `interestRate` - Rendimiento anual, Ej: "11.25%"
 - `minInvestment` - Ej: "$100" o "100"
 - `investmentType` - Ej: "CETES", "Fondos de Inversión"
@@ -53,23 +59,27 @@ Los archivos Excel deben estar en `scripts/excel-data/`:
 ## ✨ Características del Script
 
 ### 🔍 Validación Automática
+
 - Verifica campos requeridos (name, provider)
 - Parsea valores numéricos desde texto ("$50,000" → 50000)
 - Extrae rangos de tasas ("29.9% - 49.9%" → min: 29.9, max: 49.9)
 - Valida formato de datos antes de insertar
 
 ### 🏢 Gestión de Instituciones
+
 - Busca instituciones existentes en la BD
 - Crea automáticamente instituciones nuevas
 - Usa caché para evitar consultas duplicadas
 
 ### 🔗 Relaciones Automáticas
+
 - Asocia productos con instituciones
 - Vincula con subcategorías correctas
 - Crea características específicas por tipo de producto
 - Inserta features y benefits como registros separados
 
 ### 📊 Reportes Detallados
+
 ```
 ✅ Successfully migrated: 47 products
 🏢 Institutions created/used: 12
@@ -82,6 +92,7 @@ Los archivos Excel deben estar en `scripts/excel-data/`:
 ```
 
 ### 🔄 Idempotencia
+
 - Genera slugs únicos para evitar duplicados
 - Maneja errores sin romper la migración completa
 - Continúa procesando aunque fallen algunos registros
@@ -89,6 +100,7 @@ Los archivos Excel deben estar en `scripts/excel-data/`:
 ## 📝 Ejemplos de Datos
 
 ### Ejemplo Crédito
+
 ```
 name: BBVA Azul
 tagline: La tarjeta que te da más
@@ -103,6 +115,7 @@ benefits: Programa de recompensas, Seguro de compras
 ```
 
 ### Ejemplo Financiamiento
+
 ```
 name: Préstamo Personal BBVA
 tagline: Hasta $500,000 sin garantía
@@ -114,6 +127,7 @@ features: Tasa fija, Sin comisiones, Aprobación rápida
 ```
 
 ### Ejemplo Inversión
+
 ```
 name: CETES Directo
 tagline: Invierte desde $100 pesos
@@ -127,7 +141,9 @@ features: Inversión gubernamental, Liquidez, Desde $100
 ## ⚙️ Requisitos Previos
 
 ### 1. Tablas en Supabase
+
 Asegúrate de tener estas tablas creadas:
+
 - `instituciones`
 - `categorias`
 - `subcategorias`
@@ -138,7 +154,9 @@ Asegúrate de tener estas tablas creadas:
 - `producto_caracteristicas`
 
 ### 2. Datos Base
+
 Debes tener estas subcategorías creadas:
+
 ```sql
 -- Verificar que existan
 SELECT * FROM subcategorias WHERE slug IN (
@@ -149,7 +167,9 @@ SELECT * FROM subcategorias WHERE slug IN (
 ```
 
 ### 3. Variables de Entorno
+
 En `.env.local`:
+
 ```env
 NEXT_PUBLIC_SUPABASE_URL=tu_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_key
@@ -158,7 +178,9 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_key
 ## 🐛 Troubleshooting
 
 ### Error: "Subcategory not found"
+
 Ejecuta en Supabase SQL Editor:
+
 ```sql
 INSERT INTO categorias (nombre, slug) VALUES
   ('Crédito', 'credito'),
@@ -171,10 +193,13 @@ FROM categorias c WHERE c.slug = 'credito';
 ```
 
 ### Error: "Missing required fields"
+
 Verifica que tu Excel tenga las columnas `name` y `provider` con valores en todas las filas.
 
 ### Error: "File not found"
+
 Asegúrate de que los archivos estén en `scripts/excel-data/`:
+
 ```bash
 ls scripts/excel-data/
 # Debe mostrar: Credito.xlsx, Financiamiento.xlsx, Inversion.xlsx
@@ -187,6 +212,7 @@ Los archivos Excel en `scripts/excel-data/` están en `.gitignore` para evitar s
 ## 📞 Soporte
 
 Si tienes problemas:
+
 1. Revisa el log de errores detallado
 2. Verifica que las columnas del Excel coincidan con el formato esperado
 3. Confirma que las tablas en Supabase existan

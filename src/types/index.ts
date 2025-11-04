@@ -39,6 +39,22 @@ export interface FinancialProduct {
   eligibility?: string[];
   aiHint?: string;
   detailsUrl?: string;
+  // New fields for enhanced product detail page
+  pros?: string[];
+  cons?: string[];
+  gatNominal?: string;
+  gatReal?: string;
+  rendimientoAnual?: string;
+  liquidez?: string;
+  montoMinimo?: string;
+  montoMaximo?: string;
+  requisitos?: string[];
+  proteccion?: string;
+  comisiones?: string[];
+  vigenciaInicio?: string;
+  vigenciaFin?: string;
+  terminosCondicionesUrl?: string;
+  logoUrl?: string;
 }
 
 // New Supabase-based types based on actual database structure

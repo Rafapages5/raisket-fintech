@@ -2,17 +2,9 @@
 "use client";
 
 import type { FinancialProduct, Review } from '@/types';
-import Image from 'next/image';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import ReviewList from '@/components/reviews/ReviewList';
-import ReviewForm from '@/components/reviews/ReviewForm';
-import { Star, Tag, Users, Briefcase, PlusCircle, MinusCircle, Check, ExternalLink, Copy } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
-import { useCompare } from '@/contexts/CompareContext';
-import { useToast } from '@/hooks/use-toast';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import Link from 'next/link';
+import ProductDetailInvestment from './ProductDetailInvestment';
+import ProductDetailCredit from './ProductDetailCredit';
+import ProductDetailFinancing from './ProductDetailFinancing';
 
 interface ProductDetailClientProps {
   product: FinancialProduct;
@@ -20,168 +12,19 @@ interface ProductDetailClientProps {
 }
 
 export default function ProductDetailClient({ product, reviews }: ProductDetailClientProps) {
-  const { addToCompare, removeFromCompare, isInCompare } = useCompare();
-  const { toast } = useToast();
+  // Renderizar componente específico según la categoría del producto
+  switch (product.category) {
+    case 'Inversión':
+      return <ProductDetailInvestment product={product} reviews={reviews} />;
 
-  const isComparing = isInCompare(product.id);
+    case 'Crédito':
+      return <ProductDetailCredit product={product} reviews={reviews} />;
 
-  const handleCompareClick = () => {
-    if (isComparing) {
-      removeFromCompare(product.id);
-    } else {
-      addToCompare(product);
-    }
-  };
+    case 'Financiamiento':
+      return <ProductDetailFinancing product={product} reviews={reviews} />;
 
-  const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href);
-    toast({
-      title: "¡Enlace Copiado!",
-      description: "El enlace del producto se copió al portapapeles.",
-    });
-  };
-
-  const averageRating = product.averageRating || 0;
-
-  return (
-    <div className="space-y-8 lg:space-y-12">
-      <div className="grid lg:grid-cols-3 gap-8 lg:gap-12">
-        <div className="lg:col-span-2 space-y-6">
-          <Card className="overflow-hidden">
-            <CardHeader className="p-0 relative">
-              <Image
-                src={product.imageUrl}
-                alt={product.name}
-                width={800}
-                height={400}
-                className="w-full h-64 md:h-96 object-cover"
-                priority
-                data-ai-hint={product.aiHint || product.category.toLowerCase()}
-              />
-              <div className="absolute top-4 right-4 flex space-x-2">
-                <Badge variant="secondary" className="text-sm py-1 px-3 bg-opacity-80 backdrop-blur-sm">
-                  {product.segment === 'Personas' ? <Users className="h-4 w-4 mr-1.5" /> : <Briefcase className="h-4 w-4 mr-1.5" />}
-                  {product.segment}
-                </Badge>
-                <Badge variant="default" className="text-sm py-1 px-3 bg-accent text-accent-foreground bg-opacity-90 backdrop-blur-sm">
-                  <Tag className="h-4 w-4 mr-1.5" />
-                  {product.category}
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent className="p-6">
-              <h1 className="font-headline text-3xl md:text-4xl font-bold text-primary mb-2">{product.name}</h1>
-              <p className="text-lg text-muted-foreground mb-4">{product.tagline}</p>
-              <div className="flex items-center mb-4">
-                {Array.from({ length: 5 }, (_, i) => (
-                  <Star
-                    key={i}
-                    className={`h-5 w-5 ${i < Math.round(averageRating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
-                  />
-                ))}
-                <span className="ml-2 text-muted-foreground">{averageRating.toFixed(1)} ({product.reviewCount} reseñas)</span>
-              </div>
-              <p className="text-foreground/80 leading-relaxed whitespace-pre-line mb-6">{product.longDescription || product.description}</p>
-
-              {product.provider && (
-                <p className="text-sm text-muted-foreground">Proveedor: <span className="font-semibold text-foreground">{product.provider}</span></p>
-              )}
-            </CardContent>
-          </Card>
-
-          {(product.features?.length > 0 || (product.benefits && product.benefits.length > 0)) && (
-             <Card>
-              <CardHeader>
-                <CardTitle className="font-headline text-2xl text-primary">Características y Beneficios</CardTitle>
-              </CardHeader>
-              <CardContent className="grid md:grid-cols-2 gap-6">
-                {product.features?.length > 0 && (
-                  <div>
-                    <h3 className="font-semibold text-lg text-foreground mb-2">Características Principales</h3>
-                    <ul className="list-disc list-inside space-y-1 text-foreground/80">
-                      {product.features.map((feature, index) => (
-                        <li key={`feature-${index}`} className="flex items-start">
-                          <Check className="h-5 w-5 text-accent mr-2 mt-0.5 shrink-0"/> <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                {(product.benefits && product.benefits.length > 0) && (
-                  <div>
-                    <h3 className="font-semibold text-lg text-foreground mb-2">Beneficios Principales</h3>
-                    <ul className="list-disc list-inside space-y-1 text-foreground/80">
-                      {product.benefits.map((benefit, index) => (
-                         <li key={`benefit-${index}`} className="flex items-start">
-                           <Check className="h-5 w-5 text-accent mr-2 mt-0.5 shrink-0"/> <span>{benefit}</span>
-                         </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          )}
-        </div>
-
-        <div className="lg:col-span-1 space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="font-headline text-2xl text-primary">Acciones</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {product.detailsUrl && product.detailsUrl !== '#' && (
-                 <Button size="lg" className="w-full bg-primary hover:bg-primary/90" asChild>
-                  <Link href={product.detailsUrl} target="_blank" rel="noopener noreferrer">
-                    Visitar Proveedor <ExternalLink className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-              )}
-              <Button size="lg" variant="outline" className="w-full" onClick={handleCompareClick}>
-                {isComparing ? <MinusCircle className="mr-2 h-4 w-4" /> : <PlusCircle className="mr-2 h-4 w-4" />}
-                {isComparing ? 'Quitar de Comparación' : 'Agregar a Comparación'}
-              </Button>
-              <Button size="lg" variant="outline" className="w-full" onClick={handleShare}>
-                <Copy className="mr-2 h-4 w-4" /> Compartir Producto
-              </Button>
-            </CardContent>
-          </Card>
-
-          {(product.interestRate || product.loanTerm || product.fees || (product.eligibility && product.eligibility.length > 0)) && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="font-headline text-xl text-primary">Resumen del Producto</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm">
-                {product.interestRate && <p><strong>Tasa de Interés:</strong> {product.interestRate}</p>}
-                {product.loanTerm && <p><strong>Plazo:</strong> {product.loanTerm}</p>}
-                {product.maxLoanAmount && <p><strong>Monto Máximo:</strong> {product.maxLoanAmount}</p>}
-                {product.coverageAmount && <p><strong>Cobertura:</strong> {product.coverageAmount}</p>}
-                {product.minInvestment && <p><strong>Inversión Mínima:</strong> {product.minInvestment}</p>}
-                {product.fees && <p><strong>Comisiones:</strong> {product.fees}</p>}
-                {(product.eligibility && product.eligibility.length > 0) && (
-                  <div>
-                    <h4 className="font-semibold mb-1">Elegibilidad:</h4>
-                    <ul className="list-disc list-inside space-y-0.5 text-foreground/80">
-                      {product.eligibility.map((item, i) => <li key={i}>{item}</li>)}
-                    </ul>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          )}
-        </div>
-      </div>
-
-      <Separator />
-
-      <div>
-        <h2 className="font-headline text-2xl md:text-3xl font-semibold text-primary mb-6">Reseñas de Clientes</h2>
-        <div className="grid md:grid-cols-2 gap-6">
-            <ReviewList reviews={reviews} />
-            <ReviewForm productId={product.id} />
-        </div>
-      </div>
-    </div>
-  );
+    default:
+      // Fallback a inversión si no se reconoce la categoría
+      return <ProductDetailInvestment product={product} reviews={reviews} />;
+  }
 }

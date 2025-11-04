@@ -156,7 +156,23 @@ export function transformProductToLegacy(
     fees: formatFees(),
     eligibility: buildEligibility(),
     aiHint: product.ai_hint || `${product.subcategorias.categorias.nombre} ${product.instituciones.nombre}`,
-    detailsUrl: product.url_detalles || product.instituciones.sitio_web || '#'
+    detailsUrl: product.url_detalles || product.instituciones.sitio_web || '#',
+    // NEW FIELDS - Map from Supabase
+    pros: (product as any).pros || undefined,
+    cons: (product as any).cons || undefined,
+    gatNominal: (product as any).gat_nominal || undefined,
+    gatReal: (product as any).gat_real || undefined,
+    rendimientoAnual: (product as any).rendimiento_anual || undefined,
+    liquidez: (product as any).liquidez || undefined,
+    montoMinimo: (product as any).monto_minimo || undefined,
+    montoMaximo: (product as any).monto_maximo || undefined,
+    requisitos: (product as any).requisitos || undefined,
+    proteccion: (product as any).proteccion || undefined,
+    comisiones: (product as any).comisiones || undefined,
+    vigenciaInicio: (product as any).vigencia_inicio || undefined,
+    vigenciaFin: (product as any).vigencia_fin || undefined,
+    terminosCondicionesUrl: (product as any).terminos_condiciones_url || undefined,
+    logoUrl: (product as any).logo_url || product.instituciones.logo_url || undefined
   };
 }
 
