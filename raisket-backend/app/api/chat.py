@@ -9,6 +9,7 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 from app.services.llm_service import llm_service
 from app.services.rag_service import rag_service
+from app.services.db_service import db_service
 
 # Configurar logging
 logger = logging.getLogger(__name__)
@@ -217,58 +218,84 @@ async def send_message(request: MessageRequest) -> MessageResponse:
     Endpoint simplificado para enviar mensajes al asistente Raisket.
 
     Automáticamente usa RAG si use_rag=True. Maneja historial de conversación.
+    AHORA CON PERSISTENCIA EN BASE DE DATOS.
     """
     try:
         logger.info(f"Request de mensaje recibido: '{request.message[:100]}...'")
 
-        # Generar chat_id si no existe
-        import uuid
-        chat_id = request.chat_id or str(uuid.uuid4())
+        # 1. CREAR O RECUPERAR CHAT
+        chat_id = request.chat_id
+        if chat_id:
+            # Verificar que el chat exista
+            existing_chat = await db_service.get_chat(chat_id)
+            if not existing_chat:
+                logger.warning(f"Chat {chat_id} no existe, creando uno nuevo")
+                chat = await db_service.create_chat(title="Nueva conversación")
+                chat_id = chat["id"]
+        else:
+            # Crear nuevo chat
+            chat = await db_service.create_chat(title="Nueva conversación")
+            chat_id = chat["id"]
 
-        # Convertir historial a formato dict si existe
-        history = []
+        # 2. OBTENER HISTORIAL DE LA BD (si no se proporciona)
         if request.chat_history:
+            # Usar historial del request (para compatibilidad)
             history = [{"role": msg.role, "content": msg.content} for msg in request.chat_history]
+        else:
+            # Obtener historial de la base de datos
+            history = await db_service.get_chat_history(chat_id)
 
-        # Decidir si usar RAG o no
+        # 3. GUARDAR MENSAJE DEL USUARIO EN BD
+        await db_service.save_message(
+            chat_id=chat_id,
+            role="user",
+            content=request.message
+        )
+
+        # 4. GENERAR RESPUESTA DEL ASISTENTE
+        response_text = None
+        sources = None
+        context_used = False
+
         if request.use_rag:
             try:
                 # Intentar con RAG
                 result = await llm_service.chat_with_rag(message=request.message)
-
-                return MessageResponse(
-                    response=result["response"],
-                    chat_id=chat_id,
-                    sources=result.get("sources"),
-                    context_used=result.get("context_used", False)
-                )
+                response_text = result["response"]
+                sources = result.get("sources")
+                context_used = result.get("context_used", False)
             except Exception as e:
                 logger.warning(f"RAG falló, usando chat sin contexto: {e}")
                 # Fallback a chat normal
-                response = await llm_service.chat(
+                response_text = await llm_service.chat(
                     message=request.message,
                     chat_history=history
                 )
-
-                return MessageResponse(
-                    response=response,
-                    chat_id=chat_id,
-                    sources=None,
-                    context_used=False
-                )
         else:
             # Chat sin RAG
-            response = await llm_service.chat(
+            response_text = await llm_service.chat(
                 message=request.message,
                 chat_history=history
             )
 
-            return MessageResponse(
-                response=response,
-                chat_id=chat_id,
-                sources=None,
-                context_used=False
-            )
+        # 5. GUARDAR RESPUESTA DEL ASISTENTE EN BD
+        await db_service.save_message(
+            chat_id=chat_id,
+            role="assistant",
+            content=response_text,
+            metadata={
+                "context_used": context_used,
+                "sources_count": len(sources) if sources else 0
+            }
+        )
+
+        # 6. RETORNAR RESPUESTA
+        return MessageResponse(
+            response=response_text,
+            chat_id=chat_id,
+            sources=sources,
+            context_used=context_used
+        )
 
     except Exception as e:
         logger.error(f"Error en endpoint /message: {e}")
@@ -334,11 +361,129 @@ async def send_message_stream(request: MessageRequest):
         )
 
 
+@router.get("/history/{chat_id}", status_code=status.HTTP_200_OK)
+async def get_chat_history(chat_id: str):
+    """
+    Obtiene el historial completo de mensajes de un chat.
+
+    Args:
+        chat_id: ID del chat
+
+    Returns:
+        Lista de mensajes con metadata
+    """
+    try:
+        # Verificar que el chat existe
+        chat = await db_service.get_chat(chat_id)
+        if not chat:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Chat {chat_id} no encontrado"
+            )
+
+        # Obtener mensajes
+        messages = await db_service.get_chat_messages(chat_id)
+
+        return {
+            "chat_id": chat_id,
+            "title": chat.get("title", "Nueva conversación"),
+            "created_at": chat.get("created_at"),
+            "updated_at": chat.get("updated_at"),
+            "message_count": len(messages),
+            "messages": messages
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error al obtener historial: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error al obtener historial: {str(e)}"
+        )
+
+
+@router.get("/list", status_code=status.HTTP_200_OK)
+async def list_chats(user_id: Optional[str] = None, limit: int = 50):
+    """
+    Lista todos los chats del usuario.
+
+    Args:
+        user_id: ID del usuario (opcional, None para chats anónimos)
+        limit: Límite de resultados (default: 50)
+
+    Returns:
+        Lista de chats ordenados por fecha de actualización
+    """
+    try:
+        chats = await db_service.get_user_chats(user_id=user_id, limit=limit)
+
+        return {
+            "count": len(chats),
+            "chats": chats
+        }
+
+    except Exception as e:
+        logger.error(f"Error al listar chats: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error al listar chats: {str(e)}"
+        )
+
+
+@router.delete("/{chat_id}", status_code=status.HTTP_200_OK)
+async def delete_chat(chat_id: str):
+    """
+    Elimina un chat y todos sus mensajes.
+
+    Args:
+        chat_id: ID del chat a eliminar
+
+    Returns:
+        Confirmación de eliminación
+    """
+    try:
+        # Verificar que existe
+        chat = await db_service.get_chat(chat_id)
+        if not chat:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Chat {chat_id} no encontrado"
+            )
+
+        # Eliminar
+        await db_service.delete_chat(chat_id)
+
+        return {
+            "message": "Chat eliminado exitosamente",
+            "chat_id": chat_id
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error al eliminar chat: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error al eliminar chat: {str(e)}"
+        )
+
+
 @router.get("/health", status_code=status.HTTP_200_OK)
 async def chat_health_check():
     """Health check específico para el módulo de chat."""
     return {
         "status": "healthy",
         "module": "chat",
-        "endpoints": ["/chat", "/chat/stream", "/chat/rag", "/chat/message", "/chat/message/stream"]
+        "endpoints": [
+            "/chat",
+            "/chat/stream",
+            "/chat/rag",
+            "/chat/message",
+            "/chat/message/stream",
+            "/chat/history/{chat_id}",
+            "/chat/list",
+            "/chat/{chat_id} [DELETE]"
+        ],
+        "database": "connected"
     }

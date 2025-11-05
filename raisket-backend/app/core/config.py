@@ -22,6 +22,10 @@ class Settings(BaseSettings):
     OPENAI_API_KEY: str = Field(..., description="Clave de API de OpenAI")
     PINECONE_API_KEY: str = Field(..., description="Clave de API de Pinecone")
 
+    # Supabase Configuration
+    SUPABASE_URL: str = Field(..., description="URL del proyecto de Supabase")
+    SUPABASE_KEY: str = Field(..., description="Clave anon/public de Supabase")
+
     # Pinecone Configuration
     PINECONE_ENVIRONMENT: str = Field(default="us-east-1", description="Región de Pinecone")
     PINECONE_INDEX_NAME: str = Field(default="raisket-knowledge-base", description="Nombre del índice de Pinecone")

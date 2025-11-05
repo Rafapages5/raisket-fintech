@@ -7,17 +7,20 @@ import type { Message, ChatResponse, ChatRequest, ChatError } from '@/types/chat
 interface ChatInterfaceProps {
   apiUrl?: string;
   className?: string;
+  useStreaming?: boolean; // Nueva prop para habilitar/deshabilitar streaming
 }
 
 export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   apiUrl,
-  className = ''
+  className = '',
+  useStreaming = true // Por defecto usa streaming
 }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [chatId, setChatId] = useState<string | null>(null);
+  const [isStreaming, setIsStreaming] = useState<boolean>(useStreaming);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -38,6 +41,118 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   }, [input]);
+
+  const handleSendMessageStreaming = async (): Promise<void> => {
+    const trimmedInput = input.trim();
+    if (!trimmedInput || loading) return;
+
+    // Limpiar error previo
+    setError(null);
+
+    // Optimistic UI: agregar mensaje del usuario inmediatamente
+    const userMessage: Message = {
+      role: 'user',
+      content: trimmedInput,
+      timestamp: new Date()
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
+    setLoading(true);
+
+    // Crear mensaje vacío del asistente para streaming
+    const assistantMessage: Message = {
+      role: 'assistant',
+      content: '',
+      timestamp: new Date()
+    };
+
+    // Agregar mensaje vacío del asistente
+    setMessages(prev => [...prev, assistantMessage]);
+    const messageIndex = messages.length + 1; // +1 porque acabamos de agregar el mensaje del usuario
+
+    try {
+      // Construir URL de API
+      const baseUrl = apiUrl || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const endpoint = `${baseUrl}/chat/message/stream`;
+
+      // Preparar request
+      const requestBody: ChatRequest = {
+        message: trimmedInput,
+        chat_id: chatId || undefined,
+        use_rag: true
+      };
+
+      // Hacer fetch con streaming
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({
+          detail: `Error del servidor: ${response.status} ${response.statusText}`
+        }));
+
+        throw new Error(errorData.detail || 'Error al procesar tu mensaje');
+      }
+
+      // Leer stream
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+
+      if (!reader) {
+        throw new Error('No se pudo obtener el stream de respuesta');
+      }
+
+      let accumulatedText = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+
+        if (done) {
+          break;
+        }
+
+        // Decodificar chunk
+        const chunk = decoder.decode(value, { stream: true });
+        accumulatedText += chunk;
+
+        // Actualizar mensaje del asistente en tiempo real
+        setMessages(prev => {
+          const newMessages = [...prev];
+          newMessages[messageIndex] = {
+            ...newMessages[messageIndex],
+            content: accumulatedText
+          };
+          return newMessages;
+        });
+      }
+
+      setLoading(false);
+    } catch (err) {
+      console.error('Error en chat streaming:', err);
+
+      // Mostrar error al usuario
+      const errorMessage = err instanceof Error ? err.message : 'Error de conexión con el servidor';
+      setError(errorMessage);
+
+      // Actualizar mensaje del asistente con error
+      setMessages(prev => {
+        const newMessages = [...prev];
+        newMessages[messageIndex] = {
+          ...newMessages[messageIndex],
+          content: `⚠️ Lo siento, ocurrió un error: ${errorMessage}\n\nPor favor, intenta de nuevo.`
+        };
+        return newMessages;
+      });
+
+      setLoading(false);
+    }
+  };
 
   const handleSendMessage = async (): Promise<void> => {
     const trimmedInput = input.trim();
@@ -125,7 +240,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
     // Enter envía, Shift+Enter nueva línea
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSendMessage();
+      isStreaming ? handleSendMessageStreaming() : handleSendMessage();
     }
   };
 
@@ -178,19 +293,29 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
             </p>
             <div className="grid grid-cols-1 gap-2 w-full max-w-sm text-sm">
               <button
-                onClick={() => setInput('¿Cómo puedo hacer un presupuesto?')}
+                onClick={() => {
+                  setInput('¿Cómo puedo hacer un presupuesto?');
+                  // Auto-focus textarea para que usuario pueda enviar con Enter
+                  textareaRef.current?.focus();
+                }}
                 className="text-left px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 💡 ¿Cómo hacer un presupuesto?
               </button>
               <button
-                onClick={() => setInput('¿Qué son los CETES?')}
+                onClick={() => {
+                  setInput('¿Qué son los CETES?');
+                  textareaRef.current?.focus();
+                }}
                 className="text-left px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 📈 ¿Qué son los CETES?
               </button>
               <button
-                onClick={() => setInput('¿Cómo salir de deudas?')}
+                onClick={() => {
+                  setInput('¿Cómo salir de deudas?');
+                  textareaRef.current?.focus();
+                }}
                 className="text-left px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 💳 ¿Cómo salir de deudas?
@@ -208,7 +333,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
           />
         ))}
 
-        {loading && (
+        {loading && !isStreaming && (
           <div className="flex justify-start mb-4">
             <div className="bg-gray-100 rounded-2xl rounded-bl-none px-4 py-3 shadow-sm">
               <div className="flex items-center gap-2">
@@ -256,7 +381,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
             </div>
           </div>
           <button
-            onClick={handleSendMessage}
+            onClick={isStreaming ? handleSendMessageStreaming : handleSendMessage}
             disabled={!input.trim() || loading}
             className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             aria-label="Enviar mensaje"
