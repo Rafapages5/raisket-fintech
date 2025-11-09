@@ -261,11 +261,11 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
       <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-t-lg">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
-            <span className="text-2xl">💬</span>
+            <span className="text-2xl">🤖</span>
           </div>
           <div>
             <h3 className="font-semibold text-lg">Raisket AI</h3>
-            <p className="text-xs text-blue-100">Tu asesor financiero inteligente</p>
+            <p className="text-xs text-blue-100">Tu asesor financiero independiente impulsado por IA</p>
           </div>
         </div>
         {messages.length > 0 && (
@@ -283,13 +283,13 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-2 bg-gray-50">
         {messages.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full text-center px-4">
-            <div className="text-6xl mb-4">💰</div>
+            <div className="text-6xl mb-4">🤖</div>
             <h4 className="text-xl font-semibold text-gray-800 mb-2">
               ¡Hola! Soy Raisket AI
             </h4>
             <p className="text-gray-600 max-w-md mb-4">
-              Tu asesor financiero inteligente. Puedo ayudarte con presupuestos,
-              deudas, inversiones y más.
+              Tu asesor financiero <strong>independiente</strong> impulsado por IA.
+              Sin conflictos de interés. Trabajo para ti, no para los bancos.
             </p>
             <div className="grid grid-cols-1 gap-2 w-full max-w-sm text-sm">
               <button

@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Briefcase, Users, MessageCircle, Scale, BookOpen, LogIn } from 'lucide-react';
+import { Menu, Briefcase, Users, MessageCircle, Lightbulb, Scale, BookOpen, LogIn, DollarSign } from 'lucide-react';
 import { useCompare } from '@/contexts/CompareContext';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -15,7 +15,9 @@ const navItems = [
   { href: '/individuals/all', label: 'Para Personas', icon: Users },
   { href: '/businesses/all', label: 'Para Empresas', icon: Briefcase },
   { href: '/chat', label: 'Asistente IA', icon: MessageCircle, special: 'chat' },
-  { href: '/blog', label: 'Blog', icon: BookOpen },
+  { href: '/recommendations', label: 'Recomendaciones', icon: Lightbulb },
+  { href: '/educacion', label: 'Educación', icon: BookOpen },
+  { href: '/pricing', label: 'Precios', icon: DollarSign },
   { href: '/compare', label: 'Comparar', icon: Scale, special: 'badge' },
 ];
 
