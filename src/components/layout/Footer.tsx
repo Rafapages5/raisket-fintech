@@ -6,14 +6,6 @@ export default function Footer() {
   return (
     <footer className="bg-[#1e293b] border-t border-border/50 py-12 mt-auto">
       <div className="container mx-auto px-4">
-<<<<<<< HEAD
-        <p className="text-sm text-muted-foreground flex items-center justify-center">
-          <Copyright className="h-4 w-4 mr-1.5" /> {new Date().getFullYear()} Raisket. All rights reserved.
-        </p>
-        <p className="text-xs text-muted-foreground/70 mt-1">
-          Tu Asesor Financiero.
-        </p>
-=======
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           {/* Brand */}
           <div className="md:col-span-1">
@@ -97,7 +89,6 @@ export default function Footer() {
             Asesoría financiera independiente y transparente. En proceso de registro ante la CNBV.
           </p>
         </div>
->>>>>>> 3455a0f (Rediseño completo del sitio web para comunicar independencia financiera)
       </div>
     </footer>
   );
