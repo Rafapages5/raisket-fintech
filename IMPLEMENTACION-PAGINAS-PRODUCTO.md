@@ -7,9 +7,11 @@ Se ha implementado exitosamente un sistema de 3 páginas de producto diferenciad
 ### Componentes Creados
 
 #### 1. **ProductDetailInvestment.tsx**
+
 Para productos de **Inversión** (Cuentas de inversión, AFOREs, etc.)
 
 **Secciones específicas:**
+
 - Tasa de Rendimiento (GAT Nominal, GAT Real, Rendimiento Anual)
 - Liquidez (24/7 inmediata, etc.)
 - Monto mínimo y máximo
@@ -19,9 +21,11 @@ Para productos de **Inversión** (Cuentas de inversión, AFOREs, etc.)
 - Términos y condiciones con vigencia
 
 #### 2. **ProductDetailCredit.tsx**
+
 Para productos de **Crédito** (Tarjetas de crédito, créditos personales, etc.)
 
 **Secciones específicas:**
+
 - Tasa de Interés y CAT
 - Ejemplo de pago mensual
 - Montos y plazos
@@ -33,9 +37,11 @@ Para productos de **Crédito** (Tarjetas de crédito, créditos personales, etc.
 - Pros/Cons
 
 #### 3. **ProductDetailFinancing.tsx**
+
 Para productos de **Financiamiento** (BNPL - Buy Now Pay Later como Kueski Pay, Aplazo, etc.)
 
 **Secciones específicas:**
+
 - Costo de financiamiento (0%-X% según tienda)
 - CAT Promedio
 - Ejemplo de financiamiento
@@ -66,6 +72,7 @@ ProductDetailClient (Router)
 ### Campos Agregados a la Base de Datos
 
 #### Campos Comunes (todos los productos)
+
 ```sql
 pros text[]                    -- Ventajas
 cons text[]                    -- Desventajas
@@ -76,6 +83,7 @@ terminos_condiciones_url text  -- URL a términos
 ```
 
 #### Campos de Inversión
+
 ```sql
 gat_nominal text               -- GAT Nominal
 gat_real text                  -- GAT Real
@@ -89,6 +97,7 @@ comisiones text[]              -- Lista de comisiones
 ```
 
 #### Campos de Crédito
+
 ```sql
 cat text                       -- CAT promedio
 pago_mensual_ejemplo text      -- Ejemplo de pago
@@ -98,6 +107,7 @@ disposicion text               -- Forma de disposición
 ```
 
 #### Campos de Financiamiento
+
 ```sql
 ejemplo_financiamiento text    -- Ejemplo de pago
 tiendas_participantes text[]   -- Lista de tiendas
@@ -278,6 +288,7 @@ scripts/SQL:
 ## 📊 Campos por Tipo de Producto
 
 ### Inversión
+
 - ✅ GAT Nominal/Real
 - ✅ Rendimiento anual
 - ✅ Liquidez
@@ -285,6 +296,7 @@ scripts/SQL:
 - ✅ Calculadora de rendimientos
 
 ### Crédito
+
 - ✅ CAT
 - ✅ Tasa de interés
 - ✅ Ejemplo de pago mensual
@@ -294,6 +306,7 @@ scripts/SQL:
 - ⚠️ Tabla amortización (placeholder)
 
 ### Financiamiento
+
 - ✅ CAT
 - ✅ Ejemplo de financiamiento
 - ✅ Tiendas participantes
@@ -308,14 +321,17 @@ scripts/SQL:
 ## 🚀 Próximos Pasos Recomendados
 
 1. **Implementar simuladores funcionales**
+
    - Simulador de crédito (amortización)
    - Simulador de pagos de financiamiento
 
 2. **Agregar más productos a Supabase**
+
    - Productos de inversión (AFOREs, fondos)
    - Productos de financiamiento (Aplazo, Afirm)
 
 3. **Mejorar componentes**
+
    - Agregar gráficas de rendimiento
    - Tabla de amortización interactiva
    - Comparación en tiempo real

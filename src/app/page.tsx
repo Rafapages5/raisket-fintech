@@ -1,369 +1,324 @@
 // src/app/page.tsx
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Users, Briefcase, ArrowRight, XCircle as XCircleIcon } from 'lucide-react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { getFeaturedProducts } from '@/lib/products';
-import ProductList from '@/components/products/ProductList';
+// Landing Page MVP Raisket.mx - Estilo NerdWallet
 
-export default async function HomePage() {
-  // Get featured products from Supabase
-  let featuredProducts: any[] = [];
-  try {
-    featuredProducts = await getFeaturedProducts(6);
-  } catch (error) {
-    console.error('Error loading featured products:', error);
-  }
+import Link from 'next/link';
+import { CreditCard, Banknote, TrendingUp, Building2, ChevronRight, Shield, Scale, Brain, Users, Star, ExternalLink, MessageCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import {
+  getFinancialProducts,
+  categoryLabels,
+  type FinancialProduct,
+  type ProductCategory,
+} from '@/lib/financial-products';
+
+export const revalidate = 3600; // Revalidate every hour
+
+// ============ HERO SECTION ============
+function HeroSection() {
+  const categories = [
+    {
+      name: 'Tarjetas de Crédito',
+      href: '/tarjetas-credito',
+      icon: CreditCard,
+      color: 'bg-[#00D9A5]',
+      description: 'Sin anualidad, cashback',
+    },
+    {
+      name: 'Préstamos',
+      href: '/prestamos-personales',
+      icon: Banknote,
+      color: 'bg-[#4FD1C7]',
+      description: 'Tasas desde 8.9%',
+    },
+    {
+      name: 'Inversiones',
+      href: '/inversiones',
+      icon: TrendingUp,
+      color: 'bg-[#F59E0B]',
+      description: 'CETES, fondos, pagarés',
+    },
+    {
+      name: 'Cuentas',
+      href: '/cuentas-bancarias',
+      icon: Building2,
+      color: 'bg-[#8B5CF6]',
+      description: 'Alto rendimiento',
+    },
+  ];
 
   return (
-    <div className="space-y-12">
-      <section className="text-center py-12 md:py-20 bg-gradient-to-br from-primary/10 via-background to-background rounded-xl shadow-lg">
-        <div className="inline-block px-4 py-2 bg-accent/20 text-accent rounded-full text-sm font-semibold mb-6">
-          🤖 Impulsado por Inteligencia Artificial
-        </div>
-        <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl font-bold text-primary mb-6 leading-tight">
-          El Primer Asesor Financiero<br />
-          <span className="text-accent">Independiente</span> de México
-        </h1>
-        <p className="text-lg md:text-xl text-foreground/80 max-w-4xl mx-auto mb-4">
-          <strong>Raisket trabaja para ti, no para los bancos.</strong>
-        </p>
-        <p className="text-base md:text-lg text-foreground/70 max-w-3xl mx-auto mb-8">
-          Sin conflictos de interés. Sin comisiones ocultas. Solo recomendaciones honestas basadas en tus necesidades reales, impulsadas por IA y la ética de los mejores asesores financieros independientes de México.
-        </p>
-        <div className="flex flex-col sm:flex-row justify-center gap-4 mb-8">
-          <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-            <Link href="#problema">Conoce el Problema <ArrowRight className="ml-2 h-5 w-5" /></Link>
-          </Button>
-          <Button asChild size="lg" variant="outline" className="border-primary text-primary hover:bg-primary/10">
-            <Link href="/recommendations">Obtener Asesoría Gratuita</Link>
-          </Button>
-        </div>
-        <p className="text-sm text-foreground/60">
-          ✓ Comparador gratuito &nbsp;·&nbsp; ✓ Educación personalizada &nbsp;·&nbsp; ✓ Asesoría independiente
-        </p>
-      </section>
+    <section className="relative bg-gradient-to-br from-[#1A365D] to-[#2D4A68] overflow-hidden">
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+        }} />
+      </div>
 
-      <section id="problema" className="py-16 bg-destructive/5 rounded-xl">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="font-headline text-3xl md:text-4xl font-semibold text-foreground mb-4">
-              El Problema Financiero en México es Real
-            </h2>
-            <p className="text-lg text-foreground/70 max-w-3xl mx-auto">
-              Y nadie te lo dice con claridad
-            </p>
+      <div className="container mx-auto px-4 py-16 md:py-24 relative">
+        <div className="text-center max-w-4xl mx-auto mb-12">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+            Encuentra el producto financiero{' '}
+            <span className="text-[#00D9A5]">perfecto para ti</span>
+          </h1>
+          <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            Compara tarjetas, préstamos, inversiones y cuentas bancarias.
+            Decisiones informadas, sin conflictos de interés.
+          </p>
+
+          <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-400 mb-8">
+            <span className="flex items-center gap-1">
+              <svg className="h-4 w-4 text-[#00D9A5]" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+              </svg>
+              100% Gratuito
+            </span>
+            <span className="flex items-center gap-1">
+              <svg className="h-4 w-4 text-[#00D9A5]" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+              </svg>
+              Independiente
+            </span>
+            <span className="flex items-center gap-1">
+              <svg className="h-4 w-4 text-[#00D9A5]" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+              </svg>
+              +50 productos
+            </span>
           </div>
+        </div>
 
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
-            <Card className="border-destructive/20">
-              <CardHeader>
-                <CardTitle className="text-xl text-destructive flex items-center gap-2">
-                  <XCircleIcon className="h-6 w-6" />
-                  Gasto Sin Control
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-foreground/80">
-                La gente gasta con crédito sin control, acumulando deudas que no pueden pagar. El promedio de mexicanos no entiende las tasas de interés ni las comisiones.
-              </CardContent>
-            </Card>
-
-            <Card className="border-destructive/20">
-              <CardHeader>
-                <CardTitle className="text-xl text-destructive flex items-center gap-2">
-                  <XCircleIcon className="h-6 w-6" />
-                  No Hay Ahorro
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-foreground/80">
-                Solo 1 de cada 4 mexicanos ahorra regularmente. La mayoría vive al día sin un plan financiero, sin conocer opciones como CETES, ETFs o fondos de inversión.
-              </CardContent>
-            </Card>
-
-            <Card className="border-destructive/20">
-              <CardHeader>
-                <CardTitle className="text-xl text-destructive flex items-center gap-2">
-                  <XCircleIcon className="h-6 w-6" />
-                  Desconocimiento Total
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-foreground/80">
-                Los bancos y fintechs no educan, solo venden. La gente desconoce a fondo lo que realmente ofrecen y terminan con productos que no les convienen.
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="bg-card rounded-lg p-8 shadow-lg border-2 border-accent/20">
-            <h3 className="font-headline text-2xl md:text-3xl font-semibold text-primary mb-4 text-center">
-              ⚠️ El Conflicto de Interés que Nadie Te Cuenta
-            </h3>
-            <div className="grid md:grid-cols-2 gap-8 items-center">
-              <div>
-                <h4 className="text-xl font-semibold text-destructive mb-3">Asesores Tradicionales y Bancos:</h4>
-                <ul className="space-y-3 text-foreground/80">
-                  <li className="flex items-start gap-2">
-                    <XCircleIcon className="h-5 w-5 text-destructive mt-0.5 shrink-0" />
-                    <span>Solo te ofrecen los productos de <strong>su empresa</strong></span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <XCircleIcon className="h-5 w-5 text-destructive mt-0.5 shrink-0" />
-                    <span>Ganan comisión por venderte, <strong>no por ayudarte</strong></span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <XCircleIcon className="h-5 w-5 text-destructive mt-0.5 shrink-0" />
-                    <span>No les importa si realmente te benefician</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <XCircleIcon className="h-5 w-5 text-destructive mt-0.5 shrink-0" />
-                    <span>Ocultan información sobre alternativas mejores</span>
-                  </li>
-                </ul>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+          {categories.map((category) => (
+            <Link key={category.href} href={category.href} className="group">
+              <div className="bg-white rounded-xl p-5 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border-2 border-transparent hover:border-[#00D9A5]">
+                <div className={cn("w-12 h-12 rounded-lg flex items-center justify-center mb-3", category.color)}>
+                  <category.icon className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="font-semibold text-[#1A365D] mb-1 group-hover:text-[#00D9A5] transition-colors text-sm md:text-base">
+                  {category.name}
+                </h3>
+                <p className="text-xs text-gray-500">{category.description}</p>
               </div>
-              <div className="bg-accent/10 rounded-lg p-6 border-2 border-accent">
-                <h4 className="text-xl font-semibold text-accent mb-3">Raisket es Diferente:</h4>
-                <ul className="space-y-3 text-foreground/80">
-                  <li className="flex items-start gap-2">
-                    <CheckCircleIcon className="h-5 w-5 text-accent mt-0.5 shrink-0" />
-                    <span><strong>Independiente:</strong> No vendemos productos de nadie</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircleIcon className="h-5 w-5 text-accent mt-0.5 shrink-0" />
-                    <span><strong>Transparente:</strong> Te mostramos TODAS las opciones del mercado</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircleIcon className="h-5 w-5 text-accent mt-0.5 shrink-0" />
-                    <span><strong>Ético:</strong> Trabajamos para ti, no para los bancos</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircleIcon className="h-5 w-5 text-accent mt-0.5 shrink-0" />
-                    <span><strong>Regulado:</strong> En proceso de registro ante la CNBV</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
+            </Link>
+          ))}
         </div>
-      </section>
+      </div>
 
-      <section id="segments" className="py-12">
-        <h2 className="font-headline text-3xl md:text-4xl font-semibold text-center text-foreground mb-10">
-          Encuentra Productos Financieros Para...
-        </h2>
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          <Link href="/individuals/all" className="group">
-            <Card className="hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
-              <CardHeader className="items-center text-center">
-                <div className="p-4 bg-primary/10 rounded-full mb-4 group-hover:bg-primary/20 transition-colors">
-                  <Users className="h-12 w-12 text-primary" />
-                </div>
-                <CardTitle className="font-headline text-2xl text-primary group-hover:text-accent transition-colors">Personas</CardTitle>
-                <CardDescription className="text-foreground/70">
-                  Tarjetas de crédito personales, préstamos, inversiones y seguros para ayudarte a alcanzar tus metas financieras.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="text-center mt-auto">
-                 <Button variant="ghost" className="text-accent group-hover:underline">
-                  Explorar Productos Personales <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </CardContent>
-            </Card>
-          </Link>
-
-          <Link href="/businesses/all" className="group">
-            <Card className="hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
-              <CardHeader className="items-center text-center">
-                <div className="p-4 bg-primary/10 rounded-full mb-4 group-hover:bg-primary/20 transition-colors">
-                  <Briefcase className="h-12 w-12 text-primary" />
-                </div>
-                <CardTitle className="font-headline text-2xl text-primary group-hover:text-accent transition-colors">Empresas</CardTitle>
-                <CardDescription className="text-foreground/70">
-                  Financiamiento empresarial, tarjetas corporativas, soluciones de inversión y seguros comerciales para hacer crecer y proteger tu empresa.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="text-center mt-auto">
-                <Button variant="ghost" className="text-accent group-hover:underline">
-                  Descubrir Soluciones Empresariales <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </CardContent>
-            </Card>
-          </Link>
-        </div>
-      </section>
-
-      <section className="py-16 bg-card rounded-xl shadow-lg">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="font-headline text-3xl md:text-4xl font-semibold text-primary mb-4">
-              Somos Tres Cosas en Una
-            </h2>
-            <p className="text-lg text-foreground/70 max-w-3xl mx-auto">
-              Tu solución financiera completa e independiente
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 mb-8">
-            <Card className="border-accent/30 hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <div className="w-12 h-12 bg-accent/20 rounded-full flex items-center justify-center mb-3">
-                  <span className="text-2xl">📊</span>
-                </div>
-                <CardTitle className="text-2xl text-primary">1. Comparador Gratuito</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <p className="text-foreground/80">
-                  <strong>Todos los productos financieros de México</strong> en un solo lugar:
-                </p>
-                <ul className="space-y-2 text-sm text-foreground/70">
-                  <li className="flex items-start gap-2">
-                    <CheckCircleIcon className="h-4 w-4 text-accent mt-0.5 shrink-0" />
-                    <span>Tarjetas de crédito y débito</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircleIcon className="h-4 w-4 text-accent mt-0.5 shrink-0" />
-                    <span>Créditos personales y empresariales</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircleIcon className="h-4 w-4 text-accent mt-0.5 shrink-0" />
-                    <span>Inversiones y fondos</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircleIcon className="h-4 w-4 text-accent mt-0.5 shrink-0" />
-                    <span>Seguros de todo tipo</span>
-                  </li>
-                </ul>
-                <p className="text-sm text-foreground/80 pt-2">
-                  ✓ <strong>100% gratuito</strong> para consultar y comparar<br />
-                  ✓ Regístrate con tu correo para dejar reseñas<br />
-                  ✓ Calificaciones en tiempo real de usuarios reales
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-accent/30 hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <div className="w-12 h-12 bg-accent/20 rounded-full flex items-center justify-center mb-3">
-                  <span className="text-2xl">🎓</span>
-                </div>
-                <CardTitle className="text-2xl text-primary">2. Educación con IA</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <p className="text-foreground/80">
-                  <strong>Personalizada según tu perfil:</strong>
-                </p>
-                <div className="space-y-3 text-sm">
-                  <div className="bg-primary/5 p-3 rounded-lg">
-                    <p className="font-semibold text-foreground">👨‍💼 Emprendedor</p>
-                    <p className="text-foreground/70">Usa deuda inteligentemente para crecer tu negocio</p>
-                  </div>
-                  <div className="bg-primary/5 p-3 rounded-lg">
-                    <p className="font-semibold text-foreground">💼 Profesionista</p>
-                    <p className="text-foreground/70">Apalancamiento para certificaciones, posgrados y ROI</p>
-                  </div>
-                  <div className="bg-primary/5 p-3 rounded-lg">
-                    <p className="font-semibold text-foreground">🏢 Empresa</p>
-                    <p className="text-foreground/70">Herramientas prácticas: flujos de efectivo, análisis financiero</p>
-                  </div>
-                </div>
-                <p className="text-sm text-foreground/80 pt-2">
-                  Aprende sobre <strong>ETFs, fondos de inversión, PPR, cuentas productivas</strong> y cuándo conviene cada opción.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-accent/30 hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <div className="w-12 h-12 bg-accent/20 rounded-full flex items-center justify-center mb-3">
-                  <span className="text-2xl">🤝</span>
-                </div>
-                <CardTitle className="text-2xl text-primary">3. Asesoría Integral</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <p className="text-foreground/80">
-                  <strong>Independiente y regulada:</strong>
-                </p>
-                <ul className="space-y-2 text-sm text-foreground/70">
-                  <li className="flex items-start gap-2">
-                    <CheckCircleIcon className="h-4 w-4 text-accent mt-0.5 shrink-0" />
-                    <span>Modelos de IA entrenados con la <strong>ética de los mejores asesores</strong> financieros independientes de México</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircleIcon className="h-4 w-4 text-accent mt-0.5 shrink-0" />
-                    <span>En proceso de registro ante la <strong>CNBV</strong> como asesores financieros independientes</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircleIcon className="h-4 w-4 text-accent mt-0.5 shrink-0" />
-                    <span>Asesoría integral personalizada a tu medida</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircleIcon className="h-4 w-4 text-accent mt-0.5 shrink-0" />
-                    <span>Sin sesgos hacia productos específicos</span>
-                  </li>
-                </ul>
-                <div className="bg-accent/10 p-3 rounded-lg mt-4">
-                  <p className="text-sm font-semibold text-foreground">💰 Modelo Transparente:</p>
-                  <p className="text-xs text-foreground/70 mt-1">
-                    Personas: $10 USD/mes<br />
-                    Empresas: $15 USD/mes
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="text-center pt-8 border-t border-border/50">
-            <p className="text-xl font-semibold text-primary mb-4">
-              Raisket es tu aliado financiero
-            </p>
-            <p className="text-foreground/80 max-w-2xl mx-auto mb-6">
-              Te ayudamos a tomar decisiones informadas y a usar tu dinero para crear oportunidades reales.
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
-                <Link href="/about">Conoce Más Sobre Nosotros</Link>
-              </Button>
-              <Button asChild size="lg" variant="outline" className="border-accent text-accent hover:bg-accent/10">
-                <Link href="/pricing">Ver Precios</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {featuredProducts.length > 0 && (
-        <section className="py-12">
-          <h2 className="font-headline text-3xl md:text-4xl font-semibold text-center text-foreground mb-10">
-            Productos Destacados
-          </h2>
-          <ProductList products={featuredProducts} />
-          <div className="text-center mt-8">
-            <Button asChild size="lg" variant="outline">
-              <Link href="/individuals/all">Ver Todos los Productos <ArrowRight className="ml-2 h-4 w-4" /></Link>
-            </Button>
-          </div>
-        </section>
-      )}
-    </div>
+      <div className="absolute bottom-0 left-0 right-0">
+        <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
+          <path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#F8FAFC"/>
+        </svg>
+      </div>
+    </section>
   );
 }
 
-// Custom CheckCircleIcon for this page
-function CheckCircleIcon(props: React.SVGProps<SVGSVGElement>) {
+// ============ PRODUCT CARD ============
+const badgeStyles: Record<string, string> = {
+  'Sin Anualidad': 'bg-[#00D9A5]/10 text-[#00D9A5] border-[#00D9A5]/20',
+  '100% Digital': 'bg-[#8B5CF6]/10 text-[#8B5CF6] border-[#8B5CF6]/20',
+  'Sin Buró': 'bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/20',
+  'Sin Buró Mínimo': 'bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/20',
+  'Riesgo Muy Bajo': 'bg-[#00D9A5]/10 text-[#00D9A5] border-[#00D9A5]/20',
+  'Gobierno Federal': 'bg-[#1A365D]/10 text-[#1A365D] border-[#1A365D]/20',
+  'Alto Riesgo': 'bg-[#EF4444]/10 text-[#EF4444] border-[#EF4444]/20',
+  'default': 'bg-gray-100 text-gray-600 border-gray-200',
+};
+
+function ProductCard({ product }: { product: FinancialProduct }) {
   return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-      <polyline points="22 4 12 14.01 9 11.01" />
-    </svg>
+    <article className="group bg-white rounded-xl border border-[#E2E8F0] transition-all duration-300 hover:shadow-lg hover:border-[#00D9A5]">
+      <div className="p-5">
+        <div className="flex items-start gap-4 mb-4">
+          <div className="w-14 h-14 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center flex-shrink-0">
+            <span className="text-xl font-bold text-[#1A365D]">
+              {product.institution.charAt(0)}
+            </span>
+          </div>
+
+          <div className="flex-1 min-w-0">
+            <h3 className="font-semibold text-lg text-[#1A365D] group-hover:text-[#00D9A5] transition-colors line-clamp-1">
+              {product.name}
+            </h3>
+            <p className="text-sm text-[#64748B]">{product.institution}</p>
+            {product.rating > 0 && (
+              <div className="mt-1 flex items-center gap-1">
+                <Star className="h-4 w-4 fill-[#F59E0B] text-[#F59E0B]" />
+                <span className="text-sm font-medium text-[#1A365D]">{product.rating.toFixed(1)}</span>
+                <span className="text-xs text-[#64748B]">({product.review_count.toLocaleString()})</span>
+              </div>
+            )}
+          </div>
+
+          {product.main_rate_value && (
+            <div className="text-right flex-shrink-0">
+              <div className="text-2xl font-bold text-[#1A365D]">{product.main_rate_value}</div>
+              <div className="text-xs text-[#64748B]">{product.main_rate_label}</div>
+            </div>
+          )}
+        </div>
+
+        {product.badges.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-4">
+            {product.badges.slice(0, 3).map((badge) => (
+              <span
+                key={badge}
+                className={cn(
+                  'text-xs font-medium px-2.5 py-1 rounded-full border',
+                  badgeStyles[badge] || badgeStyles['default']
+                )}
+              >
+                {badge}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {product.description && (
+          <p className="text-sm text-[#334155] mb-4 line-clamp-2">{product.description}</p>
+        )}
+
+        {product.benefits.length > 0 && (
+          <ul className="space-y-1.5 mb-4">
+            {product.benefits.slice(0, 3).map((benefit, i) => (
+              <li key={i} className="flex items-start gap-2 text-sm text-[#334155]">
+                <svg className="h-4 w-4 text-[#00D9A5] mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                <span className="line-clamp-1">{benefit}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
+          {product.apply_url && (
+            <Button asChild className="flex-1 bg-[#00D9A5] hover:bg-[#00C294] text-white">
+              <a href={product.apply_url} target="_blank" rel="noopener noreferrer">
+                Solicitar <ExternalLink className="ml-2 h-4 w-4" />
+              </a>
+            </Button>
+          )}
+          <Button asChild variant="outline" className="border-[#1A365D] text-[#1A365D] hover:bg-[#1A365D] hover:text-white">
+            <Link href={`/producto/${product.slug}`}>
+              Ver más <ChevronRight className="ml-1 h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+// ============ CATEGORY SECTION ============
+const categoryHrefs: Record<ProductCategory, string> = {
+  credit_card: '/tarjetas-credito',
+  personal_loan: '/prestamos-personales',
+  investment: '/inversiones',
+  banking: '/cuentas-bancarias',
+};
+
+function CategorySection({ category, products }: { category: ProductCategory; products: FinancialProduct[] }) {
+  if (products.length === 0) return null;
+
+  return (
+    <section className="py-12">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2 className="text-2xl md:text-3xl font-bold text-[#1A365D]">{categoryLabels[category]}</h2>
+            <p className="text-[#64748B] mt-1">Compara y encuentra la mejor opción para ti</p>
+          </div>
+          <Link href={categoryHrefs[category]}>
+            <Button variant="ghost" className="text-[#00D9A5] hover:text-[#00C294] hover:bg-[#00D9A5]/10">
+              Ver todos <ChevronRight className="ml-1 h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {products.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ============ WHY RAISKET SECTION ============
+function WhyRaisketSection() {
+  const features = [
+    { icon: Shield, title: 'Independiente', description: 'No vendemos productos de nadie. Recomendaciones basadas en tu beneficio.' },
+    { icon: Scale, title: 'Sin Conflictos', description: 'No ganamos comisión por venderte. Trabajamos para ti.' },
+    { icon: Brain, title: 'IA Avanzada', description: 'Analizamos cientos de productos para encontrar el ideal.' },
+    { icon: Users, title: 'Comunidad Real', description: 'Reseñas de usuarios reales de México.' },
+  ];
+
+  return (
+    <section className="py-16 bg-white">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#1A365D] mb-4">¿Por qué confiar en Raisket?</h2>
+          <p className="text-lg text-[#64748B] max-w-2xl mx-auto">
+            El primer comparador financiero independiente de México
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {features.map((f) => (
+            <div key={f.title} className="text-center p-6 rounded-xl hover:bg-[#F8FAFC] transition-colors">
+              <div className="w-14 h-14 bg-[#00D9A5]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <f.icon className="h-7 w-7 text-[#00D9A5]" />
+              </div>
+              <h3 className="text-lg font-semibold text-[#1A365D] mb-2">{f.title}</h3>
+              <p className="text-sm text-[#64748B]">{f.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ============ MAIN PAGE ============
+export default async function HomePage() {
+  const [creditCards, personalLoans, investments, bankingAccounts] = await Promise.all([
+    getFinancialProducts({ category: 'credit_card', limit: 3 }),
+    getFinancialProducts({ category: 'personal_loan', limit: 3 }),
+    getFinancialProducts({ category: 'investment', limit: 3 }),
+    getFinancialProducts({ category: 'banking', limit: 3 }),
+  ]);
+
+  return (
+    <div className="min-h-screen bg-[#F8FAFC]">
+      <HeroSection />
+
+      <CategorySection category="credit_card" products={creditCards} />
+
+      <WhyRaisketSection />
+
+      <CategorySection category="personal_loan" products={personalLoans} />
+      <CategorySection category="investment" products={investments} />
+      <CategorySection category="banking" products={bankingAccounts} />
+
+      {/* CTA Section */}
+      <section className="py-16 bg-gradient-to-r from-[#1A365D] to-[#2D4A68]">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">¿No sabes por dónde empezar?</h2>
+          <p className="text-gray-300 mb-8 max-w-xl mx-auto">
+            Nuestro asistente IA te ayuda a encontrar el producto perfecto según tu perfil
+          </p>
+          <Link
+            href="/chat"
+            className="inline-flex items-center gap-2 bg-[#00D9A5] hover:bg-[#00C294] text-white font-medium px-8 py-3 rounded-full transition-colors"
+          >
+            <MessageCircle className="h-5 w-5" />
+            Hablar con el Asistente IA
+          </Link>
+        </div>
+      </section>
+    </div>
   );
 }
