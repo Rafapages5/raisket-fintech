@@ -7,11 +7,20 @@ import { ChevronRight, Filter, Banknote, CheckCircle2, AlertTriangle } from 'luc
 import { Button } from '@/components/ui/button';
 import { getFinancialProducts } from '@/lib/financial-products';
 import ProductCardNW from '@/components/products/ProductCardNW';
+import SchemaScript from '@/lib/schema/SchemaScript';
+import {
+  generateBreadcrumbSchema,
+  generateProductListSchema,
+  generateArticleSchema,
+} from '@/lib/schema/generators';
 
 export const metadata: Metadata = {
-  title: 'Los Mejores Préstamos Personales en México 2025 | Raisket',
-  description: 'Compara préstamos personales con las mejores tasas. Préstamos rápidos, sin aval y con aprobación inmediata.',
-  keywords: ['préstamos personales', 'créditos', 'préstamos rápidos', 'sin aval', 'México'],
+  title: 'Los Mejores Préstamos Personales en México 2025',
+  description: 'Compara préstamos personales con las mejores tasas. Préstamos rápidos, sin aval y con aprobación inmediata. Análisis experto actualizado.',
+  keywords: ['préstamos personales', 'créditos', 'préstamos rápidos', 'sin aval', 'México', 'comparador préstamos'],
+  alternates: {
+    canonical: '/prestamos-personales',
+  },
 };
 
 export const revalidate = 3600;
@@ -28,8 +37,29 @@ const loanTypes = [
 export default async function PrestamosPersonalesPage() {
   const products = await getFinancialProducts({ category: 'personal_loan' });
 
+  // Generar Schemas
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: 'Inicio', url: 'https://raisket.mx' },
+    { name: 'Préstamos Personales' },
+  ]);
+
+  const productListSchema = generateProductListSchema(products, {
+    name: 'Los Mejores Préstamos Personales en México 2025',
+    description: 'Listado completo de préstamos personales comparados por Raisket',
+  });
+
+  const articleSchema = generateArticleSchema({
+    title: 'Los Mejores Préstamos Personales en México 2025',
+    description: 'Guía completa para elegir el mejor préstamo personal según tus necesidades',
+    datePublished: new Date().toISOString(),
+    url: 'https://raisket.mx/prestamos-personales',
+  });
+
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
+      {/* Schema.org JSON-LD */}
+      <SchemaScript schema={[breadcrumbSchema, productListSchema, articleSchema]} />
+
       {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-200">
         <div className="container mx-auto px-4 py-3">

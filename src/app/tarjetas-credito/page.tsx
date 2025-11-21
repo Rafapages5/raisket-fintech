@@ -7,11 +7,27 @@ import { ChevronRight, Filter, Star, CreditCard, CheckCircle2 } from 'lucide-rea
 import { Button } from '@/components/ui/button';
 import { getFinancialProducts } from '@/lib/financial-products';
 import ProductCardNW from '@/components/products/ProductCardNW';
+import SchemaScript from '@/lib/schema/SchemaScript';
+import {
+  generateBreadcrumbSchema,
+  generateProductListSchema,
+  generateFAQSchema,
+  generateArticleSchema,
+} from '@/lib/schema/generators';
 
 export const metadata: Metadata = {
-  title: 'Las Mejores Tarjetas de Crédito en México 2025 | Raisket',
-  description: 'Compara las mejores tarjetas de crédito sin anualidad, con cashback y puntos. Encuentra la tarjeta perfecta según tu perfil financiero.',
-  keywords: ['tarjetas de crédito', 'mejores tarjetas', 'sin anualidad', 'cashback', 'puntos', 'México'],
+  title: 'Las Mejores Tarjetas de Crédito en México 2025',
+  description: 'Compara las mejores tarjetas de crédito sin anualidad, con cashback y puntos. Encuentra la tarjeta perfecta según tu perfil financiero. Análisis experto actualizado.',
+  keywords: ['tarjetas de crédito', 'mejores tarjetas', 'sin anualidad', 'cashback', 'puntos', 'México', 'comparador tarjetas'],
+  alternates: {
+    canonical: '/tarjetas-de-credito',
+  },
+  openGraph: {
+    title: 'Las Mejores Tarjetas de Crédito en México 2025',
+    description: 'Compara las mejores tarjetas de crédito sin anualidad, con cashback y puntos.',
+    url: 'https://raisket.mx/tarjetas-de-credito',
+    type: 'website',
+  },
 };
 
 export const revalidate = 3600;
@@ -29,8 +45,44 @@ const cardTypes = [
 export default async function TarjetasCreditoPage() {
   const products = await getFinancialProducts({ category: 'credit_card' });
 
+  // Generar Schemas
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: 'Inicio', url: 'https://raisket.mx' },
+    { name: 'Tarjetas de Crédito' },
+  ]);
+
+  const productListSchema = generateProductListSchema(products, {
+    name: 'Las Mejores Tarjetas de Crédito en México 2025',
+    description: 'Listado completo de tarjetas de crédito comparadas por Raisket',
+  });
+
+  const articleSchema = generateArticleSchema({
+    title: 'Las Mejores Tarjetas de Crédito en México 2025',
+    description: 'Guía completa para elegir la mejor tarjeta de crédito según tu perfil financiero',
+    datePublished: new Date().toISOString(),
+    url: 'https://raisket.mx/tarjetas-de-credito',
+  });
+
+  const faqSchema = generateFAQSchema([
+    {
+      question: '¿Qué es el CAT y por qué es importante?',
+      answer: 'El CAT (Costo Anual Total) es el indicador más completo del costo de una tarjeta de crédito. Incluye la tasa de interés, anualidad, comisiones y todos los gastos. Entre menor sea el CAT, mejor para ti.',
+    },
+    {
+      question: '¿Puedo obtener una tarjeta sin historial en Buró de Crédito?',
+      answer: 'Sí, varias tarjetas como Nu, Stori y Klar están diseñadas para personas sin historial crediticio. Estas tarjetas te ayudan a construir tu perfil desde cero.',
+    },
+    {
+      question: '¿Qué es mejor: cashback o puntos?',
+      answer: 'Depende de tu estilo de vida. El cashback es más simple y te devuelve dinero directamente. Los puntos pueden ser más valiosos si viajas frecuentemente o compras en tiendas específicas, pero requieren más estrategia para maximizar su valor.',
+    },
+  ]);
+
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
+      {/* Schema.org JSON-LD */}
+      <SchemaScript schema={[breadcrumbSchema, productListSchema, articleSchema, faqSchema]} />
+
       {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-200">
         <div className="container mx-auto px-4 py-3">

@@ -7,11 +7,20 @@ import { ChevronRight, Filter, TrendingUp, CheckCircle2, Shield } from 'lucide-r
 import { Button } from '@/components/ui/button';
 import { getFinancialProducts } from '@/lib/financial-products';
 import ProductCardNW from '@/components/products/ProductCardNW';
+import SchemaScript from '@/lib/schema/SchemaScript';
+import {
+  generateBreadcrumbSchema,
+  generateProductListSchema,
+  generateArticleSchema,
+} from '@/lib/schema/generators';
 
 export const metadata: Metadata = {
   title: 'Las Mejores Inversiones en México 2025 | Raisket',
-  description: 'Compara CETES, pagarés, fondos de inversión y más. Invierte desde $100 con las mejores tasas del mercado.',
-  keywords: ['inversiones', 'CETES', 'pagarés', 'fondos de inversión', 'GAT', 'México'],
+  description: 'Compara CETES, pagarés bancarios, fondos de inversión y más. Invierte desde $100 con las mejores tasas y rendimientos del mercado mexicano. Análisis experto actualizado.',
+  keywords: ['inversiones', 'CETES', 'pagarés', 'fondos de inversión', 'GAT', 'México', 'comparador inversiones'],
+  alternates: {
+    canonical: '/inversiones',
+  },
 };
 
 export const revalidate = 3600;
@@ -35,8 +44,29 @@ const riskLevels = [
 export default async function InversionesPage() {
   const products = await getFinancialProducts({ category: 'investment' });
 
+  // Generar Schemas
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: 'Inicio', url: 'https://raisket.mx' },
+    { name: 'Inversiones' },
+  ]);
+
+  const productListSchema = generateProductListSchema(products, {
+    name: 'Las Mejores Inversiones en México 2025',
+    description: 'Listado completo de opciones de inversión comparadas por Raisket',
+  });
+
+  const articleSchema = generateArticleSchema({
+    title: 'Las Mejores Inversiones en México 2025',
+    description: 'Guía completa para comenzar a invertir en México con opciones reguladas y seguras',
+    datePublished: new Date().toISOString(),
+    url: 'https://raisket.mx/inversiones',
+  });
+
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
+      {/* Schema.org JSON-LD */}
+      <SchemaScript schema={[breadcrumbSchema, productListSchema, articleSchema]} />
+
       {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-200">
         <div className="container mx-auto px-4 py-3">

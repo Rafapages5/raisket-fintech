@@ -7,11 +7,20 @@ import { ChevronRight, Filter, Building2, CheckCircle2, Zap, Percent } from 'luc
 import { Button } from '@/components/ui/button';
 import { getFinancialProducts } from '@/lib/financial-products';
 import ProductCardNW from '@/components/products/ProductCardNW';
+import SchemaScript from '@/lib/schema/SchemaScript';
+import {
+  generateBreadcrumbSchema,
+  generateProductListSchema,
+  generateArticleSchema,
+} from '@/lib/schema/generators';
 
 export const metadata: Metadata = {
   title: 'Las Mejores Cuentas Bancarias en México 2025 | Raisket',
-  description: 'Compara cuentas bancarias sin comisiones y con alto rendimiento. Cuentas digitales desde $0 con rendimientos hasta 15% anual.',
-  keywords: ['cuentas bancarias', 'sin comisiones', 'rendimiento', 'cuentas digitales', 'México'],
+  description: 'Compara cuentas bancarias sin comisiones y con alto rendimiento. Cuentas digitales desde $0 con rendimientos hasta 15% anual. Análisis experto actualizado.',
+  keywords: ['cuentas bancarias', 'sin comisiones', 'rendimiento', 'cuentas digitales', 'México', 'comparador cuentas'],
+  alternates: {
+    canonical: '/cuentas-bancarias',
+  },
 };
 
 export const revalidate = 3600;
@@ -27,8 +36,29 @@ const accountTypes = [
 export default async function CuentasBancariasPage() {
   const products = await getFinancialProducts({ category: 'banking' });
 
+  // Generar Schemas
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: 'Inicio', url: 'https://raisket.mx' },
+    { name: 'Cuentas Bancarias' },
+  ]);
+
+  const productListSchema = generateProductListSchema(products, {
+    name: 'Las Mejores Cuentas Bancarias en México 2025',
+    description: 'Listado completo de cuentas bancarias comparadas por Raisket',
+  });
+
+  const articleSchema = generateArticleSchema({
+    title: 'Las Mejores Cuentas Bancarias en México 2025',
+    description: 'Guía completa para elegir la mejor cuenta bancaria sin comisiones y con rendimiento',
+    datePublished: new Date().toISOString(),
+    url: 'https://raisket.mx/cuentas-bancarias',
+  });
+
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
+      {/* Schema.org JSON-LD */}
+      <SchemaScript schema={[breadcrumbSchema, productListSchema, articleSchema]} />
+
       {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-200">
         <div className="container mx-auto px-4 py-3">
