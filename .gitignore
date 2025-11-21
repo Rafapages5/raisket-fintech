@@ -67,3 +67,4 @@ data/*.pdf
 data/*/*.pdf
 data/test_url.py
 data/metadata.csv
+.mcp.json

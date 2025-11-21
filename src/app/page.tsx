@@ -11,6 +11,24 @@ import {
   type FinancialProduct,
   type ProductCategory,
 } from '@/lib/financial-products';
+import SchemaScript from '@/lib/schema/SchemaScript';
+import { generateProductListSchema } from '@/lib/schema/generators';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Raisket - Compara Productos Financieros en México',
+  description: 'Encuentra y compara los mejores productos financieros en México: tarjetas de crédito sin anualidad, préstamos personales, inversiones y cuentas bancarias. Comparador 100% gratuito con análisis experto.',
+  keywords: ['productos financieros', 'comparador', 'tarjetas de crédito', 'préstamos', 'inversiones', 'cuentas bancarias', 'México'],
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: 'Raisket - Compara Productos Financieros en México',
+    description: 'Encuentra y compara los mejores productos financieros en México',
+    url: 'https://raisket.mx',
+    type: 'website',
+  },
+};
 
 export const revalidate = 3600; // Revalidate every hour
 
@@ -291,8 +309,19 @@ export default async function HomePage() {
     getFinancialProducts({ category: 'banking', limit: 3 }),
   ]);
 
+  // Combinar todos los productos para el schema
+  const allProducts = [...creditCards, ...personalLoans, ...investments, ...bankingAccounts];
+
+  const productListSchema = generateProductListSchema(allProducts, {
+    name: 'Productos Financieros Destacados en Raisket',
+    description: 'Los mejores productos financieros en México',
+  });
+
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
+      {/* Schema.org JSON-LD */}
+      <SchemaScript schema={productListSchema} />
+
       <HeroSection />
 
       <CategorySection category="credit_card" products={creditCards} />
