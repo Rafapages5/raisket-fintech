@@ -342,16 +342,47 @@ export async function getAllInstitutions(): Promise<Institution[]> {
 
   } catch (error) {
     console.error('Error in getAllInstitutions:', error);
-    throw error;
+    return [];
   }
 }
 
-// Get products with user eligibility matching
 export async function getEligibleProducts(
-  userIncome: number,
-  userCreditScore?: number,
   limit: number = 10
 ): Promise<FinancialProduct[]> {
   // For now, just return all products as eligibility logic needs characteristics data
   return getAllProducts({ limit });
+}
+
+// Get reviews by product ID
+export async function getReviewsByProductId(productId: string): Promise<import('@/types').Review[]> {
+  try {
+    const { data, error } = await supabase
+      .from('reviews')
+      .select('*')
+      .eq('product_id', productId)
+      .eq('is_approved', true)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching reviews:', error);
+      return [];
+    }
+
+    return (data || []).map(review => ({
+      id: review.id,
+      productId: review.product_id,
+      userId: 'anonymous', // Reviews are public/anonymous for now
+      userName: review.reviewer_name,
+      rating: review.rating,
+      title: review.title || undefined,
+      comment: review.comment,
+      date: new Date(review.created_at).toISOString(),
+      helpfulCount: 0,
+      verified: true
+    }));
+
+  } catch (error) {
+    console.error('Error in getReviewsByProductId:', error);
+    return [];
+  }
 }

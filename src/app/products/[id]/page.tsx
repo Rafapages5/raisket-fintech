@@ -1,5 +1,4 @@
-// src/app/products/[id]/page.tsx
-import { getProductById } from '@/lib/products';
+import { getProductById, getReviewsByProductId } from '@/lib/products';
 import { mockReviews } from '@/data/reviews';
 import type { FinancialProduct } from '@/types';
 import { Metadata } from 'next';
@@ -35,41 +34,19 @@ export async function generateMetadata({ params }: ProductDetailPageProps): Prom
   } catch (error) {
     console.error('Error generating metadata:', error);
     return {
-      title: 'Product Not Found | Raisket',
-      description: 'The requested product could not be found.'
+      title: 'Error | Raisket',
+      description: 'An error occurred while loading the product.'
     };
   }
 }
 
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
-  try {
-    const product = await getProductById(params.id);
+  const product = await getProductById(params.id);
+  const reviews = await getReviewsByProductId(params.id);
 
-    if (!product) {
-      notFound();
-    }
-
-    // For now, still using mock reviews - this could be expanded to use Supabase reviews
-    const reviews = mockReviews.filter(r => r.productId === params.id);
-
-    return <ProductDetailClient product={product} reviews={reviews} />;
-
-  } catch (error) {
-    console.error('Error loading product:', error);
+  if (!product) {
     notFound();
   }
-}
 
-// Note: We're not using generateStaticParams because we want dynamic routing
-// If you want to pre-generate some popular products, you could uncomment and modify this:
-// export async function generateStaticParams() {
-//   try {
-//     const featuredProducts = await getFeaturedProducts(20);
-//     return featuredProducts.map(product => ({
-//       id: product.id,
-//     }));
-//   } catch (error) {
-//     console.error('Error generating static params:', error);
-//     return [];
-//   }
-// }
+  return <ProductDetailClient product={product} reviews={reviews} />;
+}

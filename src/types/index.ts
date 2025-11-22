@@ -107,6 +107,39 @@ export interface Product {
   slug: string;
   created_at: string;
   updated_at: string;
+  // Optional fields that might be present in the view or table
+  interest_rate_min?: number;
+  interest_rate_max?: number;
+  min_term_months?: number;
+  max_term_months?: number;
+  max_amount?: number;
+  min_amount?: number;
+  credit_limit_min?: number;
+  credit_limit_max?: number;
+  annual_fee?: number;
+  min_income?: number;
+  min_credit_score?: number;
+  employment_requirement?: string;
+  accepts_imss?: boolean;
+  accepts_issste?: boolean;
+  requires_guarantor?: boolean;
+  collateral_required?: boolean;
+  rate_type?: string;
+  pros?: string[];
+  cons?: string[];
+  gat_nominal?: number;
+  gat_real?: number;
+  rendimiento_anual?: number;
+  liquidez?: string;
+  monto_minimo?: number;
+  monto_maximo?: number;
+  requisitos?: string[];
+  proteccion?: string;
+  comisiones?: string[];
+  vigencia_inicio?: string;
+  vigencia_fin?: string;
+  terminos_condiciones_url?: string;
+  logo_url?: string;
 }
 
 export interface CaracteristicasCredito {

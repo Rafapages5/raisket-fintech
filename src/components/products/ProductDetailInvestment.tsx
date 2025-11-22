@@ -13,6 +13,8 @@ import KeyFeaturesCard from './KeyFeaturesCard';
 import ProsConsSection from './ProsConsSection';
 import ProductCalculator from './ProductCalculator';
 import BackToCompareButton from './BackToCompareButton';
+import ReviewList from '@/components/reviews/ReviewList';
+import ReviewForm from '@/components/reviews/ReviewForm';
 
 interface ProductDetailInvestmentProps {
   product: FinancialProduct;
@@ -69,11 +71,10 @@ export default function ProductDetailInvestment({ product, reviews }: ProductDet
               {Array.from({ length: 5 }, (_, i) => (
                 <Star
                   key={i}
-                  className={`h-5 w-5 ${
-                    i < Math.round(averageRating)
-                      ? 'fill-yellow-400 text-yellow-400'
-                      : 'text-gray-300'
-                  }`}
+                  className={`h-5 w-5 ${i < Math.round(averageRating)
+                    ? 'fill-yellow-400 text-yellow-400'
+                    : 'text-gray-300'
+                    }`}
                 />
               ))}
             </div>
@@ -181,6 +182,22 @@ export default function ProductDetailInvestment({ product, reviews }: ProductDet
           </CardContent>
         </Card>
       )}
+      {/* Reviews Section */}
+      <div className="pt-8 border-t mt-8">
+        <h3 className="font-headline text-2xl font-bold text-primary mb-6">
+          Opiniones de Usuarios
+        </h3>
+        <div className="grid md:grid-cols-1 gap-8">
+          <div className="bg-muted/30 p-6 rounded-lg">
+            <h4 className="text-lg font-semibold mb-4">Escribe tu opinión</h4>
+            <ReviewForm productId={product.id} />
+          </div>
+          <div>
+            <h4 className="text-lg font-semibold mb-4">Opiniones recientes</h4>
+            <ReviewList reviews={reviews} />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
