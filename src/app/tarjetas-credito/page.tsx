@@ -3,10 +3,11 @@
 
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { ChevronRight, Filter, Star, CreditCard, CheckCircle2 } from 'lucide-react';
+import { ChevronRight, CreditCard, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getFinancialProducts } from '@/lib/financial-products';
 import ProductCardNW from '@/components/products/ProductCardNW';
+import FilterSidebar from '@/components/filters/FilterSidebar';
 import SchemaScript from '@/lib/schema/SchemaScript';
 import {
   generateBreadcrumbSchema,
@@ -31,16 +32,6 @@ export const metadata: Metadata = {
 };
 
 export const revalidate = 3600;
-
-// Tipos de tarjetas (sub-filtros)
-const cardTypes = [
-  { id: 'all', name: 'Todas las Tarjetas', count: 0 },
-  { id: 'sin-anualidad', name: 'Sin Anualidad', count: 0 },
-  { id: 'cashback', name: 'Con Cashback', count: 0 },
-  { id: 'puntos', name: 'Con Puntos', count: 0 },
-  { id: 'viajes', name: 'Para Viajes', count: 0 },
-  { id: 'estudiantes', name: 'Para Estudiantes', count: 0 },
-];
 
 export default async function TarjetasCreditoPage() {
   const products = await getFinancialProducts({ category: 'credit_card' });
@@ -130,52 +121,8 @@ export default async function TarjetasCreditoPage() {
 
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar - Filters */}
-          <aside className="lg:w-64 flex-shrink-0">
-            <div className="bg-white rounded-xl border border-gray-200 p-6 sticky top-20">
-              <div className="flex items-center gap-2 mb-4">
-                <Filter className="h-5 w-5 text-[#1A365D]" />
-                <h2 className="font-semibold text-[#1A365D]">Filtrar por tipo</h2>
-              </div>
-
-              <div className="space-y-2">
-                {cardTypes.map((type) => (
-                  <button
-                    key={type.id}
-                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-[#F8FAFC] transition-colors text-sm"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className={type.id === 'all' ? 'text-[#00D9A5] font-medium' : 'text-[#334155]'}>
-                        {type.name}
-                      </span>
-                      {type.count > 0 && (
-                        <span className="text-xs text-[#64748B]">({type.count})</span>
-                      )}
-                    </div>
-                  </button>
-                ))}
-              </div>
-
-              {/* Quick Tips */}
-              <div className="mt-6 pt-6 border-t border-gray-100">
-                <h3 className="font-semibold text-[#1A365D] mb-3 text-sm">💡 Tips Raisket</h3>
-                <ul className="space-y-2 text-xs text-[#64748B]">
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#00D9A5] mt-0.5">•</span>
-                    <span>Compara el CAT, no solo la tasa de interés</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#00D9A5] mt-0.5">•</span>
-                    <span>Verifica si hay anualidad después del primer año</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#00D9A5] mt-0.5">•</span>
-                    <span>Lee las reseñas de usuarios reales</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </aside>
+          {/* Sidebar - Filtros "mejores" */}
+          <FilterSidebar category="credit_card" className="lg:w-80 flex-shrink-0" />
 
           {/* Main Content */}
           <main className="flex-1">

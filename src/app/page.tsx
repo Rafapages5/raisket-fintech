@@ -13,6 +13,7 @@ import {
 } from '@/lib/financial-products';
 import SchemaScript from '@/lib/schema/SchemaScript';
 import { generateProductListSchema } from '@/lib/schema/generators';
+import PopularGuidesSection from '@/components/home/PopularGuidesSection';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -327,6 +328,8 @@ export default async function HomePage() {
       <CategorySection category="credit_card" products={creditCards} />
 
       <WhyRaisketSection />
+
+      <PopularGuidesSection />
 
       <CategorySection category="personal_loan" products={personalLoans} />
       <CategorySection category="investment" products={investments} />

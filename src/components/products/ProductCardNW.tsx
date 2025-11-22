@@ -57,6 +57,16 @@ export default function ProductCardNW({ product, variant = 'default' }: ProductC
   const isCompact = variant === 'compact';
   const isFeatured = variant === 'featured';
 
+  // Mapeo de categorías a rutas de review
+  const reviewPaths: Record<string, string> = {
+    credit_card: 'tarjetas-de-credito',
+    personal_loan: 'prestamos-personales',
+    investment: 'inversiones',
+    banking: 'cuentas-bancarias',
+  };
+
+  const reviewUrl = `/${reviewPaths[product.category]}/reviews/${product.slug}`;
+
   return (
     <article
       className={cn(
@@ -163,28 +173,38 @@ export default function ProductCardNW({ product, variant = 'default' }: ProductC
         )}
 
         {/* Actions */}
-        <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
-          {product.apply_url && (
+        <div className="flex flex-col gap-3 pt-4 border-t border-gray-100">
+          <div className="flex items-center gap-3">
+            {product.apply_url && (
+              <Button
+                asChild
+                className="flex-1 bg-[#00D9A5] hover:bg-[#00C294] text-white"
+              >
+                <a href={product.apply_url} target="_blank" rel="noopener noreferrer">
+                  Solicitar
+                  <ExternalLink className="ml-2 h-4 w-4" />
+                </a>
+              </Button>
+            )}
             <Button
               asChild
-              className="flex-1 bg-[#00D9A5] hover:bg-[#00C294] text-white"
+              variant="outline"
+              className="border-[#1A365D] text-[#1A365D] hover:bg-[#1A365D] hover:text-white"
             >
-              <a href={product.apply_url} target="_blank" rel="noopener noreferrer">
-                Solicitar
-                <ExternalLink className="ml-2 h-4 w-4" />
-              </a>
+              <Link href={reviewUrl}>
+                Ver detalles
+                <ChevronRight className="ml-1 h-4 w-4" />
+              </Link>
             </Button>
-          )}
-          <Button
-            asChild
-            variant="outline"
-            className="border-[#1A365D] text-[#1A365D] hover:bg-[#1A365D] hover:text-white"
+          </div>
+          {/* Review link */}
+          <Link
+            href={reviewUrl}
+            className="text-sm text-[#00D9A5] hover:text-[#00C294] font-medium flex items-center justify-center gap-1 group/review"
           >
-            <Link href={`/producto/${product.slug}`}>
-              Ver más
-              <ChevronRight className="ml-1 h-4 w-4" />
-            </Link>
-          </Button>
+            <span>Leer review completa</span>
+            <ChevronRight className="h-4 w-4 group-hover/review:translate-x-1 transition-transform" />
+          </Link>
         </div>
       </div>
 

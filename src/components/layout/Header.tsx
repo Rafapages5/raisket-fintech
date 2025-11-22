@@ -69,19 +69,66 @@ export default function Header() {
                     Productos <ChevronDown className="ml-1 h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-[400px] p-4 bg-white">
-                  <div className="grid grid-cols-2 gap-2">
-                    {categories.map((category) => (
-                      <DropdownMenuItem key={category.href} asChild>
-                        <Link href={category.href} className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
-                          <category.icon className="h-6 w-6 text-[#00D9A5] mt-0.5" />
-                          <div>
-                            <div className="font-medium text-[#1A365D]">{category.name}</div>
-                            <div className="text-sm text-gray-500">{category.description}</div>
-                          </div>
+                <DropdownMenuContent align="start" className="w-[600px] p-6 bg-white">
+                  {/* Categorías principales */}
+                  <div className="mb-6">
+                    <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Categorías</h3>
+                    <div className="grid grid-cols-2 gap-2">
+                      {categories.map((category) => (
+                        <DropdownMenuItem key={category.href} asChild>
+                          <Link href={category.href} className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
+                            <category.icon className="h-6 w-6 text-[#00D9A5] mt-0.5" />
+                            <div>
+                              <div className="font-medium text-[#1A365D]">{category.name}</div>
+                              <div className="text-sm text-gray-500">{category.description}</div>
+                            </div>
+                          </Link>
+                        </DropdownMenuItem>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Guías populares */}
+                  <div className="border-t pt-4">
+                    <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Guías Populares</h3>
+                    <div className="grid grid-cols-2 gap-2">
+                      <DropdownMenuItem asChild>
+                        <Link href="/tarjetas-de-credito/mejores/sin-anualidad" className="flex items-center gap-2 p-2 rounded-lg hover:bg-emerald-50 cursor-pointer text-sm">
+                          <span className="text-emerald-600">→</span>
+                          <span className="text-gray-700">Tarjetas sin anualidad</span>
                         </Link>
                       </DropdownMenuItem>
-                    ))}
+                      <DropdownMenuItem asChild>
+                        <Link href="/tarjetas-de-credito/mejores/cashback" className="flex items-center gap-2 p-2 rounded-lg hover:bg-emerald-50 cursor-pointer text-sm">
+                          <span className="text-emerald-600">→</span>
+                          <span className="text-gray-700">Tarjetas con cashback</span>
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/prestamos-personales/mejores/sin-aval" className="flex items-center gap-2 p-2 rounded-lg hover:bg-cyan-50 cursor-pointer text-sm">
+                          <span className="text-cyan-600">→</span>
+                          <span className="text-gray-700">Préstamos sin aval</span>
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/prestamos-personales/mejores/rapidos" className="flex items-center gap-2 p-2 rounded-lg hover:bg-cyan-50 cursor-pointer text-sm">
+                          <span className="text-cyan-600">→</span>
+                          <span className="text-gray-700">Préstamos rápidos</span>
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/inversiones/mejores/bajo-riesgo" className="flex items-center gap-2 p-2 rounded-lg hover:bg-purple-50 cursor-pointer text-sm">
+                          <span className="text-purple-600">→</span>
+                          <span className="text-gray-700">Inversiones bajo riesgo</span>
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/cuentas-bancarias/mejores/sin-comisiones" className="flex items-center gap-2 p-2 rounded-lg hover:bg-blue-50 cursor-pointer text-sm">
+                          <span className="text-blue-600">→</span>
+                          <span className="text-gray-700">Cuentas sin comisiones</span>
+                        </Link>
+                      </DropdownMenuItem>
+                    </div>
                   </div>
                 </DropdownMenuContent>
               </DropdownMenu>
