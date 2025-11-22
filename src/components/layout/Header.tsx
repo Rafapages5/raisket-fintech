@@ -111,7 +111,7 @@ export default function Header() {
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
-                        <Link href="/prestamos-personales/mejores/rapidos" className="flex items-center gap-2 p-2 rounded-lg hover:bg-cyan-50 cursor-pointer text-sm">
+                        <Link href="/prestamos-personales/mejores/aprobacion-rapida" className="flex items-center gap-2 p-2 rounded-lg hover:bg-cyan-50 cursor-pointer text-sm">
                           <span className="text-cyan-600">→</span>
                           <span className="text-gray-700">Préstamos rápidos</span>
                         </Link>

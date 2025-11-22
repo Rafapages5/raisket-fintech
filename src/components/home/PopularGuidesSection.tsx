@@ -11,11 +11,11 @@ export default function PopularGuidesSection() {
     FILTER_DEFINITIONS['sin-anualidad'],
     FILTER_DEFINITIONS['cashback'],
     FILTER_DEFINITIONS['sin-aval'],
-    FILTER_DEFINITIONS['rapidos'],
+    FILTER_DEFINITIONS['aprobacion-rapida'],
     FILTER_DEFINITIONS['bajo-riesgo'],
     FILTER_DEFINITIONS['desde-100'],
     FILTER_DEFINITIONS['sin-comisiones'],
-    FILTER_DEFINITIONS['alto-rendimiento-banking'],
+    FILTER_DEFINITIONS['alto-rendimiento-ahorro'],
   ];
 
   // Mapeo de categorías a paths y colores
