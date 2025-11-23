@@ -21,9 +21,7 @@ jiter==0.11.1
 multidict==6.7.0
 openai==1.54.4
 packaging==25.0
-pinecone-client==5.0.1
-pinecone-plugin-inference==1.1.0
-pinecone-plugin-interface==0.0.7
+google-genai
 postgrest==2.23.2
 propcache==0.4.1
 pycparser==2.23

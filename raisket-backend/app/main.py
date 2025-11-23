@@ -36,8 +36,7 @@ async def lifespan(app: FastAPI):
             logger.info("✓ Anthropic API Key configurada")
         if settings.OPENAI_API_KEY:
             logger.info("✓ OpenAI API Key configurada")
-        if settings.PINECONE_API_KEY:
-            logger.info("✓ Pinecone API Key configurada")
+
 
         logger.info("Aplicación iniciada correctamente")
     except Exception as e:
@@ -162,8 +161,7 @@ if settings.is_development:
             "temperature": settings.TEMPERATURE,
             "top_k_results": settings.TOP_K_RESULTS,
             "similarity_threshold": settings.SIMILARITY_THRESHOLD,
-            "pinecone_index": settings.PINECONE_INDEX_NAME,
-            "pinecone_environment": settings.PINECONE_ENVIRONMENT
+
         }
 
 

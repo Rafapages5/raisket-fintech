@@ -1,25 +1,21 @@
-// src/components/layout/Header.tsx
 "use client";
 
 import Link from 'next/link';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 import {
   Menu,
   CreditCard,
   Banknote,
   TrendingUp,
-  Building2,
-  MessageCircle,
-  BookOpen,
-  LogIn,
-  ChevronDown,
+  Landmark,
   Search,
   X,
-  Calculator,
+  ChevronDown,
+  ChevronRight,
+  Shield
 } from 'lucide-react';
-import { useCompare } from '@/contexts/CompareContext';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
@@ -31,31 +27,67 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-// Categorías principales estilo NerdWallet
-const categories = [
-  { name: 'Tarjetas de Crédito', href: '/tarjetas-credito', icon: CreditCard, description: 'Compara las mejores tarjetas' },
-  { name: 'Préstamos', href: '/prestamos-personales', icon: Banknote, description: 'Encuentra tu préstamo ideal' },
-  { name: 'Inversiones', href: '/inversiones', icon: TrendingUp, description: 'CETES, fondos y más' },
-  { name: 'Cuentas', href: '/cuentas-bancarias', icon: Building2, description: 'Cuentas sin comisiones' },
-];
+// Icon mapping
+const iconMap: { [key: string]: any } = {
+  "credit-card": CreditCard,
+  "banknote": Banknote,
+  "trending-up": TrendingUp,
+  "landmark": Landmark,
+  "shield": Shield,
+};
 
-const calculators = [
-  { name: 'Interés Compuesto', href: '/calculators/interes-compuesto', icon: TrendingUp, description: 'Calcula tus rendimientos' },
-  { name: 'Préstamos', href: '/calculators/prestamos', icon: Banknote, description: 'Calcula tus pagos mensuales' },
-  { name: 'Aguinaldo', href: '/calculators/aguinaldo', icon: Calculator, description: 'Calcula cuánto te corresponde' },
-];
-
-const navItems = [
-  { href: '/chat', label: 'Asistente IA', icon: MessageCircle },
-  { href: '/educacion', label: 'Educación', icon: BookOpen },
+const menuData = [
+  {
+    label: "Tarjetas de Crédito",
+    icon: "credit-card",
+    featured: [
+      { name: "Sin Anualidad", url: "/tarjetas/sin-anualidad" },
+      { name: "Con Cashback", url: "/tarjetas/cashback" },
+      { name: "Para Estudiantes", url: "/tarjetas/estudiantes" },
+      { name: "Todas las tarjetas", url: "/tarjetas" }
+    ]
+  },
+  {
+    label: "Préstamos",
+    icon: "banknote",
+    featured: [
+      { name: "Personales", url: "/prestamos/personales" },
+      { name: "Rápidos / Apps", url: "/prestamos/rapidos" },
+      { name: "Tasas Bajas", url: "/prestamos/tasas-bajas" }
+    ]
+  },
+  {
+    label: "Inversiones",
+    icon: "trending-up",
+    featured: [
+      { name: "Cetes y Gobierno", url: "/inversiones/cetes" },
+      { name: "Pagarés Bancarios", url: "/inversiones/pagares" },
+      { name: "Bolsa / Fondos", url: "/inversiones/bolsa" }
+    ]
+  },
+  {
+    label: "Cuentas",
+    icon: "landmark",
+    featured: [
+      { name: "Alto Rendimiento", url: "/cuentas/rendimiento" },
+      { name: "Nómina", url: "/cuentas/nomina" },
+      { name: "Digitales", url: "/cuentas/digitales" }
+    ]
+  }
 ];
 
 export default function Header() {
-  const { compareItems } = useCompare();
   const { user, loading } = useAuth();
   const pathname = usePathname();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  // State for mobile accordion
+  const [openCategory, setOpenCategory] = useState<string | null>(null);
+
+  const toggleCategory = (label: string) => {
+    setOpenCategory(openCategory === label ? null : label);
+  };
 
   return (
     <>
@@ -63,123 +95,57 @@ export default function Header() {
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
-            <Link href="/" className="text-2xl font-bold text-white hover:text-[#00D9A5] transition-colors">
-              Raisket
+            <Link href="/" className="flex items-center gap-2">
+              <span className="text-2xl font-bold text-white hover:text-[#00D9A5] transition-colors">Raisket</span>
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-1">
-              {/* Best Products Dropdown */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="text-white hover:text-[#00D9A5] hover:bg-white/10">
-                    Mejores Productos <ChevronDown className="ml-1 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-[600px] p-6 bg-white">
-                  {/* Guías populares */}
-                  <div>
-                    <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Rankings y Comparativas</h3>
-                    <div className="grid grid-cols-2 gap-2">
+            <nav className="hidden lg:flex items-center gap-6">
+              {menuData.map((category) => {
+                const Icon = iconMap[category.icon] || CreditCard;
+                return (
+                  <DropdownMenu key={category.label}>
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        className="flex items-center gap-1 text-[15px] font-medium text-white hover:text-[#00D9A5] transition-colors py-2 group"
+                      >
+                        {category.label}
+                        <ChevronDown className="h-4 w-4 text-gray-300 group-hover:text-[#00D9A5] transition-transform duration-200 group-data-[state=open]:rotate-180" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" className="w-[280px] p-2 bg-white border-gray-100 shadow-xl rounded-xl animate-in fade-in-0 zoom-in-95">
+                      <div className="px-3 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                        Explorar {category.label}
+                      </div>
+                      {category.featured.map((item) => (
+                        <DropdownMenuItem key={item.name} asChild>
+                          <Link
+                            href={item.url}
+                            className="flex items-center justify-between w-full p-3 rounded-lg hover:bg-gray-50 cursor-pointer group/item focus:bg-gray-50"
+                          >
+                            <span className="text-gray-700 font-medium group-hover/item:text-[#00D9A5] transition-colors">
+                              {item.name}
+                            </span>
+                            <ChevronRight className="h-4 w-4 text-gray-300 group-hover/item:text-[#00D9A5] opacity-0 group-hover/item:opacity-100 transition-all -translate-x-2 group-hover/item:translate-x-0" />
+                          </Link>
+                        </DropdownMenuItem>
+                      ))}
                       <DropdownMenuItem asChild>
-                        <Link href="/tarjetas-de-credito/mejores/sin-anualidad" className="flex items-center gap-2 p-2 rounded-lg hover:bg-emerald-50 cursor-pointer text-sm">
-                          <span className="text-emerald-600">→</span>
-                          <span className="text-gray-700">Tarjetas sin anualidad</span>
+                        <Link
+                          href={category.featured[category.featured.length - 1].url.split('/').slice(0, -1).join('/') || '#'}
+                          className="flex items-center gap-2 w-full p-3 mt-1 border-t border-gray-50 text-[#00D9A5] font-medium hover:bg-[#00D9A5]/5 rounded-b-lg justify-center"
+                        >
+                          Ver todo en {category.label}
                         </Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link href="/tarjetas-de-credito/mejores/cashback" className="flex items-center gap-2 p-2 rounded-lg hover:bg-emerald-50 cursor-pointer text-sm">
-                          <span className="text-emerald-600">→</span>
-                          <span className="text-gray-700">Tarjetas con cashback</span>
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link href="/prestamos-personales/mejores/sin-aval" className="flex items-center gap-2 p-2 rounded-lg hover:bg-cyan-50 cursor-pointer text-sm">
-                          <span className="text-cyan-600">→</span>
-                          <span className="text-gray-700">Préstamos sin aval</span>
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link href="/prestamos-personales/mejores/aprobacion-rapida" className="flex items-center gap-2 p-2 rounded-lg hover:bg-cyan-50 cursor-pointer text-sm">
-                          <span className="text-cyan-600">→</span>
-                          <span className="text-gray-700">Préstamos rápidos</span>
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link href="/inversiones/mejores/bajo-riesgo" className="flex items-center gap-2 p-2 rounded-lg hover:bg-purple-50 cursor-pointer text-sm">
-                          <span className="text-purple-600">→</span>
-                          <span className="text-gray-700">Inversiones bajo riesgo</span>
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link href="/cuentas-bancarias/mejores/sin-comisiones" className="flex items-center gap-2 p-2 rounded-lg hover:bg-blue-50 cursor-pointer text-sm">
-                          <span className="text-blue-600">→</span>
-                          <span className="text-gray-700">Cuentas sin comisiones</span>
-                        </Link>
-                      </DropdownMenuItem>
-                    </div>
-                  </div>
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              {/* Calculators Dropdown */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="text-white hover:text-[#00D9A5] hover:bg-white/10">
-                    Calculadoras <ChevronDown className="ml-1 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-[300px] p-4 bg-white">
-                  <div className="grid gap-2">
-                    {calculators.map((calc) => (
-                      <DropdownMenuItem key={calc.href} asChild>
-                        <Link href={calc.href} className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
-                          <calc.icon className="h-5 w-5 text-[#00D9A5] mt-0.5" />
-                          <div>
-                            <div className="font-medium text-[#1A365D]">{calc.name}</div>
-                            <div className="text-xs text-gray-500">{calc.description}</div>
-                          </div>
-                        </Link>
-                      </DropdownMenuItem>
-                    ))}
-                  </div>
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              {/* Category Links */}
-              {categories.map((category) => (
-                <Link key={category.href} href={category.href}>
-                  <Button
-                    variant="ghost"
-                    className={cn(
-                      "text-white hover:text-[#00D9A5] hover:bg-white/10 text-sm",
-                      pathname.startsWith(category.href) && "text-[#00D9A5] bg-white/10"
-                    )}
-                  >
-                    {category.name}
-                  </Button>
-                </Link>
-              ))}
-
-              {/* Other Nav Items */}
-              {navItems.map((item) => (
-                <Link key={item.href} href={item.href}>
-                  <Button
-                    variant="ghost"
-                    className={cn(
-                      "text-white hover:text-[#00D9A5] hover:bg-white/10 text-sm",
-                      pathname.startsWith(item.href) && "text-[#00D9A5] bg-white/10"
-                    )}
-                  >
-                    <item.icon className="mr-2 h-4 w-4" />
-                    {item.label}
-                  </Button>
-                </Link>
-              ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                );
+              })}
             </nav>
 
             {/* Right Side Actions */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               {/* Search Button */}
               <Button
                 variant="ghost"
@@ -197,111 +163,107 @@ export default function Header() {
                 ) : user ? (
                   <UserMenu />
                 ) : (
-                  <Link href="/login">
-                    <Button variant="outline" className="border-[#00D9A5] text-[#00D9A5] hover:bg-[#00D9A5] hover:text-white">
-                      Iniciar sesión
-                    </Button>
-                  </Link>
+                  <div className="flex items-center gap-3">
+                    <Link href="/login" className="text-sm font-medium text-white hover:text-[#00D9A5]">
+                      Log in
+                    </Link>
+                    <Link href="/register">
+                      <Button className="bg-[#00D9A5] hover:bg-[#00C294] text-white font-bold px-6 rounded-full shadow-md hover:shadow-lg transition-all">
+                        Únete
+                      </Button>
+                    </Link>
+                  </div>
                 )}
               </div>
 
-              {/* Mobile Menu */}
+              {/* Mobile Menu Trigger */}
               <Sheet>
                 <SheetTrigger asChild className="lg:hidden">
-                  <Button variant="ghost" size="icon" className="text-white hover:bg-white/10">
-                    <Menu className="h-6 w-6" />
+                  <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 -mr-2">
+                    <Menu className="h-7 w-7" />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-[300px] bg-[#1A365D] border-none p-0">
+                <SheetContent side="left" className="w-[320px] p-0 bg-white border-r border-gray-100">
                   <div className="flex flex-col h-full">
-                    <div className="p-4 border-b border-white/10">
-                      <Link href="/" className="text-xl font-bold text-white">Raisket</Link>
+                    <div className="p-5 border-b border-gray-100 flex items-center justify-between">
+                      <Link href="/" className="text-2xl font-bold text-[#1A365D]">Raisket</Link>
+                      <SheetTitle className="sr-only">Menú de navegación</SheetTitle>
                     </div>
-                    <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-                      <div>
-                        <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-3">Rankings y Comparativas</h4>
-                        <Link href="/tarjetas-de-credito/mejores/sin-anualidad">
-                          <div className="flex items-center gap-3 p-3 rounded-lg text-white hover:bg-white/10">
-                            <span className="text-[#00D9A5]">→</span>
-                            <span>Tarjetas sin anualidad</span>
-                          </div>
-                        </Link>
-                        <Link href="/tarjetas-de-credito/mejores/cashback">
-                          <div className="flex items-center gap-3 p-3 rounded-lg text-white hover:bg-white/10">
-                            <span className="text-[#00D9A5]">→</span>
-                            <span>Tarjetas con cashback</span>
-                          </div>
-                        </Link>
-                        <Link href="/prestamos-personales/mejores/sin-aval">
-                          <div className="flex items-center gap-3 p-3 rounded-lg text-white hover:bg-white/10">
-                            <span className="text-[#00D9A5]">→</span>
-                            <span>Préstamos sin aval</span>
-                          </div>
-                        </Link>
-                        <Link href="/prestamos-personales/mejores/aprobacion-rapida">
-                          <div className="flex items-center gap-3 p-3 rounded-lg text-white hover:bg-white/10">
-                            <span className="text-[#00D9A5]">→</span>
-                            <span>Préstamos rápidos</span>
-                          </div>
-                        </Link>
-                        <Link href="/inversiones/mejores/bajo-riesgo">
-                          <div className="flex items-center gap-3 p-3 rounded-lg text-white hover:bg-white/10">
-                            <span className="text-[#00D9A5]">→</span>
-                            <span>Inversiones bajo riesgo</span>
-                          </div>
-                        </Link>
-                        <Link href="/cuentas-bancarias/mejores/sin-comisiones">
-                          <div className="flex items-center gap-3 p-3 rounded-lg text-white hover:bg-white/10">
-                            <span className="text-[#00D9A5]">→</span>
-                            <span>Cuentas sin comisiones</span>
-                          </div>
-                        </Link>
-                      </div>
 
-                      <div className="pt-4 border-t border-white/10">
-                        <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-3">Categorías</h4>
-                        {categories.map((category) => (
-                          <Link key={category.href} href={category.href}>
-                            <div className="flex items-center gap-3 p-3 rounded-lg text-white hover:bg-white/10 transition-colors">
-                              <category.icon className="h-5 w-5 text-[#00D9A5]" />
-                              <span>{category.name}</span>
+                    <div className="flex-1 overflow-y-auto py-2">
+                      {menuData.map((category) => {
+                        const Icon = iconMap[category.icon] || CreditCard;
+                        const isOpen = openCategory === category.label;
+
+                        return (
+                          <div key={category.label} className="border-b border-gray-50 last:border-0">
+                            <button
+                              onClick={() => toggleCategory(category.label)}
+                              className={cn(
+                                "flex items-center justify-between w-full p-4 text-left transition-colors",
+                                isOpen ? "bg-gray-50 text-[#00D9A5]" : "text-gray-700 hover:bg-gray-50"
+                              )}
+                            >
+                              <div className="flex items-center gap-3">
+                                <Icon className={cn("h-5 w-5", isOpen ? "text-[#00D9A5]" : "text-gray-400")} />
+                                <span className="font-semibold text-[15px]">{category.label}</span>
+                              </div>
+                              <ChevronRight className={cn("h-5 w-5 text-gray-400 transition-transform duration-200", isOpen && "rotate-90 text-[#00D9A5]")} />
+                            </button>
+
+                            <div
+                              className={cn(
+                                "overflow-hidden transition-all duration-300 ease-in-out bg-gray-50/50",
+                                isOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+                              )}
+                            >
+                              <div className="py-2 px-4 space-y-1">
+                                {category.featured.map((item) => (
+                                  <Link
+                                    key={item.name}
+                                    href={item.url}
+                                    className="block py-2.5 pl-9 pr-4 text-sm font-medium text-gray-600 hover:text-[#00D9A5] rounded-lg hover:bg-white transition-colors"
+                                  >
+                                    {item.name}
+                                  </Link>
+                                ))}
+                                <Link
+                                  href={category.featured[category.featured.length - 1].url.split('/').slice(0, -1).join('/') || '#'}
+                                  className="block py-2.5 pl-9 pr-4 text-sm font-bold text-[#00D9A5] hover:underline"
+                                >
+                                  Ver todo en {category.label}
+                                </Link>
+                              </div>
                             </div>
-                          </Link>
-                        ))}
-                      </div>
-                      <div className="pt-4 border-t border-white/10">
-                        <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-3">Calculadoras</h4>
-                        {calculators.map((calc) => (
-                          <Link key={calc.href} href={calc.href}>
-                            <div className="flex items-center gap-3 p-3 rounded-lg text-white hover:bg-white/10">
-                              <calc.icon className="h-5 w-5 text-[#00D9A5]" />
-                              <span>{calc.name}</span>
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
-                      <div className="pt-4 border-t border-white/10">
-                        {navItems.map((item) => (
-                          <Link key={item.href} href={item.href}>
-                            <div className="flex items-center gap-3 p-3 rounded-lg text-white hover:bg-white/10">
-                              <item.icon className="h-5 w-5 text-[#00D9A5]" />
-                              <span>{item.label}</span>
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
-                    </nav>
-                    <div className="p-4 border-t border-white/10">
-                      {loading ? (
-                        <div className="w-full h-10 rounded bg-white/10 animate-pulse" />
-                      ) : user ? (
-                        <UserMenu />
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    <div className="p-5 border-t border-gray-100 space-y-4 bg-gray-50/50">
+                      {user ? (
+                        <div className="flex items-center gap-3 p-2 rounded-lg bg-white border border-gray-100 shadow-sm">
+                          <div className="h-10 w-10 rounded-full bg-[#00D9A5]/10 flex items-center justify-center text-[#00D9A5] font-bold">
+                            {user.email?.[0].toUpperCase()}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-gray-900 truncate">{user.email}</p>
+                            <p className="text-xs text-gray-500">Miembro</p>
+                          </div>
+                        </div>
                       ) : (
-                        <Link href="/login">
-                          <Button className="w-full bg-[#00D9A5] hover:bg-[#00C294] text-white">
-                            <LogIn className="mr-2 h-4 w-4" /> Iniciar sesión
-                          </Button>
-                        </Link>
+                        <div className="grid grid-cols-2 gap-3">
+                          <Link href="/login" className="w-full">
+                            <Button variant="outline" className="w-full border-gray-200 hover:border-[#00D9A5] hover:text-[#00D9A5]">
+                              Log in
+                            </Button>
+                          </Link>
+                          <Link href="/register" className="w-full">
+                            <Button className="w-full bg-[#00D9A5] hover:bg-[#00C294] text-white">
+                              Únete
+                            </Button>
+                          </Link>
+                        </div>
                       )}
                     </div>
                   </div>
@@ -314,36 +276,42 @@ export default function Header() {
 
       {/* Search Overlay */}
       {isSearchOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50" onClick={() => setIsSearchOpen(false)}>
-          <div className="bg-white p-4 shadow-lg" onClick={(e) => e.stopPropagation()}>
-            <div className="container mx-auto">
+        <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm animate-in fade-in duration-200" onClick={() => setIsSearchOpen(false)}>
+          <div className="bg-white p-4 shadow-2xl animate-in slide-in-from-top-10 duration-300" onClick={(e) => e.stopPropagation()}>
+            <div className="container mx-auto max-w-3xl">
               <div className="flex items-center gap-4">
-                <div className="flex-1 relative">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <div className="flex-1 relative group">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-[#00D9A5] transition-colors" />
                   <input
                     type="text"
-                    placeholder="Buscar tarjetas, préstamos, inversiones..."
-                    className="w-full pl-12 pr-4 py-3 text-lg border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-[#00D9A5] focus:border-transparent"
+                    placeholder="Busca tarjetas, préstamos, inversiones..."
+                    className="w-full pl-12 pr-4 py-4 text-lg bg-gray-50 border-2 border-transparent rounded-2xl focus:outline-none focus:bg-white focus:border-[#00D9A5] transition-all placeholder:text-gray-400"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     autoFocus
                   />
                 </div>
-                <Button variant="ghost" size="icon" onClick={() => setIsSearchOpen(false)}>
+                <button
+                  onClick={() => setIsSearchOpen(false)}
+                  className="p-2 rounded-full hover:bg-gray-100 text-gray-500 transition-colors"
+                >
                   <X className="h-6 w-6" />
-                </Button>
+                </button>
               </div>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <span className="text-sm text-gray-500">Búsquedas populares:</span>
-                {['Tarjeta sin anualidad', 'CETES', 'Préstamo rápido', 'Cuenta con rendimiento'].map((term) => (
-                  <button
-                    key={term}
-                    className="text-sm px-3 py-1 bg-gray-100 rounded-full hover:bg-[#00D9A5]/10 hover:text-[#00D9A5] transition-colors"
-                    onClick={() => setSearchQuery(term)}
-                  >
-                    {term}
-                  </button>
-                ))}
+
+              <div className="mt-6">
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Tendencias</p>
+                <div className="flex flex-wrap gap-2">
+                  {['Tarjeta sin anualidad', 'Mejores CETES', 'Préstamos rápidos', 'Cuenta de nómina'].map((term) => (
+                    <button
+                      key={term}
+                      className="text-sm px-4 py-2 bg-gray-100 text-gray-700 rounded-full hover:bg-[#00D9A5] hover:text-white transition-all duration-200 font-medium"
+                      onClick={() => setSearchQuery(term)}
+                    >
+                      {term}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
