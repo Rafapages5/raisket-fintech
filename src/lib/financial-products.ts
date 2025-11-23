@@ -64,12 +64,23 @@ export async function getFinancialProducts(options?: {
   limit?: number;
   orderBy?: 'rating' | 'main_rate_numeric' | 'created_at';
   ascending?: boolean;
+  target_audience?: 'personal' | 'business';
 }): Promise<FinancialProduct[]> {
   try {
     let query = supabase
       .from('financial_products')
       .select('*')
       .eq('is_active', true);
+
+    if (options?.target_audience) {
+      query = query.eq('target_audience', options.target_audience);
+    } else {
+      // Default to personal if not specified, or show all? 
+      // Usually we want to separate them. Let's default to 'personal' if not specified to avoid mixing, 
+      // OR we can leave it open. Given the user wants to separate "Para Personas" and "Para Empresas", 
+      // explicit filtering is better.
+      // For now, let's NOT default here to allow flexibility, but we should use it in the pages.
+    }
 
     if (options?.category) {
       query = query.eq('category', options.category);
@@ -148,7 +159,8 @@ export async function getProductCounts(): Promise<Record<ProductCategory, number
     const { data, error } = await supabase
       .from('financial_products')
       .select('category')
-      .eq('is_active', true);
+      .eq('is_active', true)
+      .returns<{ category: string }[]>();
 
     if (error || !data) {
       return { credit_card: 0, personal_loan: 0, investment: 0, banking: 0 };

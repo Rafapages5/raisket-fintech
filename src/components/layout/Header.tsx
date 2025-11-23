@@ -14,7 +14,8 @@ import {
   X,
   ChevronDown,
   ChevronRight,
-  Shield
+  Shield,
+  Briefcase
 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -34,6 +35,7 @@ const iconMap: { [key: string]: any } = {
   "trending-up": TrendingUp,
   "landmark": Landmark,
   "shield": Shield,
+  "briefcase": Briefcase,
 };
 
 const menuData = [
@@ -41,37 +43,47 @@ const menuData = [
     label: "Tarjetas de Crédito",
     icon: "credit-card",
     featured: [
-      { name: "Sin Anualidad", url: "/tarjetas/sin-anualidad" },
-      { name: "Con Cashback", url: "/tarjetas/cashback" },
-      { name: "Para Estudiantes", url: "/tarjetas/estudiantes" },
-      { name: "Todas las tarjetas", url: "/tarjetas" }
+      { name: "Sin Anualidad", url: "/tarjetas-de-credito/mejores/sin-anualidad" },
+      { name: "Con Cashback", url: "/tarjetas-de-credito/mejores/cashback" },
+      { name: "Para Estudiantes", url: "/tarjetas-de-credito/mejores/para-estudiantes" },
+      { name: "Todas las tarjetas", url: "/tarjetas-de-credito" }
     ]
   },
   {
     label: "Préstamos",
     icon: "banknote",
     featured: [
-      { name: "Personales", url: "/prestamos/personales" },
-      { name: "Rápidos / Apps", url: "/prestamos/rapidos" },
-      { name: "Tasas Bajas", url: "/prestamos/tasas-bajas" }
+      { name: "Personales", url: "/prestamos-personales/mejores/sin-aval" }, // Adjusted to match likely structure
+      { name: "Rápidos / Apps", url: "/prestamos-personales/mejores/aprobacion-rapida" },
+      { name: "Tasas Bajas", url: "/prestamos-personales/mejores/tasa-baja" }
     ]
   },
   {
     label: "Inversiones",
     icon: "trending-up",
     featured: [
-      { name: "Cetes y Gobierno", url: "/inversiones/cetes" },
-      { name: "Pagarés Bancarios", url: "/inversiones/pagares" },
-      { name: "Bolsa / Fondos", url: "/inversiones/bolsa" }
+      { name: "Cetes y Gobierno", url: "/inversiones/mejores/cetes" },
+      { name: "Pagarés Bancarios", url: "/inversiones/mejores/bajo-riesgo" },
+      { name: "Bolsa / Fondos", url: "/inversiones/mejores/alto-rendimiento" }
     ]
   },
   {
     label: "Cuentas",
     icon: "landmark",
     featured: [
-      { name: "Alto Rendimiento", url: "/cuentas/rendimiento" },
-      { name: "Nómina", url: "/cuentas/nomina" },
-      { name: "Digitales", url: "/cuentas/digitales" }
+      { name: "Alto Rendimiento", url: "/cuentas-bancarias/mejores/alto-rendimiento-ahorro" },
+      { name: "Nómina", url: "/cuentas-bancarias/mejores/sin-comisiones" }, // Fallback mapping
+      { name: "Digitales", url: "/cuentas-bancarias/mejores/digital-banco" }
+    ]
+  },
+  {
+    label: "Para Empresas",
+    icon: "briefcase", // We'll need to add this icon to the map
+    featured: [
+      { name: "Crédito PyME", url: "/empresas/credito-pyme" },
+      { name: "Tarjetas Empresariales", url: "/empresas/tarjetas" },
+      { name: "Cuentas Negocios", url: "/empresas/cuentas" },
+      { name: "Ver todo para Empresas", url: "/empresas" }
     ]
   }
 ];

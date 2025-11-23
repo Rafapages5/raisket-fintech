@@ -23,12 +23,12 @@ export default function Footer() {
             <h4 className="text-white font-semibold mb-3">Productos</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/individuals/all" className="text-muted-foreground/70 hover:text-[#00d4aa] transition-colors">
+                <Link href="/" className="text-muted-foreground/70 hover:text-[#00d4aa] transition-colors">
                   Para Personas
                 </Link>
               </li>
               <li>
-                <Link href="/businesses/all" className="text-muted-foreground/70 hover:text-[#00d4aa] transition-colors">
+                <Link href="/empresas" className="text-muted-foreground/70 hover:text-[#00d4aa] transition-colors">
                   Para Empresas
                 </Link>
               </li>
