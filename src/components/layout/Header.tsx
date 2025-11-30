@@ -21,6 +21,7 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 import UserMenu from '@/components/auth/UserMenu';
+import SignUpModal from '@/components/auth/SignUpModal';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -42,18 +43,19 @@ const menuData = [
   {
     label: "Tarjetas de Crédito",
     icon: "credit-card",
+    viewAllUrl: "/tarjetas-credito",
     featured: [
       { name: "Sin Anualidad", url: "/tarjetas-de-credito/mejores/sin-anualidad" },
       { name: "Con Cashback", url: "/tarjetas-de-credito/mejores/cashback" },
-      { name: "Para Estudiantes", url: "/tarjetas-de-credito/mejores/para-estudiantes" },
-      { name: "Todas las tarjetas", url: "/tarjetas-de-credito" }
+      { name: "Para Estudiantes", url: "/tarjetas-de-credito/mejores/para-estudiantes" }
     ]
   },
   {
     label: "Préstamos",
     icon: "banknote",
+    viewAllUrl: "/prestamos-personales",
     featured: [
-      { name: "Personales", url: "/prestamos-personales/mejores/sin-aval" }, // Adjusted to match likely structure
+      { name: "Personales", url: "/prestamos-personales/mejores/sin-aval" },
       { name: "Rápidos / Apps", url: "/prestamos-personales/mejores/aprobacion-rapida" },
       { name: "Tasas Bajas", url: "/prestamos-personales/mejores/tasa-baja" }
     ]
@@ -61,6 +63,7 @@ const menuData = [
   {
     label: "Inversiones",
     icon: "trending-up",
+    viewAllUrl: "/inversiones",
     featured: [
       { name: "Cetes y Gobierno", url: "/inversiones/mejores/cetes" },
       { name: "Pagarés Bancarios", url: "/inversiones/mejores/bajo-riesgo" },
@@ -70,20 +73,21 @@ const menuData = [
   {
     label: "Cuentas",
     icon: "landmark",
+    viewAllUrl: "/cuentas-bancarias",
     featured: [
       { name: "Alto Rendimiento", url: "/cuentas-bancarias/mejores/alto-rendimiento-ahorro" },
-      { name: "Nómina", url: "/cuentas-bancarias/mejores/sin-comisiones" }, // Fallback mapping
+      { name: "Nómina", url: "/cuentas-bancarias/mejores/sin-comisiones" },
       { name: "Digitales", url: "/cuentas-bancarias/mejores/digital-banco" }
     ]
   },
   {
     label: "Para Empresas",
-    icon: "briefcase", // We'll need to add this icon to the map
+    icon: "briefcase",
+    viewAllUrl: "/empresas",
     featured: [
       { name: "Crédito PyME", url: "/empresas/credito-pyme" },
       { name: "Tarjetas Empresariales", url: "/empresas/tarjetas" },
-      { name: "Cuentas Negocios", url: "/empresas/cuentas" },
-      { name: "Ver todo para Empresas", url: "/empresas" }
+      { name: "Cuentas Negocios", url: "/empresas/cuentas" }
     ]
   }
 ];
@@ -93,6 +97,7 @@ export default function Header() {
   const pathname = usePathname();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // State for mobile accordion
   const [openCategory, setOpenCategory] = useState<string | null>(null);
@@ -144,7 +149,7 @@ export default function Header() {
                       ))}
                       <DropdownMenuItem asChild>
                         <Link
-                          href={category.featured[category.featured.length - 1].url.split('/').slice(0, -1).join('/') || '#'}
+                          href={(category as any).viewAllUrl || category.featured[category.featured.length - 1].url.split('/').slice(0, -1).join('/') || '#'}
                           className="flex items-center gap-2 w-full p-3 mt-1 border-t border-gray-50 text-[#00D9A5] font-medium hover:bg-[#00D9A5]/5 rounded-b-lg justify-center"
                         >
                           Ver todo en {category.label}
@@ -179,17 +184,17 @@ export default function Header() {
                     <Link href="/login" className="text-sm font-medium text-white hover:text-[#00D9A5]">
                       Log in
                     </Link>
-                    <Link href="/register">
+                    <SignUpModal>
                       <Button className="bg-[#00D9A5] hover:bg-[#00C294] text-white font-bold px-6 rounded-full shadow-md hover:shadow-lg transition-all">
                         Únete
                       </Button>
-                    </Link>
+                    </SignUpModal>
                   </div>
                 )}
               </div>
 
               {/* Mobile Menu Trigger */}
-              <Sheet>
+              <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
                 <SheetTrigger asChild className="lg:hidden">
                   <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 -mr-2">
                     <Menu className="h-7 w-7" />
@@ -198,7 +203,7 @@ export default function Header() {
                 <SheetContent side="left" className="w-[320px] p-0 bg-white border-r border-gray-100">
                   <div className="flex flex-col h-full">
                     <div className="p-5 border-b border-gray-100 flex items-center justify-between">
-                      <Link href="/" className="text-2xl font-bold text-[#1A365D]">Raisket</Link>
+                      <Link href="/" className="text-2xl font-bold text-[#1A365D]" onClick={() => setIsMobileMenuOpen(false)}>Raisket</Link>
                       <SheetTitle className="sr-only">Menú de navegación</SheetTitle>
                     </div>
 
@@ -235,13 +240,15 @@ export default function Header() {
                                     key={item.name}
                                     href={item.url}
                                     className="block py-2.5 pl-9 pr-4 text-sm font-medium text-gray-600 hover:text-[#00D9A5] rounded-lg hover:bg-white transition-colors"
+                                    onClick={() => setIsMobileMenuOpen(false)}
                                   >
                                     {item.name}
                                   </Link>
                                 ))}
                                 <Link
-                                  href={category.featured[category.featured.length - 1].url.split('/').slice(0, -1).join('/') || '#'}
+                                  href={(category as any).viewAllUrl || category.featured[category.featured.length - 1].url.split('/').slice(0, -1).join('/') || '#'}
                                   className="block py-2.5 pl-9 pr-4 text-sm font-bold text-[#00D9A5] hover:underline"
+                                  onClick={() => setIsMobileMenuOpen(false)}
                                 >
                                   Ver todo en {category.label}
                                 </Link>
@@ -265,16 +272,18 @@ export default function Header() {
                         </div>
                       ) : (
                         <div className="grid grid-cols-2 gap-3">
-                          <Link href="/login" className="w-full">
+                          <Link href="/login" className="w-full" onClick={() => setIsMobileMenuOpen(false)}>
                             <Button variant="outline" className="w-full border-gray-200 hover:border-[#00D9A5] hover:text-[#00D9A5]">
                               Log in
                             </Button>
                           </Link>
-                          <Link href="/register" className="w-full">
-                            <Button className="w-full bg-[#00D9A5] hover:bg-[#00C294] text-white">
-                              Únete
-                            </Button>
-                          </Link>
+                          <div className="w-full">
+                            <SignUpModal>
+                              <Button className="w-full bg-[#00D9A5] hover:bg-[#00C294] text-white">
+                                Únete
+                              </Button>
+                            </SignUpModal>
+                          </div>
                         </div>
                       )}
                     </div>

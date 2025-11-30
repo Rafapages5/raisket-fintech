@@ -43,6 +43,25 @@ export function useAuth() {
     }
   };
 
+  const signUpWithEmail = async (email: string, password: string, name: string) => {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: name,
+        },
+      },
+    });
+
+    if (error) {
+      console.error('Error signing up:', error);
+      throw error;
+    }
+
+    return data;
+  };
+
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
@@ -55,6 +74,7 @@ export function useAuth() {
     user,
     loading,
     signInWithGoogle,
+    signUpWithEmail,
     signOut,
     isAuthenticated: !!user
   };

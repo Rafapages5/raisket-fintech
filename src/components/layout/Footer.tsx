@@ -82,6 +82,9 @@ export default function Footer() {
 
         {/* Bottom */}
         <div className="border-t border-white/10 pt-6 text-center">
+          <p className="text-xs text-muted-foreground/50 max-w-2xl mx-auto mb-4">
+            Raisket puede recibir compensación de algunos enlaces de afiliados. Esto no afecta nuestras evaluaciones ni el orden de los productos. Nuestra prioridad es tu bienestar financiero.
+          </p>
           <p className="text-sm text-muted-foreground/70 flex items-center justify-center mb-2">
             <Copyright className="h-4 w-4 mr-1.5" /> {new Date().getFullYear()} Raisket. Todos los derechos reservados.
           </p>

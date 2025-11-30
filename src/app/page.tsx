@@ -11,9 +11,12 @@ import {
   type FinancialProduct,
   type ProductCategory,
 } from '@/lib/financial-products';
+import { getAllTopInstitutions } from '@/lib/institutions';
 import SchemaScript from '@/lib/schema/SchemaScript';
 import { generateProductListSchema } from '@/lib/schema/generators';
 import PopularGuidesSection from '@/components/home/PopularGuidesSection';
+import InstitutionTicker from '@/components/home/InstitutionTicker';
+import TopInstitutionsSection from '@/components/home/TopInstitutionsSection';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -126,7 +129,7 @@ function HeroSection() {
 
       <div className="absolute bottom-0 left-0 right-0">
         <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
-          <path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#F8FAFC"/>
+          <path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#F8FAFC" />
         </svg>
       </div>
     </section>
@@ -270,7 +273,7 @@ function CategorySection({ category, products }: { category: ProductCategory; pr
 function WhyRaisketSection() {
   const features = [
     { icon: Shield, title: 'Independiente', description: 'No vendemos productos de nadie. Recomendaciones basadas en tu beneficio.' },
-    { icon: Scale, title: 'Sin Conflictos', description: 'No ganamos comisión por venderte. Trabajamos para ti.' },
+    { icon: Scale, title: 'Sin Conflictos', description: 'Algunos enlaces generan comisión, pero esto NO afecta nuestras calificaciones. Tu beneficio es primero.' },
     { icon: Brain, title: 'IA Avanzada', description: 'Analizamos cientos de productos para encontrar el ideal.' },
     { icon: Users, title: 'Comunidad Real', description: 'Reseñas de usuarios reales de México.' },
   ];
@@ -303,11 +306,12 @@ function WhyRaisketSection() {
 
 // ============ MAIN PAGE ============
 export default async function HomePage() {
-  const [creditCards, personalLoans, investments, bankingAccounts] = await Promise.all([
+  const [creditCards, personalLoans, investments, bankingAccounts, topInstitutions] = await Promise.all([
     getFinancialProducts({ category: 'credit_card', limit: 3 }),
     getFinancialProducts({ category: 'personal_loan', limit: 3 }),
     getFinancialProducts({ category: 'investment', limit: 3 }),
     getFinancialProducts({ category: 'banking', limit: 3 }),
+    getAllTopInstitutions(),
   ]);
 
   // Combinar todos los productos para el schema
@@ -325,9 +329,15 @@ export default async function HomePage() {
 
       <HeroSection />
 
+      {/* Bloomberg-style Ticker */}
+      <InstitutionTicker items={topInstitutions.ticker} />
+
       <CategorySection category="credit_card" products={creditCards} />
 
       <WhyRaisketSection />
+
+      {/* Top Institutions Dashboard */}
+      <TopInstitutionsSection institutionsByType={topInstitutions.byType} />
 
       <PopularGuidesSection />
 
