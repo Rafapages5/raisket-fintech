@@ -325,12 +325,12 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-2 gap-12 items-center mb-20">
             <div className="bg-gradient-to-br from-primary to-secondary rounded-2xl p-10 text-white shadow-xl min-h-[400px] flex flex-col justify-center text-center">
               <h3 className="text-3xl font-bold mb-6">🤖 AI-Powered Platform</h3>
-              <p className="text-lg mb-6">Sistema RAG multi-modelo que combina:</p>
+              <p className="text-lg mb-6">Potenciado 100% por Google Gemini:</p>
               <ul className="space-y-3 text-left max-w-xs mx-auto mb-8">
-                <li className="flex items-center gap-2"><Zap className="w-5 h-5 text-accent" /> Claude Sonnet 4.5 (Razonamiento)</li>
-                <li className="flex items-center gap-2"><Zap className="w-5 h-5 text-accent" /> GPT-4o (Generación)</li>
-                <li className="flex items-center gap-2"><Zap className="w-5 h-5 text-accent" /> Gemini 2.0 Flash (Velocidad)</li>
-                <li className="flex items-center gap-2"><Database className="w-5 h-5 text-accent" /> Vector DB con productos MX</li>
+                <li className="flex items-center gap-2"><Zap className="w-5 h-5 text-accent" /> Gemini 1.5 Pro (Razonamiento)</li>
+                <li className="flex items-center gap-2"><Zap className="w-5 h-5 text-accent" /> Gemini 1.5 Flash (Velocidad)</li>
+                <li className="flex items-center gap-2"><Database className="w-5 h-5 text-accent" /> Vertex AI Vector Search</li>
+                <li className="flex items-center gap-2"><Brain className="w-5 h-5 text-accent" /> Google AI Studio</li>
               </ul>
               <p className="text-sm opacity-80 border-t border-white/20 pt-4 inline-block mx-auto">
                 [Demo interactiva disponible en Q1 2025]
@@ -442,11 +442,11 @@ export default function AboutPage() {
               </CardContent>
             </Card>
             <Card>
-              <CardHeader><CardTitle className="text-lg text-primary">🤖 AI/ML Stack (actual)</CardTitle></CardHeader>
+              <CardHeader><CardTitle className="text-lg text-primary">🤖 AI/ML Stack</CardTitle></CardHeader>
               <CardContent className="text-sm text-gray-600">
-                <p>Claude Sonnet 4.5, GPT-4o, Gemini 2.0</p>
-                <p>OpenAI Embeddings</p>
-                <p>Pinecone / Qdrant</p>
+                <p>Gemini 1.5 Pro & Flash</p>
+                <p>Vertex AI Embeddings</p>
+                <p>Vertex AI Vector Search</p>
                 <p>LangChain, Vercel AI SDK</p>
               </CardContent>
             </Card>
