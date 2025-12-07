@@ -18,14 +18,15 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 3600;
 
 interface PageProps {
-    params: {
+    params: Promise<{
         category: string;
         slug: string;
-    };
+    }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-    const product = await getProductBySlug(params.slug);
+    const { category, slug } = await params;
+    const product = await getProductBySlug(slug);
 
     if (!product) {
         return {
@@ -37,7 +38,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: `${product.name} - Análisis, Opiniones y Beneficios 2025`,
         description: `Conoce todo sobre la ${product.name} de ${product.institution}. ${product.description?.slice(0, 120)}... Descubre si es para ti.`,
         alternates: {
-            canonical: `/productos/${params.category}/${params.slug}`,
+            canonical: `/productos/${category}/${slug}`,
         },
         openGraph: {
             title: `${product.name} - Opiniones y Análisis`,
@@ -48,13 +49,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function ProductPage({ params }: PageProps) {
+    const { category, slug } = await params;
     // Validar categoría (opcional, pero buena práctica)
     const validCategories = Object.keys(categoryLabels);
-    if (!validCategories.includes(params.category)) {
+    if (!validCategories.includes(category)) {
         notFound();
     }
 
-    const product = await getProductBySlug(params.slug);
+    const product = await getProductBySlug(slug);
 
     if (!product) {
         notFound();
@@ -64,7 +66,7 @@ export default async function ProductPage({ params }: PageProps) {
     const productSchema = generateProductSchema(product);
     const breadcrumbSchema = generateBreadcrumbSchema([
         { name: 'Inicio', url: 'https://raisket.mx' },
-        { name: categoryLabels[product.category], url: `https://raisket.mx/comparadores/${params.category === 'credit_card' ? 'tarjetas-credito' : params.category === 'personal_loan' ? 'prestamos-personales' : params.category === 'investment' ? 'inversiones' : 'cuentas-bancarias'}` },
+        { name: categoryLabels[product.category], url: `https://raisket.mx/comparadores/${category === 'credit_card' ? 'tarjetas-credito' : category === 'personal_loan' ? 'prestamos-personales' : category === 'investment' ? 'inversiones' : 'cuentas-bancarias'}` },
         { name: product.name },
     ]);
 
@@ -80,9 +82,9 @@ export default async function ProductPage({ params }: PageProps) {
                         <ChevronRight className="h-4 w-4 mx-2" />
                         <Link
                             href={`/comparadores/${product.category === 'credit_card' ? 'tarjetas-credito' :
-                                    product.category === 'personal_loan' ? 'prestamos-personales' :
-                                        product.category === 'investment' ? 'inversiones' :
-                                            'cuentas-bancarias'
+                                product.category === 'personal_loan' ? 'prestamos-personales' :
+                                    product.category === 'investment' ? 'inversiones' :
+                                        'cuentas-bancarias'
                                 }`}
                             className="hover:text-[#00D9A5]"
                         >

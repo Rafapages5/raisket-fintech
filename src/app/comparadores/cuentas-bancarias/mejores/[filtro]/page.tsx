@@ -29,9 +29,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { filtro: string };
+  params: Promise<{ filtro: string }>;
 }): Promise<Metadata> {
-  const filter = getFilterDefinition('banking', params.filtro);
+  const { filtro } = await params;
+  const filter = getFilterDefinition('banking', filtro);
 
   if (!filter) {
     return {
@@ -65,10 +66,11 @@ export async function generateMetadata({
 export default async function MejoresCuentasPage({
   params,
 }: {
-  params: { filtro: string };
+  params: Promise<{ filtro: string }>;
 }) {
+  const { filtro } = await params;
   // Obtener definición del filtro
-  const filter = getFilterDefinition('banking', params.filtro);
+  const filter = getFilterDefinition('banking', filtro);
 
   if (!filter) {
     notFound();

@@ -29,9 +29,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { filtro: string };
+  params: Promise<{ filtro: string }>;
 }): Promise<Metadata> {
-  const filter = getFilterDefinition('credit_card', params.filtro);
+  const { filtro } = await params;
+  const filter = getFilterDefinition('credit_card', filtro);
 
   if (!filter) {
     return {
@@ -65,10 +66,11 @@ export async function generateMetadata({
 export default async function MejoresTarjetasPage({
   params,
 }: {
-  params: { filtro: string };
+  params: Promise<{ filtro: string }>;
 }) {
+  const { filtro } = await params;
   // Obtener definición del filtro
-  const filter = getFilterDefinition('credit_card', params.filtro);
+  const filter = getFilterDefinition('credit_card', filtro);
 
   if (!filter) {
     notFound();

@@ -1,7 +1,11 @@
 import Link from 'next/link';
 import { ArrowLeft, Share2, Bookmark, Clock, Calendar } from 'lucide-react';
 
-export default function ArticlePage({ params }: { params: { slug: string } }) {
+export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+    await params; // Wait for params (conceptually, though not strictly needed if unused yet, but good practice per Next 15)
+    // Actually we don't use slug here yet (mock data), but typings must match.
+    // However, if we don't await, Next 15 dev server might warn or error if we access props later.
+    // Since mock data is static, we just fix the signature.
     // Mock Data - In a real app, fetch based on params.slug
     const article = {
         title: 'El Peso Mexicano se Fortalece: Análisis de Cierre de Mercado',

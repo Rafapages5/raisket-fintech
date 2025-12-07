@@ -179,7 +179,8 @@ export function generateProductListSchema(
  */
 export function generateArticleSchema(
   article: {
-    title: string;
+    title?: string;
+    headline?: string;
     description?: string;
     image?: string;
     datePublished: string;
@@ -191,7 +192,7 @@ export function generateArticleSchema(
   return {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: article.title,
+    headline: article.headline || article.title || '',
     description: article.description,
     image: article.image,
     datePublished: article.datePublished,

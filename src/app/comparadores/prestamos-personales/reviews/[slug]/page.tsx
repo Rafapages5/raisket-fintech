@@ -20,12 +20,14 @@ import ReviewPageTemplate from '@/components/reviews/ReviewPageTemplate';
 export const revalidate = 3600; // ISR - revalidar cada hora
 
 // ============ METADATA SEO ============
+// ============ METADATA SEO ============
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const product = await getProductBySlug(params.slug);
+  const { slug } = await params;
+  const product = await getProductBySlug(slug);
 
   if (!product || product.category !== 'personal_loan') {
     return {
@@ -72,8 +74,9 @@ export async function generateStaticParams() {
 }
 
 // ============ PÁGINA PRINCIPAL ============
-export default async function PrestamoReviewPage({ params }: { params: { slug: string } }) {
-  const product = await getProductBySlug(params.slug);
+export default async function PrestamoReviewPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const product = await getProductBySlug(slug);
 
   if (!product || product.category !== 'personal_loan') {
     notFound();

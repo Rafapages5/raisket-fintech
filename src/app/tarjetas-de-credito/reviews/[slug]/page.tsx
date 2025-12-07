@@ -23,12 +23,14 @@ import { Button } from '@/components/ui/button';
 export const revalidate = 3600; // ISR - revalidar cada hora
 
 // ============ METADATA SEO ============
+// ============ METADATA SEO ============
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const product = await getProductBySlug(params.slug);
+  const { slug } = await params;
+  const product = await getProductBySlug(slug);
 
   if (!product || product.category !== 'credit_card') {
     return {
@@ -75,8 +77,9 @@ export async function generateStaticParams() {
 }
 
 // ============ PÁGINA PRINCIPAL ============
-export default async function TarjetaReviewPage({ params }: { params: { slug: string } }) {
-  const product = await getProductBySlug(params.slug);
+export default async function TarjetaReviewPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const product = await getProductBySlug(slug);
 
   if (!product || product.category !== 'credit_card') {
     notFound();
@@ -161,11 +164,10 @@ export default async function TarjetaReviewPage({ params }: { params: { slug: st
                     {[1, 2, 3, 4, 5].map((star) => (
                       <Star
                         key={star}
-                        className={`h-5 w-5 ${
-                          star <= product.rating
+                        className={`h-5 w-5 ${star <= product.rating
                             ? 'fill-yellow-400 text-yellow-400'
                             : 'text-white/30'
-                        }`}
+                          }`}
                       />
                     ))}
                   </div>
