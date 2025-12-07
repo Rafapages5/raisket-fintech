@@ -247,10 +247,10 @@ export function combineSchemas(...schemas: Array<Record<string, any> | undefined
  */
 export function categoryToPath(category: ProductCategory): string {
   const paths: Record<ProductCategory, string> = {
-    credit_card: 'tarjetas-de-credito',
-    personal_loan: 'prestamos-personales',
-    investment: 'inversiones',
-    banking: 'cuentas-bancarias',
+    credit_card: 'comparadores/tarjetas-credito',
+    personal_loan: 'comparadores/prestamos-personales',
+    investment: 'comparadores/inversiones',
+    banking: 'comparadores/cuentas-bancarias',
   };
   return paths[category];
 }

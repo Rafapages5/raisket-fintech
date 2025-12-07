@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   description: 'Compara cuentas bancarias sin comisiones y con alto rendimiento. Cuentas digitales desde $0 con rendimientos hasta 15% anual. Análisis experto actualizado.',
   keywords: ['cuentas bancarias', 'sin comisiones', 'rendimiento', 'cuentas digitales', 'México', 'comparador cuentas'],
   alternates: {
-    canonical: '/cuentas-bancarias',
+    canonical: '/comparadores/cuentas-bancarias',
   },
 };
 
@@ -51,7 +51,7 @@ export default async function CuentasBancariasPage() {
     title: 'Las Mejores Cuentas Bancarias en México 2025',
     description: 'Guía completa para elegir la mejor cuenta bancaria sin comisiones y con rendimiento',
     datePublished: new Date().toISOString(),
-    url: 'https://raisket.mx/cuentas-bancarias',
+    url: 'https://raisket.mx/comparadores/cuentas-bancarias',
   });
 
   return (

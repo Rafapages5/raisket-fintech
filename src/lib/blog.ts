@@ -1,8 +1,6 @@
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
-import { remark } from 'remark'
-import html from 'remark-html'
 
 const postsDirectory = path.join(process.cwd(), '_posts')
 
@@ -13,7 +11,7 @@ export interface BlogPost {
   excerpt: string
   author: string
   tags: string[]
-  content: string
+  content: string // Raw Markdown content for MDX
 }
 
 export interface BlogPostMeta {
@@ -26,47 +24,53 @@ export interface BlogPostMeta {
 }
 
 export async function getAllPosts(): Promise<BlogPostMeta[]> {
-  const fileNames = fs.readdirSync(postsDirectory)
-  const allPostsData = fileNames
-    .filter((fileName) => fileName.endsWith('.md'))
-    .map((fileName) => {
-      const slug = fileName.replace(/\.md$/, '')
-      const fullPath = path.join(postsDirectory, fileName)
-      const fileContents = fs.readFileSync(fullPath, 'utf8')
-      const { data } = matter(fileContents)
+  try {
+    if (!fs.existsSync(postsDirectory)) {
+        return [];
+    }
+    const fileNames = fs.readdirSync(postsDirectory)
+    const allPostsData = fileNames
+      .filter((fileName) => fileName.endsWith('.md'))
+      .map((fileName) => {
+        const slug = fileName.replace(/\.md$/, '')
+        const fullPath = path.join(postsDirectory, fileName)
+        const fileContents = fs.readFileSync(fullPath, 'utf8')
+        const { data } = matter(fileContents)
 
-      return {
-        slug,
-        title: data.title,
-        date: data.date,
-        excerpt: data.excerpt,
-        author: data.author,
-        tags: data.tags || [],
-      }
-    })
+        return {
+          slug,
+          title: data.title ?? 'Sin título',
+          date: data.date ?? new Date().toISOString(),
+          excerpt: data.excerpt ?? '',
+          author: data.author ?? 'Raisket',
+          tags: data.tags || [],
+        }
+      })
 
-  return allPostsData.sort((a, b) => (a.date < b.date ? 1 : -1))
+    return allPostsData.sort((a, b) => (a.date < b.date ? 1 : -1))
+  } catch (error) {
+    console.error('Error getting all posts:', error);
+    return [];
+  }
 }
 
 export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
   try {
     const fullPath = path.join(postsDirectory, `${slug}.md`)
+    if (!fs.existsSync(fullPath)) {
+        return null;
+    }
     const fileContents = fs.readFileSync(fullPath, 'utf8')
     const { data, content } = matter(fileContents)
 
-    const processedContent = await remark()
-      .use(html)
-      .process(content)
-    const contentHtml = processedContent.toString()
-
     return {
       slug,
-      title: data.title,
-      date: data.date,
-      excerpt: data.excerpt,
-      author: data.author,
+      title: data.title ?? 'Sin título',
+      date: data.date ?? new Date().toISOString(),
+      excerpt: data.excerpt ?? '',
+      author: data.author ?? 'Raisket',
       tags: data.tags || [],
-      content: contentHtml,
+      content: content,
     }
   } catch (error) {
     return null
@@ -74,8 +78,15 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
 }
 
 export async function getAllSlugs(): Promise<string[]> {
-  const fileNames = fs.readdirSync(postsDirectory)
-  return fileNames
-    .filter((fileName) => fileName.endsWith('.md'))
-    .map((fileName) => fileName.replace(/\.md$/, ''))
+  try {
+    if (!fs.existsSync(postsDirectory)) {
+        return [];
+    }
+    const fileNames = fs.readdirSync(postsDirectory)
+    return fileNames
+      .filter((fileName) => fileName.endsWith('.md'))
+      .map((fileName) => fileName.replace(/\.md$/, ''))
+  } catch (error) {
+    return [];
+  }
 }

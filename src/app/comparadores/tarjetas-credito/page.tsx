@@ -21,12 +21,12 @@ export const metadata: Metadata = {
   description: 'Compara las mejores tarjetas de crédito sin anualidad, con cashback y puntos. Encuentra la tarjeta perfecta según tu perfil financiero. Análisis experto actualizado.',
   keywords: ['tarjetas de crédito', 'mejores tarjetas', 'sin anualidad', 'cashback', 'puntos', 'México', 'comparador tarjetas'],
   alternates: {
-    canonical: '/tarjetas-de-credito',
+    canonical: '/comparadores/tarjetas-credito',
   },
   openGraph: {
     title: 'Las Mejores Tarjetas de Crédito en México 2025',
     description: 'Compara las mejores tarjetas de crédito sin anualidad, con cashback y puntos.',
-    url: 'https://raisket.mx/tarjetas-de-credito',
+    url: 'https://raisket.mx/comparadores/tarjetas-credito',
     type: 'website',
   },
 };
@@ -51,7 +51,7 @@ export default async function TarjetasCreditoPage() {
     title: 'Las Mejores Tarjetas de Crédito en México 2025',
     description: 'Guía completa para elegir la mejor tarjeta de crédito según tu perfil financiero',
     datePublished: new Date().toISOString(),
-    url: 'https://raisket.mx/tarjetas-de-credito',
+    url: 'https://raisket.mx/comparadores/tarjetas-credito',
   });
 
   const faqSchema = generateFAQSchema([

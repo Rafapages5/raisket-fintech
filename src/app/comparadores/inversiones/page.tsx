@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   description: 'Compara CETES, pagarés bancarios, fondos de inversión y más. Invierte desde $100 con las mejores tasas y rendimientos del mercado mexicano. Análisis experto actualizado.',
   keywords: ['inversiones', 'CETES', 'pagarés', 'fondos de inversión', 'GAT', 'México', 'comparador inversiones'],
   alternates: {
-    canonical: '/inversiones',
+    canonical: '/comparadores/inversiones',
   },
 };
 
@@ -59,7 +59,7 @@ export default async function InversionesPage() {
     title: 'Las Mejores Inversiones en México 2025',
     description: 'Guía completa para comenzar a invertir en México con opciones reguladas y seguras',
     datePublished: new Date().toISOString(),
-    url: 'https://raisket.mx/inversiones',
+    url: 'https://raisket.mx/comparadores/inversiones',
   });
 
   return (

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   description: 'Compara préstamos personales con las mejores tasas. Préstamos rápidos, sin aval y con aprobación inmediata. Análisis experto actualizado.',
   keywords: ['préstamos personales', 'créditos', 'préstamos rápidos', 'sin aval', 'México', 'comparador préstamos'],
   alternates: {
-    canonical: '/prestamos-personales',
+    canonical: '/comparadores/prestamos-personales',
   },
 };
 
@@ -52,7 +52,7 @@ export default async function PrestamosPersonalesPage() {
     title: 'Los Mejores Préstamos Personales en México 2025',
     description: 'Guía completa para elegir el mejor préstamo personal según tus necesidades',
     datePublished: new Date().toISOString(),
-    url: 'https://raisket.mx/prestamos-personales',
+    url: 'https://raisket.mx/comparadores/prestamos-personales',
   });
 
   return (
