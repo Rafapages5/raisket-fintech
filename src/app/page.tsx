@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import {
   getFinancialProducts,
   categoryLabels,
+  getCategorySlug,
   type FinancialProduct,
   type ProductCategory,
 } from '@/lib/financial-products';
@@ -41,7 +42,7 @@ function HeroSection() {
   const categories = [
     {
       name: 'Tarjetas de Crédito',
-      href: '/tarjetas-credito',
+      href: '/tarjetas-de-credito',
       icon: CreditCard,
       color: 'bg-[#00D9A5]',
       description: 'Sin anualidad, cashback',
@@ -149,6 +150,8 @@ const badgeStyles: Record<string, string> = {
 };
 
 function ProductCard({ product }: { product: FinancialProduct }) {
+  const categorySlug = getCategorySlug(product.category);
+
   return (
     <article className="group bg-white rounded-xl border border-[#E2E8F0] transition-all duration-300 hover:shadow-lg hover:border-[#00D9A5]">
       <div className="p-5">
@@ -223,7 +226,7 @@ function ProductCard({ product }: { product: FinancialProduct }) {
             </Button>
           )}
           <Button asChild variant="outline" className="border-[#1A365D] text-[#1A365D] hover:bg-[#1A365D] hover:text-white">
-            <Link href={`/producto/${product.slug}`}>
+            <Link href={`/${categorySlug}/${product.slug}`}>
               Ver más <ChevronRight className="ml-1 h-4 w-4" />
             </Link>
           </Button>
@@ -235,7 +238,7 @@ function ProductCard({ product }: { product: FinancialProduct }) {
 
 // ============ CATEGORY SECTION ============
 const categoryHrefs: Record<ProductCategory, string> = {
-  credit_card: '/tarjetas-credito',
+  credit_card: '/tarjetas-de-credito',
   personal_loan: '/prestamos-personales',
   investment: '/inversiones',
   banking: '/cuentas-bancarias',

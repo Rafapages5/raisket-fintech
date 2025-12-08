@@ -43,7 +43,7 @@ const menuData = [
   {
     label: "Tarjetas de Crédito",
     icon: "credit-card",
-    viewAllUrl: "/comparadores/tarjetas-credito",
+    viewAllUrl: "/tarjetas-de-credito",
     featured: [
       { name: "Sin Anualidad", url: "/tarjetas-de-credito/mejores/sin-anualidad" },
       { name: "Con Cashback", url: "/tarjetas-de-credito/mejores/cashback" },
@@ -53,31 +53,31 @@ const menuData = [
   {
     label: "Préstamos",
     icon: "banknote",
-    viewAllUrl: "/comparadores/prestamos-personales",
+    viewAllUrl: "/prestamos-personales",
     featured: [
-      { name: "Personales", url: "/comparadores/prestamos-personales/mejores/sin-aval" },
-      { name: "Rápidos / Apps", url: "/comparadores/prestamos-personales/mejores/aprobacion-rapida" },
-      { name: "Tasas Bajas", url: "/comparadores/prestamos-personales/mejores/tasa-baja" }
+      { name: "Personales", url: "/prestamos-personales/mejores/sin-aval" },
+      { name: "Rápidos / Apps", url: "/prestamos-personales/mejores/aprobacion-rapida" },
+      { name: "Tasas Bajas", url: "/prestamos-personales/mejores/tasa-baja" }
     ]
   },
   {
     label: "Inversiones",
     icon: "trending-up",
-    viewAllUrl: "/comparadores/inversiones",
+    viewAllUrl: "/inversiones",
     featured: [
-      { name: "Cetes y Gobierno", url: "/comparadores/inversiones/mejores/cetes" },
-      { name: "Pagarés Bancarios", url: "/comparadores/inversiones/mejores/bajo-riesgo" },
-      { name: "Bolsa / Fondos", url: "/comparadores/inversiones/mejores/alto-rendimiento" }
+      { name: "Cetes y Gobierno", url: "/inversiones/mejores/cetes" },
+      { name: "Pagarés Bancarios", url: "/inversiones/mejores/bajo-riesgo" },
+      { name: "Bolsa / Fondos", url: "/inversiones/mejores/alto-rendimiento" }
     ]
   },
   {
     label: "Cuentas",
     icon: "landmark",
-    viewAllUrl: "/comparadores/cuentas-bancarias",
+    viewAllUrl: "/cuentas-bancarias",
     featured: [
-      { name: "Alto Rendimiento", url: "/comparadores/cuentas-bancarias/mejores/alto-rendimiento-ahorro" },
-      { name: "Nómina", url: "/comparadores/cuentas-bancarias/mejores/sin-comisiones" },
-      { name: "Digitales", url: "/comparadores/cuentas-bancarias/mejores/digital-banco" }
+      { name: "Alto Rendimiento", url: "/cuentas-bancarias/mejores/alto-rendimiento-ahorro" },
+      { name: "Nómina", url: "/cuentas-bancarias/mejores/sin-comisiones" },
+      { name: "Digitales", url: "/cuentas-bancarias/mejores/digital-banco" }
     ]
   },
   {

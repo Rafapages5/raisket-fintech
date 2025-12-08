@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getFinancialProducts, ProductCategory } from '@/lib/financial-products';
+import { getFinancialProducts, ProductCategory, getCategorySlug } from '@/lib/financial-products';
 import { Check, X } from 'lucide-react';
 
 interface ProductComparisonTableProps {
@@ -10,6 +10,7 @@ interface ProductComparisonTableProps {
 
 export async function ProductComparisonTable({ category, limit = 5, highlight_products }: ProductComparisonTableProps) {
     const products = await getFinancialProducts({ category, limit, orderBy: 'rating' });
+    const categorySlug = getCategorySlug(category);
 
     return (
         <div className="my-8 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm not-prose">
@@ -61,7 +62,7 @@ export async function ProductComparisonTable({ category, limit = 5, highlight_pr
                                 </td>
                                 <td className="px-4 py-4 text-right">
                                     <Link
-                                        href={`/productos/${product.category}/${product.slug}`}
+                                        href={`/${categorySlug}/${product.slug}`}
                                         className="text-[#00D9A5] hover:text-[#00C294] font-medium text-xs hover:underline"
                                     >
                                         Ver detalles

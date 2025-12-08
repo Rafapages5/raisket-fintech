@@ -5,6 +5,16 @@ import { supabase } from './supabase';
 
 export type ProductCategory = 'credit_card' | 'personal_loan' | 'investment' | 'banking';
 
+export function getCategorySlug(category: ProductCategory): string {
+  const slugMap: Record<ProductCategory, string> = {
+    credit_card: 'tarjetas-de-credito',
+    personal_loan: 'prestamos-personales',
+    investment: 'inversiones',
+    banking: 'cuentas-bancarias',
+  };
+  return slugMap[category];
+}
+
 export interface FinancialProduct {
   id: string;
   name: string;
