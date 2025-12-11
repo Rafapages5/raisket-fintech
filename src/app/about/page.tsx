@@ -128,12 +128,12 @@ export default function AboutPage() {
               <p>
                 Raisket <strong>no es solo un comparador</strong> de productos financieros. Estamos construyendo el
                 <strong> primer asesor financiero con IA verdaderamente personalizado para México</strong>, que entiende
-                el contexto único de cada usuario y recomienda productos basándose en <strong>datos propietarios que
+                el contexto único de cada usuario y recomienda productos basándose en <strong>datos propios que
                   ningún competidor tiene</strong>.
               </p>
               <p>
                 La diferencia entre un chatbot básico y un asesor financiero confiable está en nuestra capacidad de
-                combinar <strong>inteligencia contextual</strong>, <strong>conocimiento propietario</strong>, y
+                combinar <strong>inteligencia contextual</strong>, <strong>conocimiento propio</strong> y
                 <strong> memoria personalizada</strong> para crear una experiencia que mejora con cada interacción.
               </p>
             </div>
@@ -264,7 +264,7 @@ export default function AboutPage() {
           </p>
 
           <div className="grid md:grid-cols-2 gap-10 max-w-4xl mx-auto">
-            {/* Rafael Zamudio */}
+            {/* Rafael Rivas */}
             <Card className="overflow-hidden hover:shadow-lg transition-all">
               <CardContent className="p-8 text-center">
                 <div className="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden border-4 border-white shadow-md">
@@ -416,137 +416,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Tech Stack */}
-      <section id="tech" className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="font-headline text-3xl md:text-4xl font-bold text-primary text-center mb-6">Stack Tecnológico</h2>
-          <p className="text-center text-lg text-gray-600 max-w-3xl mx-auto mb-16">
-            Arquitectura moderna y escalable diseñada para manejar millones de usuarios.
-          </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card>
-              <CardHeader><CardTitle className="text-lg text-primary">🎨 Frontend</CardTitle></CardHeader>
-              <CardContent className="text-sm text-gray-600">
-                <p><strong>Next.js 15</strong>, React 19, TypeScript</p>
-                <p>Tailwind CSS, Shadcn UI</p>
-                <p>Zustand, React Query</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader><CardTitle className="text-lg text-primary">⚙️ Backend</CardTitle></CardHeader>
-              <CardContent className="text-sm text-gray-600">
-                <p>Next.js API Routes, tRPC</p>
-                <p>Clerk / NextAuth</p>
-                <p>PostgreSQL (Supabase), Prisma</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader><CardTitle className="text-lg text-primary">🤖 AI/ML Stack</CardTitle></CardHeader>
-              <CardContent className="text-sm text-gray-600">
-                <p>Gemini 1.5 Pro & Flash</p>
-                <p>Vertex AI Embeddings</p>
-                <p>Vertex AI Vector Search</p>
-                <p>LangChain, Vercel AI SDK</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader><CardTitle className="text-lg text-primary">☁️ Infrastructure</CardTitle></CardHeader>
-              <CardContent className="text-sm text-gray-600">
-                <p>Vercel (Frontend)</p>
-                <p>Google Cloud Platform</p>
-                <p>Cloudflare</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader><CardTitle className="text-lg text-primary">📊 Data & Analytics</CardTitle></CardHeader>
-              <CardContent className="text-sm text-gray-600">
-                <p>Google Analytics 4, Mixpanel</p>
-                <p>Airbyte, Metabase</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader><CardTitle className="text-lg text-primary">🔒 Security</CardTitle></CardHeader>
-              <CardContent className="text-sm text-gray-600">
-                <p>AES-256 Encryption</p>
-                <p>CNBV Compliance</p>
-                <p>Automated Backups</p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Google Cloud Section (Special) */}
-      <section className="py-20 text-white bg-gradient-to-br from-[#4285f4] to-[#34a853]">
-        <div className="container mx-auto px-4">
-          <h2 className="font-headline text-3xl md:text-4xl font-bold text-center mb-12">¿Por qué Google Cloud y cómo usaremos los créditos?</h2>
-
-          <div className="max-w-5xl mx-auto">
-            <p className="text-xl text-center mb-12 opacity-90">
-              La diferencia entre un chatbot básico y un asesor financiero confiable está en <strong>tres capacidades críticas</strong> que solo una infraestructura enterprise puede proporcionar:
-            </p>
-
-            <div className="grid md:grid-cols-3 gap-8 mb-16">
-              <div className="bg-white/10 backdrop-blur-md p-8 rounded-xl border border-white/20">
-                <h3 className="text-2xl font-bold mb-4">🧠 Inteligencia Contextual</h3>
-                <p className="font-bold mb-4">Vertex AI + Gemini</p>
-                <ul className="space-y-2 text-sm opacity-90">
-                  <li>✓ Múltiples modelos especializados</li>
-                  <li>✓ Experiencia premium</li>
-                  <li className="mt-4 font-semibold">Costo: $500-800 USD/mes</li>
-                </ul>
-              </div>
-              <div className="bg-white/10 backdrop-blur-md p-8 rounded-xl border border-white/20">
-                <h3 className="text-2xl font-bold mb-4">🔍 Conocimiento Propietario</h3>
-                <p className="font-bold mb-4">RAG + Vertex AI Search</p>
-                <ul className="space-y-2 text-sm opacity-90">
-                  <li>✓ IA conectada con nuestra DB</li>
-                  <li>✓ Calificaciones Raisket</li>
-                  <li className="mt-4 font-semibold">Costo: $300-500 USD/mes</li>
-                </ul>
-              </div>
-              <div className="bg-white/10 backdrop-blur-md p-8 rounded-xl border border-white/20">
-                <h3 className="text-2xl font-bold mb-4">💾 Memoria</h3>
-                <p className="font-bold mb-4">Firestore + Memorystore</p>
-                <ul className="space-y-2 text-sm opacity-90">
-                  <li>✓ Recordamos cada interacción</li>
-                  <li>✓ Perfil financiero completo</li>
-                  <li className="mt-4 font-semibold">Costo: $200-400 USD/mes</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="bg-white text-gray-800 p-10 rounded-2xl shadow-xl mb-12">
-              <h3 className="text-2xl font-bold text-[#4285f4] text-center mb-8">Desglose de $2,000 USD de créditos</h3>
-              <div className="grid md:grid-cols-2 gap-8">
-                <div className="border-l-4 border-[#4285f4] pl-6">
-                  <h4 className="font-bold text-lg text-[#4285f4] mb-2">Mes 1-2: MVP + Pruebas (~$1,200)</h4>
-                  <ul className="text-sm text-gray-600 space-y-1">
-                    <li>Configuración arquitectura agentes IA</li>
-                    <li>Integración RAG</li>
-                    <li>Testing 50-100 usuarios</li>
-                  </ul>
-                </div>
-                <div className="border-l-4 border-[#34a853] pl-6">
-                  <h4 className="font-bold text-lg text-[#34a853] mb-2">Mes 3: Validación (~$800)</h4>
-                  <ul className="text-sm text-gray-600 space-y-1">
-                    <li>Escalar a 500 usuarios</li>
-                    <li>Métricas para fundraising</li>
-                    <li>Optimizar costos</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <div className="text-center bg-white/10 backdrop-blur-md p-8 rounded-xl border border-white/20">
-              <p className="text-lg font-semibold italic">
-                "Los $2,000 USD de créditos nos permiten construir tecnología nivel Goldman Sachs para México, sin quemar capital crítico."
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Business Model */}
       <section className="py-20 bg-gray-50">
@@ -596,7 +465,7 @@ export default function AboutPage() {
           <h2 className="font-headline text-3xl md:text-4xl font-bold text-primary text-center mb-12">Ventaja Competitiva</h2>
           <div className="max-w-4xl mx-auto space-y-8">
             <Card className="border-l-4 border-accent">
-              <CardHeader><CardTitle className="text-xl text-primary">🏆 ¿Por qué Raisket va a ganar?</CardTitle></CardHeader>
+              <CardHeader><CardTitle className="text-xl text-primary">🏆 ¿Por qué Raisket es distinto?</CardTitle></CardHeader>
               <CardContent className="text-gray-600 space-y-2">
                 <p>• <strong>First-mover:</strong> Primeros en combinar IA + Expertise Financiero en MX.</p>
                 <p>• <strong>Independencia:</strong> No vendemos productos propios, solo recomendamos lo mejor.</p>
